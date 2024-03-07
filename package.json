@@ -1,0 +1,39 @@
+{
+  "name": "imagine",
+  "version": "1.0.0",
+  "description": "A typescript open source 2D game engine for HTML5 games with the Canvas API",
+  "main": "index.js",
+  "scripts": {
+    "clear": "rimraf ./dist",
+    "prebuild": "npm run clear",
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node ./dist/index.js",
+    "dev": "nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nadjiel/imagine.git"
+  },
+  "keywords": [
+    "game",
+    "engine",
+    "2d",
+    "canvas",
+    "typescript",
+    "html5",
+    "opensource"
+  ],
+  "author": "Daniel de Oliveira Sousa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nadjiel/imagine/issues"
+  },
+  "homepage": "https://github.com/nadjiel/imagine#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "rimraf": "^5.0.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.2"
+  }
+}
