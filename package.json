@@ -2,7 +2,9 @@
   "name": "imagine",
   "version": "1.0.0",
   "description": "A typescript open source 2D game engine for HTML5 games with the Canvas API",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [ "/dist" ],
   "scripts": {
     "clear": "rimraf ./dist",
     "prebuild": "npm run clear",
