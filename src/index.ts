@@ -1,1 +1,1 @@
-export { Imagine } from "./imagine";
+export { Wonder } from "./wonder";

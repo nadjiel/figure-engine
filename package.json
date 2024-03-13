@@ -1,10 +1,12 @@
 {
-  "name": "imagine",
+  "name": "wonderjs",
   "version": "1.0.0",
   "description": "A typescript open source 2D game engine for HTML5 games with the Canvas API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": [ "/dist" ],
+  "files": [
+    "/dist"
+  ],
   "scripts": {
     "clear": "rimraf ./dist",
     "prebuild": "npm run clear",
@@ -15,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nadjiel/imagine.git"
+    "url": "git+https://github.com/nadjiel/wonderjs.git"
   },
   "keywords": [
     "game",
@@ -29,9 +31,9 @@
   "author": "Daniel de Oliveira Sousa",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nadjiel/imagine/issues"
+    "url": "https://github.com/nadjiel/wonderjs/issues"
   },
-  "homepage": "https://github.com/nadjiel/imagine#readme",
+  "homepage": "https://github.com/nadjiel/wonderjs#readme",
   "devDependencies": {
     "nodemon": "^3.1.0",
     "rimraf": "^5.0.5",
