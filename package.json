@@ -1,12 +1,10 @@
 {
-  "name": "wonderjs",
+  "name": "figure-engine",
   "version": "1.0.0",
   "description": "A typescript open source 2D game engine for HTML5 games with the Canvas API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": [
-    "/dist"
-  ],
+  "files": [ "/dist" ],
   "scripts": {
     "clear": "rimraf ./dist",
     "prebuild": "npm run clear",
@@ -17,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nadjiel/wonderjs.git"
+    "url": "git+https://github.com/nadjiel/figure-engine.git"
   },
   "keywords": [
     "game",
@@ -31,9 +29,9 @@
   "author": "Daniel de Oliveira Sousa",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nadjiel/wonderjs/issues"
+    "url": "https://github.com/nadjiel/figure-engine/issues"
   },
-  "homepage": "https://github.com/nadjiel/wonderjs#readme",
+  "homepage": "https://github.com/nadjiel/figure-engine#readme",
   "devDependencies": {
     "nodemon": "^3.1.0",
     "rimraf": "^5.0.5",
