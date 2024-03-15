@@ -13,7 +13,8 @@
     "start": "node ./dist/index.js",
     "dev": "nodemon",
     "prepublish": "npm run build",
-    "publish": "npm publish --dry-run"
+    "publish": "npm publish",
+    "publish-locally": "npm run prepublish && npm link"
   },
   "repository": {
     "type": "git",
