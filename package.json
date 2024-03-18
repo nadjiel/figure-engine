@@ -1,6 +1,6 @@
 {
   "name": "figure-engine",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A typescript open source 2D game engine for HTML5 games with the Canvas API",
   "main": "dist/index.js",
   "type": "module",
@@ -15,7 +15,7 @@
     "dev": "nodemon",
     "prepublish": "npm run build",
     "publish": "npm publish",
-    "publish-locally": "npm run prepublish && npm link"
+    "publish:local": "npm run prepublish && npm link"
   },
   "repository": {
     "type": "git",
@@ -26,6 +26,9 @@
     "engine",
     "2d",
     "canvas",
+    "js",
+    "ts",
+    "javascript",
     "typescript",
     "html5",
     "opensource"
