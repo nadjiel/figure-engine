@@ -5,17 +5,24 @@
   "main": "dist/index.js",
   "type": "module",
   "types": "dist/index.d.ts",
-  "files": [ "/dist" ],
+  "files": [
+    "/dist"
+  ],
   "scripts": {
-    "clear": "rimraf ./dist",
-    "prebuild": "npm run clear",
-    "build": "tsc",
-    "prestart": "npm run build",
-    "start": "node ./dist/index.js",
-    "dev": "nodemon",
-    "prepublish": "npm run build",
-    "publish": "npm publish",
-    "publish:local": "npm run prepublish && npm link"
+    "clear:dist": "rimraf ./dist",
+    "clear:test": "rimraf ./spec-build",
+    "clear": "npm run clear:dist && npm run clear:test",
+    "prebuild:dist": "npm run clear:dist",
+    "build:dist": "tsc",
+    "prebuild:test": "npm run clear:test",
+    "build:test": "tsc --project ./tsconfig.test.json",
+    "build": "npm run build:dist && npm run build:test",
+    "test": "jasmine-browser-runner runSpecs --config=jasmine.json",
+    "test-serve": "jasmine-browser-runner serve --config=jasmine.json",
+    "dev": " concurrently \"npm run test-serve\" \"nodemon\"",
+    "prepublish": "npm run build:dist",
+    "publish": "npm run test && npm publish",
+    "publish:local": "npm run prepublish && npm run test && npm link"
   },
   "repository": {
     "type": "git",
@@ -40,9 +47,12 @@
   },
   "homepage": "https://github.com/nadjiel/figure-engine#readme",
   "devDependencies": {
+    "@types/jasmine": "^5.1.4",
+    "concurrently": "^8.2.2",
+    "jasmine-browser-runner": "^2.3.0",
+    "jasmine-core": "^5.1.2",
     "nodemon": "^3.1.0",
     "rimraf": "^5.0.5",
-    "ts-node": "^10.9.2",
     "typescript": "^5.4.2"
   }
 }
