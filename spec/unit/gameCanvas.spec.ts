@@ -5,6 +5,10 @@ describe("GameCanvas class", () => {
   it("Should instantiate without parameters", () => {
     const defaultWidth = 1280;
     const defaultHeight = 720;
+    const originalWidth = defaultWidth;
+    const originalHeight = defaultHeight;
+    const defaultAspectRatioMaintanance = false;
+    const defaultAspectRatio = 16 / 9;
     const defaultBgColor = "rgb(0, 0, 0)";
 
     const gameCanvas = new GameCanvas();
@@ -12,29 +16,182 @@ describe("GameCanvas class", () => {
     const context = gameCanvas.getHTMLCanvas().getContext("2d")!;
     
     expect(gameCanvas.getHTMLCanvas()).toBeInstanceOf(HTMLCanvasElement);
+    expect(gameCanvas.getHTMLCanvas().parentElement).toBe(document.body);
     expect(gameCanvas.getContext()).toEqual(context);
-    expect(gameCanvas.getAspectRatio()).toBeUndefined();
     expect(gameCanvas.getWidth()).toBe(defaultWidth);
     expect(gameCanvas.getHeight()).toBe(defaultHeight);
+    expect(gameCanvas.getOriginalWidth()).toBe(originalWidth);
+    expect(gameCanvas.getOriginalHeight()).toBe(originalHeight);
+    expect(gameCanvas.getAspectRatio()).toBe(defaultAspectRatio);
+    expect(gameCanvas.isMaintainingAspectRatio()).toBe(defaultAspectRatioMaintanance);
     expect(gameCanvas.getBackgroundColor()).toBe(defaultBgColor);
   });
 
   it("Should accept a predefined canvas", () => {
     const canvasElement = document.createElement("canvas");
+    const canvasElementCtx = canvasElement.getContext("2d")!;
     const defaultWidth = 1280;
     const defaultHeight = 720;
+    const originalWidth = defaultWidth;
+    const originalHeight = defaultHeight;
+    const defaultAspectRatioMaintanance = false;
+    const defaultAspectRatio = 16 / 9;
     const defaultBgColor = "rgb(0, 0, 0)";
 
-    const gameCanvas = new GameCanvas(canvasElement);
-    const ctx = gameCanvas.getContext();
+    const gameCanvas = new GameCanvas({ canvas: canvasElement });
+
+    spyOn(gameCanvas, "appendTo").and.callThrough();
 
     expect(gameCanvas.getHTMLCanvas()).toBe(canvasElement);
-    expect(ctx).toBeInstanceOf(CanvasRenderingContext2D);
-    expect(ctx.canvas).toBe(canvasElement);
-    expect(gameCanvas.getAspectRatio()).toBeUndefined();
+    expect(gameCanvas.appendTo).not.toHaveBeenCalled();
+    expect(gameCanvas.getContext()).toEqual(canvasElementCtx);
     expect(gameCanvas.getWidth()).toBe(defaultWidth);
     expect(gameCanvas.getHeight()).toBe(defaultHeight);
+    expect(gameCanvas.getOriginalWidth()).toBe(originalWidth);
+    expect(gameCanvas.getOriginalHeight()).toBe(originalHeight);
+    expect(gameCanvas.getAspectRatio()).toBe(defaultAspectRatio);
+    expect(gameCanvas.isMaintainingAspectRatio()).toBe(defaultAspectRatioMaintanance);
     expect(gameCanvas.getBackgroundColor()).toBe(defaultBgColor);
+  });
+
+  it("Should accept a predefined root", () => {
+    const root = document.createElement("div");
+    const defaultWidth = 1280;
+    const defaultHeight = 720;
+    const originalWidth = defaultWidth;
+    const originalHeight = defaultHeight;
+    const defaultAspectRatioMaintanance = false;
+    const defaultAspectRatio = 16 / 9;
+    const defaultBgColor = "rgb(0, 0, 0)";
+
+    const gameCanvas = new GameCanvas({ root });
+    
+    const context = gameCanvas.getHTMLCanvas().getContext("2d")!;
+
+    expect(gameCanvas.getHTMLCanvas()).toBeInstanceOf(HTMLCanvasElement);
+    expect(gameCanvas.getRoot()).toBe(root);
+    expect(gameCanvas.getContext()).toEqual(context);
+    expect(gameCanvas.getWidth()).toBe(defaultWidth);
+    expect(gameCanvas.getHeight()).toBe(defaultHeight);
+    expect(gameCanvas.getOriginalWidth()).toBe(originalWidth);
+    expect(gameCanvas.getOriginalHeight()).toBe(originalHeight);
+    expect(gameCanvas.getAspectRatio()).toBe(defaultAspectRatio);
+    expect(gameCanvas.isMaintainingAspectRatio()).toBe(defaultAspectRatioMaintanance);
+    expect(gameCanvas.getBackgroundColor()).toBe(defaultBgColor);
+  });
+
+  describe("setWidth method", () => {
+
+    it("Should set original width and update current width", () => {
+      const newWidth = 1920;
+      const gameCanvas = new GameCanvas();
+
+      gameCanvas.setWidth(newWidth);
+
+      expect(gameCanvas.getOriginalWidth()).toBe(newWidth);
+      expect(gameCanvas.getWidth()).toBe(newWidth);
+    });
+
+  });
+
+  describe("setHeight method", () => {
+
+    it("Should set original height and update current height", () => {
+      const newHeight = 1080;
+      const gameCanvas = new GameCanvas();
+
+      gameCanvas.setHeight(newHeight);
+
+      expect(gameCanvas.getOriginalHeight()).toBe(newHeight);
+      expect(gameCanvas.getHeight()).toBe(newHeight);
+    });
+
+  });
+
+  describe("scaleWidthTo method", () => {
+
+    it("Should scale width only if game isn't maintaining aspect ratio", () => {
+      const defaultWidth = 1280;
+      const newWidth = 1920;
+      const gameCanvas = new GameCanvas();
+
+      gameCanvas.scaleWidthTo(newWidth);
+
+      expect(gameCanvas.getOriginalWidth()).toBe(defaultWidth);
+      expect(gameCanvas.getWidth()).toBe(newWidth);
+    });
+
+    it("Should scale width and height if aspect ratio is maintained", () => {
+      const defaultWidth = 1280;
+      const defaultHeight = 720;
+      const newWidth = 1920;
+      const newHeight = 1080;
+      const gameCanvas = new GameCanvas();
+
+      gameCanvas.doMaintainAspectRatio();
+
+      gameCanvas.scaleWidthTo(newWidth);
+
+      expect(gameCanvas.getOriginalWidth()).toBe(defaultWidth);
+      expect(gameCanvas.getOriginalHeight()).toBe(defaultHeight);
+      expect(gameCanvas.getWidth()).toBe(newWidth);
+      expect(gameCanvas.getHeight()).toBe(newHeight);
+    });
+
+  });
+
+  describe("scaleHeightTo method", () => {
+
+    it("Should scale height only if game isn't maintaining aspect ratio", () => {
+      const defaultHeight = 720;
+      const newHeight = 1080;
+      const gameCanvas = new GameCanvas();
+
+      gameCanvas.scaleHeightTo(newHeight);
+
+      expect(gameCanvas.getOriginalHeight()).toBe(defaultHeight);
+      expect(gameCanvas.getHeight()).toBe(newHeight);
+    });
+
+    it("Should scale width and height if aspect ratio is maintained", () => {
+      const defaultWidth = 1280;
+      const defaultHeight = 720;
+      const newWidth = 1920;
+      const newHeight = 1080;
+      const gameCanvas = new GameCanvas();
+
+      gameCanvas.doMaintainAspectRatio();
+
+      gameCanvas.scaleHeightTo(newHeight);
+
+      expect(gameCanvas.getOriginalWidth()).toBe(defaultWidth);
+      expect(gameCanvas.getOriginalHeight()).toBe(defaultHeight);
+      expect(gameCanvas.getWidth()).toBe(newWidth);
+      expect(gameCanvas.getHeight()).toBe(newHeight);
+    });
+
+  });
+
+  describe("scaleTo method", () => {
+
+    it("Should stop maintaining aspect ratio and scale width and height", () => {
+      const defaultWidth = 1280;
+      const defaultHeight = 720;
+      const newWidth = 256;
+      const newHeight = 224;
+      const gameCanvas = new GameCanvas();
+
+      gameCanvas.doMaintainAspectRatio();
+
+      gameCanvas.scaleTo(newWidth, newHeight);
+
+      expect(gameCanvas.isMaintainingAspectRatio()).toBeFalse();
+      expect(gameCanvas.getOriginalWidth()).toBe(defaultWidth);
+      expect(gameCanvas.getOriginalHeight()).toBe(defaultHeight);
+      expect(gameCanvas.getWidth()).toBe(newWidth);
+      expect(gameCanvas.getHeight()).toBe(newHeight);
+    });
+
   });
 
   describe("appendTo method", () => {
@@ -50,81 +207,61 @@ describe("GameCanvas class", () => {
 
   });
 
-  describe("setWidth method", () => {
+  describe("fitRoot method", () => {
 
-    it("Should only set width if aspect ratio is not set", () => {
-      const newWidth = 1920;
-      const defaultHeight = 720;
+    it("Should cover root if no aspect ratio is set", () => {
       const gameCanvas = new GameCanvas();
+      const rootWidth = gameCanvas.getRootWidth();
+      const rootHeight = gameCanvas.getRootHeight();
 
-      gameCanvas.setWidth(newWidth);
+      gameCanvas.fitRoot();
 
-      expect(gameCanvas.getWidth()).toBe(newWidth);
-      expect(gameCanvas.getHeight()).toBe(defaultHeight);
-    });
-    
-    it("Should also set height if aspect ratio is set", () => {
-      const newWidth = 1920;
-      const aspectRatio = 16 / 9;
-      const newHeight = newWidth / aspectRatio;
-      const gameCanvas = new GameCanvas();
-
-      gameCanvas.setAspectRatio(aspectRatio);
-
-      gameCanvas.setWidth(newWidth);
-
-      expect(gameCanvas.getWidth()).toBe(newWidth);
-      expect(gameCanvas.getHeight()).toBe(newHeight);
+      expect(gameCanvas.getWidth()).toBe(rootWidth);
+      expect(gameCanvas.getHeight()).toBe(rootHeight);
     });
 
-  });
+    it("Should fit root respecting aspect ratio if set", () => {
+      const root = document.createElement("div");
+      document.body.appendChild(root);
+      const rootWidth = 1000;
+      const rootHeight = 1000;
+      root.style.width = `${rootWidth}px`;
+      root.style.height = `${rootHeight}px`;
+      const gameCanvas = new GameCanvas({ root });
+      const aspectRatio = gameCanvas.getAspectRatio();
+      const scaledWidth = rootWidth;
+      const scaledHeight = Math.floor(scaledWidth / aspectRatio);
 
-  describe("setHeight method", () => {
+      gameCanvas.doMaintainAspectRatio();
 
-    it("Should only set height if aspect ratio is not set", () => {
-      const newHeight = 1080;
-      const defaultWidth = 1280;
-      const gameCanvas = new GameCanvas();
+      gameCanvas.fitRoot();
 
-      gameCanvas.setHeight(newHeight);
-
-      expect(gameCanvas.getHeight()).toBe(newHeight);
-      expect(gameCanvas.getWidth()).toBe(defaultWidth);
+      expect(gameCanvas.getWidth()).toBe(scaledWidth);
+      expect(gameCanvas.getHeight()).toBe(scaledHeight);
     });
-    
-    it("Should also set width if aspect ratio is set", () => {
-      const newHeight = 1080;
-      const aspectRatio = 16 / 9;
-      const newWidth = newHeight * aspectRatio;
-      const gameCanvas = new GameCanvas();
 
-      gameCanvas.setAspectRatio(aspectRatio);
+    it("Should make broad roots contain game without overflow", () => {
+      const root = document.createElement("div");
+      document.body.appendChild(root);
+      const rootWidth = 2000;
+      const rootHeight = 1000;
+      root.style.width = `${rootWidth}px`;
+      root.style.height = `${rootHeight}px`;
+      const gameCanvas = new GameCanvas({ root });
+      const aspectRatio = gameCanvas.getAspectRatio();
+      const scaledWidth = Math.floor(rootHeight * aspectRatio);
+      const scaledHeight = rootHeight;
 
-      gameCanvas.setHeight(newHeight);
+      gameCanvas.doMaintainAspectRatio();
 
-      expect(gameCanvas.getHeight()).toBe(newHeight);
-      expect(gameCanvas.getWidth()).toBe(newWidth);
+      gameCanvas.fitRoot();
+
+      expect(gameCanvas.getWidth()).toBe(scaledWidth);
+      expect(gameCanvas.getHeight()).toBe(scaledHeight);
     });
 
   });
 
-  describe("setSize method", () => {
-
-    it("Should set size and remove old aspect ratio", () => {
-      const newWidth = 1920;
-      const newHeight = 1080;
-      const newAspectRatio = 1 / 1;
-      const gameCanvas = new GameCanvas();
-
-      gameCanvas.setAspectRatio(newAspectRatio);
-
-      gameCanvas.setSize(newWidth, newHeight);
-
-      expect(gameCanvas.getWidth()).toBe(newWidth);
-      expect(gameCanvas.getHeight()).toBe(newHeight);
-      expect(gameCanvas.getAspectRatio()).toBeUndefined();
-    });
-
-  });
+  // WARNING: toggleFullscreen method can't be automatically tested since it has to be triggered by the user
 
 });
