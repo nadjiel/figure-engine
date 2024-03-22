@@ -1,6 +1,9 @@
 /**
  * The `GameCanvasOptions` describes the possible options that the
  * {@linkcode GameCanvas} class accepts.
+ * 
+ * @version 0.0.1
+ * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
  */
 interface GameCanvasOptions {
 
@@ -36,6 +39,9 @@ interface GameCanvasOptions {
  * This `canvas` will have a size of `1280` by `720` and a black background
  * color and will also be configured to not maintain the aspect ratio when
  * resizing.
+ * 
+ * @version 0.0.1
+ * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
  */
 export class GameCanvas {
 
