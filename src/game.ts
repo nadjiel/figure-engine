@@ -1,6 +1,11 @@
+import { GameCanvas } from "./gameCanvas.js";
+
 /**
  * This interface describes the possible properties the game configuration can
  * accept.
+ * 
+ * @version 0.0.1
+ * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
  */
 interface GameConfig {
 
@@ -8,7 +13,10 @@ interface GameConfig {
    * This property accepts an HTML `canvas` element that is set as
    * the place where the game is displayed.
    * 
-   * If left `undefined`, the `Game` class creates a new `canvas` element.
+   * If left `undefined` a new `canvas` element is created.
+   * 
+   * If you pass a `canvas` and don't pass a `root` it's expected that that
+   * `canvas` is already appended to the DOM.
    */
   canvas?: HTMLCanvasElement;
 
@@ -21,14 +29,14 @@ interface GameConfig {
   root?: HTMLElement;
 
   /**
-   * This attribute defines the width of the game canvas.
+   * This attribute defines the original width of the game canvas.
    * 
    * If undefined, the default HD width `1280` is set.
    */
   width?: number;
   
   /**
-   * This attribute defines the height of the game canvas.
+   * This attribute defines the original height of the game canvas.
    * 
    * If undefined, the default HD height `720` is set.
    */
@@ -45,9 +53,9 @@ interface GameConfig {
  * This class accepts some configurations passed through a `config` object, but
  * can also be instantiated without any setup.
  * 
- * By default, this class will create an HTML `canvas` element with the default
- * width and height set to `1280` by `720` and append it to the `body` element
- * of the DOM so it can be displayed.
+ * By default, this class will create a black HTML `canvas` element with the
+ * default width and height set to `1280` by `720` and append it to the `body`
+ * element of the DOM so it can be displayed.
  * 
  * @version 0.0.1
  * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
@@ -55,37 +63,10 @@ interface GameConfig {
 export class Game {
 
   /**
-   * This property stores the canvas used to display the game.
+   * The `gameCanvas` property stores an instance to a {@linkcode GameCanvas}
+   * used to control the game display.
    */
-  private canvas: HTMLCanvasElement;
-
-  /**
-   * The `ctx` property (short for context) stores the game canvas' rendering
-   * context, which provides functionality to do the game rendering.
-   */
-  private ctx: CanvasRenderingContext2D;
-
-  /**
-   * This property stores what aspect ratio should be used when resizing the
-   * game canvas with the {@linkcode setWidth} or {@linkcode setHeight} methods.
-   * Therefore, it provides a way of automatically setting one dimension
-   * whenever the other is changed.
-   * 
-   * For example, if the `aspectRatio` is `1.77` (`16 / 9`), that means when
-   * {@linkcode setWidth} is called with `1920`, the height is automatically set
-   * to `1080`, mainteining the aspect ratio.
-   * 
-   * If left `undefined` the resizing won't take any aspect ratio in
-   * consideration, only resizing the dimension asked.
-   * 
-   * Take into account that, when the `aspectRatio` is set, you have to manually
-   * call either {@linkcode setWidth} or {@linkcode setHeight} to make sure the
-   * canvas starts in fact using the new ratio.
-   * 
-   * Also note that using the {@linkcode setSize} method automatically removes
-   * any `aspectRatio` set, since you will pass manually a new width and height.
-   */
-  private aspectRatio?: number;
+  private gameCanvas: GameCanvas;
 
   /**
    * @param config An object specifying configurations for this game, or
@@ -94,123 +75,246 @@ export class Game {
   constructor(config?: GameConfig) {
     if(config === undefined) config = {};
     let { canvas, root, width, height } = config;
-
-    if(canvas === undefined) canvas = this.createCanvas();
-    if(root === undefined) root = document.body;
-    if(width === undefined) width = 1280;
-    if(height === undefined) height = 720;
-
-    this.canvas = canvas;
-    this.ctx = this.createContext();
-    root.appendChild(this.canvas);
-    this.setWidth(width);
-    this.setHeight(height);
+    
+    this.gameCanvas = new GameCanvas({ canvas, root });
+    if(width !== undefined) this.gameCanvas.setWidth(width);
+    if(height !== undefined) this.gameCanvas.setHeight(height);
   }
 
   /**
-   * The `createCanvas` method simply uses the
-   * {@link [DOM](https://developer.mozilla.org/pt-BR/docs/Web/API/Document_Object_Model)}
-   * to create and return a new `canvas` element.
-   * @returns A new HTML `canvas` element.
+   * @returns The {@link GameCanvas} instance used to control visual aspects of
+   * the game such as aspect ratio, fullscreen and size.
    */
-  private createCanvas(): HTMLCanvasElement {
-    return document.createElement("canvas");
+  public getGameCanvas(): GameCanvas {
+    return this.gameCanvas;
   }
 
   /**
-   * The `createContext` method uses the
-   * {@link [CanvasAPI](https://developer.mozilla.org/pt-BR/docs/Web/API/Canvas_API)}
-   * to create a 2D rendering context from the canvas element that is used to
-   * render the game.
-   * @returns The canvas 2D rendering context.
+   * @returns The HTML `canvas` element used to display the game.
    */
-  private createContext(): CanvasRenderingContext2D {
-    return this.canvas.getContext("2d")!;
+  public getHTMLCanvas(): HTMLCanvasElement {
+    return this.getGameCanvas().getHTMLCanvas();
   }
 
   /**
-   * This method takes a `ratio` and sets it to be the new aspect ratio of the
-   * game.
+   * @returns The `canvas` rendering context used to render the game.
+   */
+  public getContext(): CanvasRenderingContext2D {
+    return this.getGameCanvas().getContext();
+  }
+
+  /**
+   * This method is used to tell the game if the {@linkcode scaleWidthTo} and
+   * {@linkcode scaleHeightTo} methods should maintain the original aspect ratio
+   * when resizing the game.
+   * That means if this method is called, whenever one dimension is scaled,
+   * the other one is as well.
    * 
-   * This aspect ratio allows you to automatically resize one dimension of the
-   * game when you set the other using the {@linkcode setWidth} or
-   * {@linkcode setHeight} methods.
+   * For example, if the `originalWidth` and `originalHeight` of the game are
+   * (`1280 / 720`), that means when {@linkcode scaleWidthTo} is called with
+   * `1920`, the height is automatically set to `1080`, maintaining the aspect
+   * ratio.
    * 
-   * For example, if the aspect ratio is set to `1.77` (`16 / 9`), that means
-   * when {@linkcode setWidth} is called with `1920`, the height is
-   * automatically set to `1080`, mainteining the aspect ratio.
+   * If this method isn't called, or the {@linkcode dontMaintainAspectRatio}
+   * method is called, the scaling won't respect the aspect ratio of the game.
    * 
-   * Keep in mind that if the {@linkcode setSize} method is called, though, the
-   * aspect ratio is automatically removed since you will manually pass a new
-   * width and height.
-   * @param ratio The new aspect ratio to set to the game.
+   * Take into account that using the {@linkcode scaleTo} method automatically
+   * makes it so the aspect ratio stops being automatically maintained, since
+   * you will manually pass a new width and height.
    */
-  public setAspectRatio(ratio: number): void {
-    this.aspectRatio = ratio;
+  public doMaintainAspectRatio(): void {
+    this.getGameCanvas().doMaintainAspectRatio();
   }
 
   /**
-   * This method is a way to remove the current aspect ratio of the game,
-   * making so you have to adjust manually its height whenever you change the
-   * width, or vice-versa, if you want to keep them consistent.
+   * This method is a way to stop automatically maintaining the aspect ratio of
+   * the game, making so you have to adjust manually its height whenever you
+   * scale the width, or vice-versa, if you want to keep them consistent.
+   * 
+   * If this method is called, it also means that when the game is set to
+   * fullscreen it might be distorted, if its `originalWidth` and
+   * `originalHeight` don't have an equivalent aspect ratio to the screen.
    */
-  public removeAspectRatio(): void {
-    this.aspectRatio = undefined;
+  public dontMaintainAspectRatio(): void {
+    this.getGameCanvas().dontMaintainAspectRatio();
+  }
+
+  /**
+   * This method allows you to know if the aspect ratio is being currently
+   * maintained by the game when scaled up or down.
+   * @returns `true` or `false` indicating if the game is currently maintaining
+   * the aspect ratio.
+   */
+  public isMaintainingAspectRatio(): boolean {
+    return this.getGameCanvas().isMaintainingAspectRatio();
+  }
+
+  /**
+   * This method returns the aspect ratio formed by the `originalWidth` and
+   * `originalHeight` of this game.
+   * These properties can be set manually using the {@linkcode setWidth} and
+   * {@linkcode setHeight} methods and are set to `1280` by `720`
+   * (HD aspect ratio) by default.
+   * @returns The aspect ratio of the `originalWidth` and `originalHeight` of
+   * the game.
+   */
+  public getAspectRatio(): number {
+    return this.getGameCanvas().getAspectRatio();
   }
 
   /**
    * This method takes a `width` parameter and sets it to be the new game width.
    * 
-   * If the game aspect ratio is currently set to some value, the height of the
-   * game is also updated to respect that ratio with the new width.
+   * This defines the `originalWidth` of the game as being this new width.
+   * 
+   * That, together with the `originalHeight`, are the parameters used to
+   * calculate the aspect ratio of the game.
    * @param width The new width to set to the game.
    */
   public setWidth(width: number): void {
-    this.canvas.setAttribute("width", `${width}px`);
-
-    if(this.aspectRatio !== undefined) {
-      this.setHeight(this.canvas.width / this.aspectRatio);
-    }
+    this.getGameCanvas().setWidth(width);
   }
 
   /**
-   * This method takes a `height` parameter and sets it to be the new game height.
+   * This method takes a `height` parameter and sets it to be the new game
+   * height.
    * 
-   * If the game aspect ratio is currently set to some value, the width of the
-   * game is also updated to respect that ratio with the new height.
+   * This defines the `originalHeight` of the game as being this new height.
+   * 
+   * That, together with the `originalWidth`, are the parameters used to
+   * calculate the aspect ratio of the game.
    * @param height The new height to set to the game.
    */
   public setHeight(height: number): void {
-    this.canvas.setAttribute("height", `${height}px`);
-
-    if(this.aspectRatio !== undefined) {
-      this.setWidth(this.canvas.height * this.aspectRatio);
-    }
+    this.getGameCanvas().setHeight(height);
   }
 
   /**
    * This method takes a `width` and a `height` and sets them to be the new
    * game dimensions.
    * 
-   * Consequentially, this method also removes the current aspect ratio of the
-   * game, if there is any, since the width and height are being explicitly
-   * passed.
+   * This defines the `originalWidth` and `originalHeight` of the game as being
+   * these new dimensions.
+   * 
+   * Those dimensions are the parameters used to calculate the aspect ratio of
+   * the game.
    * @param width The new width to set to the game.
    * @param height The new height to set to the game.
    */
   public setSize(width: number, height: number): void {
-    this.removeAspectRatio();
-
-    this.setWidth(width);
-    this.setHeight(height);
+    this.getGameCanvas().setSize(width, height);
   }
 
-  public getCanvas(): HTMLCanvasElement {
-    return this.canvas;
+  /**
+   * @returns The original width of the game, set with the {@linkcode setWidth}
+   * method.
+   */
+  public getOriginalWidth(): number {
+    return this.getGameCanvas().getOriginalWidth();
   }
 
-  public getContext(): CanvasRenderingContext2D {
-    return this.ctx;
+  /**
+   * @returns The original height of the game, set with the {@linkcode setHeight}
+   * method.
+   */
+  public getOriginalHeight(): number {
+    return this.getGameCanvas().getOriginalHeight();
+  }
+
+  /**
+   * @returns The current width of the game taking any applied scaling in
+   * consideration.
+   */
+  public getWidth(): number {
+    return this.getGameCanvas().getWidth();
+  }
+
+  /**
+   * @returns The current height of the game taking any applied scaling in
+   * consideration.
+   */
+  public getHeight(): number {
+    return this.getGameCanvas().getHeight();
+  }
+
+  /**
+   * This method scales the game canvas to have the passed `newWidth`.
+   * 
+   * If the game is currently configured to maintain its aspect ratio, its
+   * height also is updated to match the new width correctly.
+   * @param newWidth A new width to scale the game canvas to.
+   */
+  public scaleWidthTo(newWidth: number): void {
+    this.getGameCanvas().scaleWidthTo(newWidth);
+  }
+
+  /**
+   * This method scales the game canvas to have the passed `newHeight`.
+   * 
+   * If the game is currently configured to maintain its aspect ratio, its
+   * width also is updated to match the new height correctly.
+   * @param newHeight A new height to scale the game canvas to.
+   */
+  public scaleHeightTo(newHeight: number): void {
+    this.getGameCanvas().scaleHeightTo(newHeight);
+  }
+
+  /**
+   * This method scales the game canvas to have the passed `newWidth` and
+   * `newHeight`.
+   * 
+   * Note that, consequentially, this method makes it so the game stops
+   * maintaining its aspect ratio since you manually will pass new width and
+   * height values.
+   * @param newWidth A new width to scale the game canvas to.
+   */
+  public scaleTo(newWidth: number, newHeight: number): void {
+    this.getGameCanvas().scaleTo(newWidth, newHeight);
+  }
+
+  /**
+   * This method returns the game canvas to its original size set with the
+   * {@linkcode setWidth} and {@linkcode setHeight} methods.
+   */
+  public scaleToOriginalSize(): void {
+    this.getGameCanvas().scaleToOriginalSize();
+  }
+
+  /**
+   * This method uses inline CSS to set the background color of the game canvas,
+   * which by default is black.
+   * @param color The new game canvas color to set.
+   */
+  public setBackgroundColor(color: string): void {
+    this.getGameCanvas().setBackgroundColor(color);
+  }
+
+  public getBackgroundColor(): string {
+    return this.getGameCanvas().getBackgroundColor();
+  }
+
+  /**
+   * @returns A boolean indicating if the `root` element of the game is
+   * currently set to fullscreen.
+   */
+  public isFullscreen(): boolean {
+    return this.getGameCanvas().isFullscreen();
+  }
+
+  /**
+   * This method allows switching between fullscreen and nonfullscreen mode.
+   * 
+   * It's important to know that, because of the
+   * {@link [FullscreenAPI](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API)}
+   * used to implement this mechanism, this method only works properly if
+   * triggered by an user event (for example, a button click).
+   * That's explained in this link of the API documentation
+   * {@link [FullscreenAPI docs](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API/Guide)}.
+   */
+  public toggleFullscreen(): void {
+    this.getGameCanvas().toggleFullscreen();
   }
 
 }
+
+export default Game;

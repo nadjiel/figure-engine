@@ -21,7 +21,7 @@ interface GameCanvasOptions {
    * The `root` property refers to the HTML element that will be the parent of
    * the game `canvas`. If you don't set anything, the default value to this
    * property is the `document.body` when you do not pass your own `canvas`. If
-   * you do, then it's expected that you already set it to the DOM.
+   * you do, then it's expected that you have already set it to the DOM.
    */
   root?: HTMLElement;
 
@@ -462,3 +462,5 @@ export class GameCanvas {
   }
 
 }
+
+export default GameCanvas;
