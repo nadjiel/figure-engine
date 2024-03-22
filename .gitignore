@@ -1,3 +1,6 @@
+# Built tests folder
+spec-build
+
 # Logs
 logs
 *.log
