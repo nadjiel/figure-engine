@@ -1,1 +1,1 @@
-export { Figure } from "./figure";
+export { Game } from "./game.js";
