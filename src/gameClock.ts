@@ -1,4 +1,4 @@
-import { ArgumentError } from "./errors/argumentError.js";
+import { ArgumentError, CallError } from "./errors/index.js";
 
 type OnStep = () => void;
 
@@ -27,6 +27,8 @@ export class GameClock {
    * `requestAnimationFrame` calls that make it run. That's because to do
    * that the method {@linkcode stop} uses the `cancelAnimationFrame` method
    * which requires that id.
+   * 
+   * Once the game is stopped, this property is set to `0`.
    */
   private animationFrameHandler?: number;
 
@@ -315,20 +317,31 @@ export class GameClock {
   }
 
   /**
-   * This method stops the execution of the game if it is running.
-   * 
-   * If the game isn't running, this method does nothing.
+   * @returns A boolean indicating if the game clock is currently running.
    */
-  public stop(): void {
-    if(this.animationFrameHandler === undefined) return;
-
-    cancelAnimationFrame(this.animationFrameHandler);
+  public isRunning(): boolean {
+    return !!this.animationFrameHandler;
   }
 
   /**
-   * The `step` is passed as an argument to a `requestAnimationFrame` method
-   * each time it finishes executing forming a loop that starts with the
-   * {@linkcode start} method.
+   * This method stops the execution of the game if it is running.
+   * 
+   * @throws {CallError} If called with the game already stopped.
+   */
+  public stop(): void {
+    if(!this.animationFrameHandler) {
+      throw new CallError(`can't call stop on already stopped game`);
+    }
+
+    cancelAnimationFrame(this.animationFrameHandler);
+    this.animationFrameHandler = 0;
+  }
+
+  /**
+   * The `step` method is passed as an argument to a `requestAnimationFrame`
+   * method each time it finishes executing forming a loop that starts with the
+   * {@linkcode start} method. This loop finishes once the {@linkcode stop}
+   * method is called, making the game stop.
    * 
    * This method ensures that the {@linkcode onStep} method is executed each
    * frame of the game.
@@ -350,6 +363,8 @@ export class GameClock {
       this.previousTime = this.currentTime;
     }
 
+    if(!this.animationFrameHandler) return;
+
     this.animationFrameHandler = requestAnimationFrame(
       nextTimestamp => this.step(nextTimestamp)
     );
@@ -357,10 +372,17 @@ export class GameClock {
 
   /**
    * This method starts the game execution if it hasn't already started.
-   * If it has, this method does nothing;
+   * @throws {CallError} If this method is called with the game already in
+   * execution or after its execution is finished with the {@linkcode stop}
+   * method.
    */
   public start(): void {
-    if(this.animationFrameHandler !== undefined) return;
+    if(this.animationFrameHandler === 0) {
+      throw new CallError(`can't call start on game that has been stopped`);
+    }
+    if(this.animationFrameHandler !== undefined) {
+      throw new CallError(`can't call start on already running game`);
+    }
 
     this.startTime = document.timeline.currentTime as number;
     this.previousTime = this.startTime;
