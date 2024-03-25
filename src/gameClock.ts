@@ -25,7 +25,7 @@ export class GameClock {
    * 
    * This is useful for when you want to stop the game, cancelling the chain of
    * `requestAnimationFrame` calls that make it run. That's because to do
-   * that the method {@linkcode stop} uses the `cancelAnimationFrame` method
+   * that the method {@linkcode GameClock.stop} uses the `cancelAnimationFrame` method
    * which requires that id.
    * 
    * Once the game is stopped, this property is set to `0`.
@@ -159,7 +159,7 @@ export class GameClock {
    * to calculate a mean of in how many frames per second the game is actually
    * running.
    * 
-   * If you used the {@linkcode measureFps} method method passing `0` as its
+   * If you used the {@linkcode measureFps} method passing `0` as its
    * argument, or called the {@linkcode dontMeasureFps} method, then no FPS
    * measures have been collected and that means this method has no data to work
    * with and hence will return `undefined`.
@@ -225,7 +225,7 @@ export class GameClock {
   }
 
   /**
-   * @returns The time in miliseconds of the current frame was or `undefined` if
+   * @returns The time in miliseconds of the current frame or `undefined` if
    * the {@linkcode start} method wasn't called yet.
    */
   public getCurrentTime(): number | undefined {
@@ -317,7 +317,7 @@ export class GameClock {
   }
 
   /**
-   * @returns A boolean indicating if the game clock is currently running.
+   * @returns A boolean indicating if the game is currently running.
    */
   public isRunning(): boolean {
     return !!this.animationFrameHandler;
@@ -340,8 +340,8 @@ export class GameClock {
   /**
    * The `step` method is passed as an argument to a `requestAnimationFrame`
    * method each time it finishes executing forming a loop that starts with the
-   * {@linkcode start} method. This loop finishes once the {@linkcode stop}
-   * method is called, making the game stop.
+   * {@linkcode start} method. This loop finishes once the
+   * {@linkcode GameClock.stop} method is called, making the game stop.
    * 
    * This method ensures that the {@linkcode onStep} method is executed each
    * frame of the game.
@@ -373,7 +373,7 @@ export class GameClock {
   /**
    * This method starts the game execution if it hasn't already started.
    * @throws {CallError} If this method is called with the game already in
-   * execution or after its execution is finished with the {@linkcode stop}
+   * execution or after its execution is finished with the {@linkcode GameClock.stop}
    * method.
    */
   public start(): void {
