@@ -392,7 +392,7 @@ export class GameCanvas {
    * @param root The element that you want to be the parent of the game
    * `canvas`.
    */
-  public appendTo(root: HTMLElement): void {
+  private appendTo(root: HTMLElement): void {
     root.appendChild(this.getHTMLCanvas());
   }
 

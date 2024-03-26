@@ -1,4 +1,5 @@
 import { GameCanvas } from "./gameCanvas.js";
+import { GameClock } from "./gameClock.js";
 
 /**
  * This interface describes the possible properties the game configuration can
@@ -41,6 +42,12 @@ interface GameConfig {
    * If undefined, the default HD height `720` is set.
    */
   height?: number;
+
+  /**
+   * This property defines in how many frames per second the game should run.
+   */
+  fps?: number;
+
 }
 
 /**
@@ -55,7 +62,8 @@ interface GameConfig {
  * 
  * By default, this class will create a black HTML `canvas` element with the
  * default width and height set to `1280` by `720` and append it to the `body`
- * element of the DOM so it can be displayed.
+ * element of the DOM so it can be displayed. Also, the default FPS of the game
+ * will be `30` frames per second.
  * 
  * @version 0.0.1
  * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
@@ -69,38 +77,42 @@ export class Game {
   private gameCanvas: GameCanvas;
 
   /**
+   * The `gameClock` property stores an instance to a {@linkcode GameClock}
+   * used to control the game flow.
+   */
+  private gameClock: GameClock;
+
+  /**
    * @param config An object specifying configurations for this game, or
    * `undefined`, which makes the game use the default configurations.
    */
   constructor(config?: GameConfig) {
     if(config === undefined) config = {};
-    let { canvas, root, width, height } = config;
+    let { canvas, root, width, height, fps } = config;
     
     this.gameCanvas = new GameCanvas({ canvas, root });
     if(width !== undefined) this.gameCanvas.setWidth(width);
     if(height !== undefined) this.gameCanvas.setHeight(height);
-  }
 
-  /**
-   * @returns The {@link GameCanvas} instance used to control visual aspects of
-   * the game such as aspect ratio, fullscreen and size.
-   */
-  public getGameCanvas(): GameCanvas {
-    return this.gameCanvas;
+    if(fps === undefined) fps = 30;
+    this.gameClock = new GameClock(fps, () => {
+      this.update();
+      this.draw(this.getContext());
+    });
   }
 
   /**
    * @returns The HTML `canvas` element used to display the game.
    */
   public getHTMLCanvas(): HTMLCanvasElement {
-    return this.getGameCanvas().getHTMLCanvas();
+    return this.gameCanvas.getHTMLCanvas();
   }
 
   /**
    * @returns The `canvas` rendering context used to render the game.
    */
   public getContext(): CanvasRenderingContext2D {
-    return this.getGameCanvas().getContext();
+    return this.gameCanvas.getContext();
   }
 
   /**
@@ -123,7 +135,7 @@ export class Game {
    * you will manually pass a new width and height.
    */
   public doMaintainAspectRatio(): void {
-    this.getGameCanvas().doMaintainAspectRatio();
+    this.gameCanvas.doMaintainAspectRatio();
   }
 
   /**
@@ -136,7 +148,7 @@ export class Game {
    * `originalHeight` don't have an equivalent aspect ratio to the screen.
    */
   public dontMaintainAspectRatio(): void {
-    this.getGameCanvas().dontMaintainAspectRatio();
+    this.gameCanvas.dontMaintainAspectRatio();
   }
 
   /**
@@ -146,7 +158,7 @@ export class Game {
    * the aspect ratio.
    */
   public isMaintainingAspectRatio(): boolean {
-    return this.getGameCanvas().isMaintainingAspectRatio();
+    return this.gameCanvas.isMaintainingAspectRatio();
   }
 
   /**
@@ -159,7 +171,7 @@ export class Game {
    * the game.
    */
   public getAspectRatio(): number {
-    return this.getGameCanvas().getAspectRatio();
+    return this.gameCanvas.getAspectRatio();
   }
 
   /**
@@ -172,7 +184,7 @@ export class Game {
    * @param width The new width to set to the game.
    */
   public setWidth(width: number): void {
-    this.getGameCanvas().setWidth(width);
+    this.gameCanvas.setWidth(width);
   }
 
   /**
@@ -186,7 +198,7 @@ export class Game {
    * @param height The new height to set to the game.
    */
   public setHeight(height: number): void {
-    this.getGameCanvas().setHeight(height);
+    this.gameCanvas.setHeight(height);
   }
 
   /**
@@ -202,7 +214,7 @@ export class Game {
    * @param height The new height to set to the game.
    */
   public setSize(width: number, height: number): void {
-    this.getGameCanvas().setSize(width, height);
+    this.gameCanvas.setSize(width, height);
   }
 
   /**
@@ -210,7 +222,7 @@ export class Game {
    * method.
    */
   public getOriginalWidth(): number {
-    return this.getGameCanvas().getOriginalWidth();
+    return this.gameCanvas.getOriginalWidth();
   }
 
   /**
@@ -218,7 +230,7 @@ export class Game {
    * method.
    */
   public getOriginalHeight(): number {
-    return this.getGameCanvas().getOriginalHeight();
+    return this.gameCanvas.getOriginalHeight();
   }
 
   /**
@@ -226,7 +238,7 @@ export class Game {
    * consideration.
    */
   public getWidth(): number {
-    return this.getGameCanvas().getWidth();
+    return this.gameCanvas.getWidth();
   }
 
   /**
@@ -234,7 +246,7 @@ export class Game {
    * consideration.
    */
   public getHeight(): number {
-    return this.getGameCanvas().getHeight();
+    return this.gameCanvas.getHeight();
   }
 
   /**
@@ -245,7 +257,7 @@ export class Game {
    * @param newWidth A new width to scale the game canvas to.
    */
   public scaleWidthTo(newWidth: number): void {
-    this.getGameCanvas().scaleWidthTo(newWidth);
+    this.gameCanvas.scaleWidthTo(newWidth);
   }
 
   /**
@@ -256,7 +268,7 @@ export class Game {
    * @param newHeight A new height to scale the game canvas to.
    */
   public scaleHeightTo(newHeight: number): void {
-    this.getGameCanvas().scaleHeightTo(newHeight);
+    this.gameCanvas.scaleHeightTo(newHeight);
   }
 
   /**
@@ -269,7 +281,7 @@ export class Game {
    * @param newWidth A new width to scale the game canvas to.
    */
   public scaleTo(newWidth: number, newHeight: number): void {
-    this.getGameCanvas().scaleTo(newWidth, newHeight);
+    this.gameCanvas.scaleTo(newWidth, newHeight);
   }
 
   /**
@@ -277,7 +289,7 @@ export class Game {
    * {@linkcode setWidth} and {@linkcode setHeight} methods.
    */
   public scaleToOriginalSize(): void {
-    this.getGameCanvas().scaleToOriginalSize();
+    this.gameCanvas.scaleToOriginalSize();
   }
 
   /**
@@ -286,11 +298,37 @@ export class Game {
    * @param color The new game canvas color to set.
    */
   public setBackgroundColor(color: string): void {
-    this.getGameCanvas().setBackgroundColor(color);
+    this.gameCanvas.setBackgroundColor(color);
   }
 
   public getBackgroundColor(): string {
-    return this.getGameCanvas().getBackgroundColor();
+    return this.gameCanvas.getBackgroundColor();
+  }
+
+  /**
+   * @returns The HTML element that is the parent of the `canvas` element that
+   * displays the game.
+   */
+  public getRoot(): HTMLElement {
+    return this.gameCanvas.getRoot();
+  }
+
+  /**
+   * @returns The width of the HTML element parent of the game canvas.
+   */
+  public getRootWidth(): number {
+    return this.gameCanvas.getRootWidth();
+  }
+
+  /**
+   * @returns The height of the HTML element parent of the game canvas.
+   */
+  public getRootHeight(): number {
+    return this.gameCanvas.getRootHeight();
+  }
+
+  public fitRoot(): void {
+    this.gameCanvas.fitRoot();
   }
 
   /**
@@ -298,7 +336,7 @@ export class Game {
    * currently set to fullscreen.
    */
   public isFullscreen(): boolean {
-    return this.getGameCanvas().isFullscreen();
+    return this.gameCanvas.isFullscreen();
   }
 
   /**
@@ -312,7 +350,191 @@ export class Game {
    * {@link [FullscreenAPI docs](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API/Guide)}.
    */
   public toggleFullscreen(): void {
-    this.getGameCanvas().toggleFullscreen();
+    this.gameCanvas.toggleFullscreen();
+  }
+
+  /**
+   * Sets the in how many frames per second the game should run.
+   * @param fps The FPS in which the game should run. This parameter only
+   * accepts positive values, since a negative FPS doesn't make sense.
+   * @throws { ArgumentError } If the `fps` argument is negative.
+   */
+  public setFps(fps: number): void {
+    this.gameClock.setFps(fps);
+  }
+
+  /**
+   * @returns The FPS in which the game tries to run.
+   */
+  public getFps(): number {
+    return this.gameClock.getFps();
+  }
+
+  /**
+   * This method uses a set of FPS measures collected in the most recent frames
+   * to calculate a mean of in how many frames per second the game is actually
+   * running.
+   * 
+   * If you used the {@linkcode measureFps} method passing `0` as its
+   * argument, or called the {@linkcode dontMeasureFps} method, then no FPS
+   * measures have been collected and that means this method has no data to work
+   * with and hence will return `undefined`.
+   * @returns The FPS in which the game is actually running or `undefined` if
+   * there is no FPS data stored.
+   */
+  public getActualFps(): number | undefined {
+    return this.gameClock.getActualFps();
+  }
+
+  /**
+   * With this method you can determine if you want the FPS of the latest frames
+   * to be stored and in what amount. That's useful if you want to be able to
+   * know the actual frame rate in which the game is running.
+   * 
+   * By default the game always stores the last `60` frames FPS so that you can
+   * use the {@linkcode getActualFps} method to know its actual framerate, but
+   * the greater the amount of FPS stored, the more precise will be the FPS
+   * measurement that can be obtained with the {@linkcode getActualFps} method.
+   * 
+   * Passing a `amount` of `0` to this method is the equivalent of calling the
+   * {@linkcode dontMeasureFps} method.
+   * 
+   * Lastly, if you pass a floating point `amount` it will be rounded using the
+   * `Math.round` method, since the amount can only be an integer.
+   * 
+   * @param amount The amount of the latest frames FPS you want to keep storing.
+   * @throws {ArgumentError} If you pass a negative `amount`.
+   */
+  public measureFps(amount: number): void {
+    this.gameClock.measureFps(amount);
+  }
+
+  /**
+   * Use this method if you don't want to store FPS metrics.
+   * 
+   * Be aware that doing so will make it impossible to know the actual framerate
+   * with the {@linkcode getActualFps} method.
+   */
+  public dontMeasureFps(): void {
+    this.gameClock.dontMeasureFps();
+  }
+
+  /**
+   * @returns The id of the current frame (starting in `1` for the first frame)
+   * or `0` if the {@linkcode start} method wasn't called yet.
+   */
+  public getCurrentFrame(): number {
+    return this.gameClock.getCurrentFrame();
+  }
+
+  /**
+   * @returns The time in miliseconds when the {@linkcode start} method was
+   * executed or `undefined` if it wasn't called yet.
+   */
+  public getStartTime(): number | undefined {
+    return this.gameClock.getStartTime();
+  }
+
+  /**
+   * @returns The time in miliseconds of the current frame or `undefined` if
+   * the {@linkcode start} method wasn't called yet.
+   */
+  public getCurrentTime(): number | undefined {
+    return this.gameClock.getCurrentTime();
+  }
+
+  /**
+   * This method uses the `requestAnimationFrame` method a certain amount of
+   * times to try to find out what's the refresh rate of the monitor running the
+   * game based on the time interval between each call.
+   * 
+   * The final result is the mean between each call interval and the total
+   * amount of calls, corresponding to the approximate refresh rate.
+   * 
+   * Note that if you pass a floating point as an argument, it will be rounded
+   * using the `Math.round` method.
+   * @param framesToTest This determines how many times the
+   * `requestAnimationFrame` method will be called to calculate what's the
+   * interval between each call.
+   * @returns A promise that resolves to the approximate refresh rate of the
+   * monitor or rejects if the `framesToTest` argument is less or equal to `0`.
+   */
+  public getRefreshRate(framesToTest: number): Promise<number> {
+    return this.gameClock.getRefreshRate(framesToTest);
+  }
+
+  /**
+   * @returns A boolean indicating if the game is currently running.
+   */
+  public isRunning(): boolean {
+    return this.gameClock.isRunning();
+  }
+
+  /**
+   * This method starts the game execution if it hasn't already started.
+   * 
+   * It triggers the {@linkcode onStart} method, which you can use to define
+   * what happens once the game starts.
+   * @throws {CallError} If this method is called with the game already in
+   * execution or after its execution is finished with the {@linkcode Game.stop}
+   * method.
+   */
+  public start(): void {
+    this.onStart();
+
+    this.gameClock.start();
+  }
+
+  /**
+   * The `update` method executes every frame of the game before the
+   * {@linkcode draw} method.
+   * 
+   * It triggers the {@linkcode onUpdate} method, which you can use to define
+   * what happens every frame of the game.
+   */
+  private update(): void {
+    this.onUpdate();
+  }
+
+  /**
+   * The `draw` method executes every frame of the game after the
+   * {@linkcode update} method.
+   * 
+   * It triggers the {@linkcode onDraw} method, which you can use to define
+   * what is drawn every frame of the game.
+   * @param ctx The canvas rendering context used to draw with.
+   */
+  private draw(ctx: CanvasRenderingContext2D): void {
+    this.onDraw(ctx);
+  }
+
+  /**
+   * This method stops the execution of the game if it is running.
+   * 
+   * It triggers the {@linkcode onStop} method, which you can use to define
+   * what happens when the game stops.
+   * @throws {CallError} If called with the game already stopped.
+   */
+  public stop(): void {
+    this.onStop();
+
+    this.gameClock.stop();
+  }
+
+  public onStart(): void {
+    
+  }
+
+  public onUpdate(): void {
+    
+  }
+
+  public onDraw(ctx: CanvasRenderingContext2D): void {
+    
+  }
+
+  public onStop(): void {
+
   }
 
 }

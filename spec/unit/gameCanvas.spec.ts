@@ -29,6 +29,8 @@ describe("GameCanvas class", () => {
 
   it("Should accept a predefined canvas", () => {
     const canvasElement = document.createElement("canvas");
+    document.body.appendChild(canvasElement);
+    const canvasRoot = canvasElement.parentElement;
     const canvasElementCtx = canvasElement.getContext("2d")!;
     const defaultWidth = 1280;
     const defaultHeight = 720;
@@ -40,10 +42,8 @@ describe("GameCanvas class", () => {
 
     const gameCanvas = new GameCanvas({ canvas: canvasElement });
 
-    spyOn(gameCanvas, "appendTo").and.callThrough();
-
     expect(gameCanvas.getHTMLCanvas()).toBe(canvasElement);
-    expect(gameCanvas.appendTo).not.toHaveBeenCalled();
+    expect(gameCanvas.getRoot()).toBe(canvasRoot!);
     expect(gameCanvas.getContext()).toEqual(canvasElementCtx);
     expect(gameCanvas.getWidth()).toBe(defaultWidth);
     expect(gameCanvas.getHeight()).toBe(defaultHeight);
@@ -190,19 +190,6 @@ describe("GameCanvas class", () => {
       expect(gameCanvas.getOriginalHeight()).toBe(defaultHeight);
       expect(gameCanvas.getWidth()).toBe(newWidth);
       expect(gameCanvas.getHeight()).toBe(newHeight);
-    });
-
-  });
-
-  describe("appendTo method", () => {
-
-    it("Should append canvas to the specified element", () => {
-      const div = document.createElement("div");
-      const gameCanvas = new GameCanvas();
-
-      gameCanvas.appendTo(div);
-
-      expect(gameCanvas.getHTMLCanvas().parentElement).toBe(div);
     });
 
   });
