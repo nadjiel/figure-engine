@@ -102,25 +102,17 @@ export class Game {
   }
 
   /**
-   * @returns The {@link GameCanvas} instance used to control visual aspects of
-   * the game such as aspect ratio, fullscreen and size.
-   */
-  public getGameCanvas(): GameCanvas {
-    return this.gameCanvas;
-  }
-
-  /**
    * @returns The HTML `canvas` element used to display the game.
    */
   public getHTMLCanvas(): HTMLCanvasElement {
-    return this.getGameCanvas().getHTMLCanvas();
+    return this.gameCanvas.getHTMLCanvas();
   }
 
   /**
    * @returns The `canvas` rendering context used to render the game.
    */
   public getContext(): CanvasRenderingContext2D {
-    return this.getGameCanvas().getContext();
+    return this.gameCanvas.getContext();
   }
 
   /**
@@ -143,7 +135,7 @@ export class Game {
    * you will manually pass a new width and height.
    */
   public doMaintainAspectRatio(): void {
-    this.getGameCanvas().doMaintainAspectRatio();
+    this.gameCanvas.doMaintainAspectRatio();
   }
 
   /**
@@ -156,7 +148,7 @@ export class Game {
    * `originalHeight` don't have an equivalent aspect ratio to the screen.
    */
   public dontMaintainAspectRatio(): void {
-    this.getGameCanvas().dontMaintainAspectRatio();
+    this.gameCanvas.dontMaintainAspectRatio();
   }
 
   /**
@@ -166,7 +158,7 @@ export class Game {
    * the aspect ratio.
    */
   public isMaintainingAspectRatio(): boolean {
-    return this.getGameCanvas().isMaintainingAspectRatio();
+    return this.gameCanvas.isMaintainingAspectRatio();
   }
 
   /**
@@ -179,7 +171,7 @@ export class Game {
    * the game.
    */
   public getAspectRatio(): number {
-    return this.getGameCanvas().getAspectRatio();
+    return this.gameCanvas.getAspectRatio();
   }
 
   /**
@@ -192,7 +184,7 @@ export class Game {
    * @param width The new width to set to the game.
    */
   public setWidth(width: number): void {
-    this.getGameCanvas().setWidth(width);
+    this.gameCanvas.setWidth(width);
   }
 
   /**
@@ -206,7 +198,7 @@ export class Game {
    * @param height The new height to set to the game.
    */
   public setHeight(height: number): void {
-    this.getGameCanvas().setHeight(height);
+    this.gameCanvas.setHeight(height);
   }
 
   /**
@@ -222,7 +214,7 @@ export class Game {
    * @param height The new height to set to the game.
    */
   public setSize(width: number, height: number): void {
-    this.getGameCanvas().setSize(width, height);
+    this.gameCanvas.setSize(width, height);
   }
 
   /**
@@ -230,7 +222,7 @@ export class Game {
    * method.
    */
   public getOriginalWidth(): number {
-    return this.getGameCanvas().getOriginalWidth();
+    return this.gameCanvas.getOriginalWidth();
   }
 
   /**
@@ -238,7 +230,7 @@ export class Game {
    * method.
    */
   public getOriginalHeight(): number {
-    return this.getGameCanvas().getOriginalHeight();
+    return this.gameCanvas.getOriginalHeight();
   }
 
   /**
@@ -246,7 +238,7 @@ export class Game {
    * consideration.
    */
   public getWidth(): number {
-    return this.getGameCanvas().getWidth();
+    return this.gameCanvas.getWidth();
   }
 
   /**
@@ -254,7 +246,7 @@ export class Game {
    * consideration.
    */
   public getHeight(): number {
-    return this.getGameCanvas().getHeight();
+    return this.gameCanvas.getHeight();
   }
 
   /**
@@ -265,7 +257,7 @@ export class Game {
    * @param newWidth A new width to scale the game canvas to.
    */
   public scaleWidthTo(newWidth: number): void {
-    this.getGameCanvas().scaleWidthTo(newWidth);
+    this.gameCanvas.scaleWidthTo(newWidth);
   }
 
   /**
@@ -276,7 +268,7 @@ export class Game {
    * @param newHeight A new height to scale the game canvas to.
    */
   public scaleHeightTo(newHeight: number): void {
-    this.getGameCanvas().scaleHeightTo(newHeight);
+    this.gameCanvas.scaleHeightTo(newHeight);
   }
 
   /**
@@ -289,7 +281,7 @@ export class Game {
    * @param newWidth A new width to scale the game canvas to.
    */
   public scaleTo(newWidth: number, newHeight: number): void {
-    this.getGameCanvas().scaleTo(newWidth, newHeight);
+    this.gameCanvas.scaleTo(newWidth, newHeight);
   }
 
   /**
@@ -297,7 +289,7 @@ export class Game {
    * {@linkcode setWidth} and {@linkcode setHeight} methods.
    */
   public scaleToOriginalSize(): void {
-    this.getGameCanvas().scaleToOriginalSize();
+    this.gameCanvas.scaleToOriginalSize();
   }
 
   /**
@@ -306,11 +298,37 @@ export class Game {
    * @param color The new game canvas color to set.
    */
   public setBackgroundColor(color: string): void {
-    this.getGameCanvas().setBackgroundColor(color);
+    this.gameCanvas.setBackgroundColor(color);
   }
 
   public getBackgroundColor(): string {
-    return this.getGameCanvas().getBackgroundColor();
+    return this.gameCanvas.getBackgroundColor();
+  }
+
+  /**
+   * @returns The HTML element that is the parent of the `canvas` element that
+   * displays the game.
+   */
+  public getRoot(): HTMLElement {
+    return this.gameCanvas.getRoot();
+  }
+
+  /**
+   * @returns The width of the HTML element parent of the game canvas.
+   */
+  public getRootWidth(): number {
+    return this.gameCanvas.getRootWidth();
+  }
+
+  /**
+   * @returns The height of the HTML element parent of the game canvas.
+   */
+  public getRootHeight(): number {
+    return this.gameCanvas.getRootHeight();
+  }
+
+  public fitRoot(): void {
+    this.gameCanvas.fitRoot();
   }
 
   /**
@@ -318,7 +336,7 @@ export class Game {
    * currently set to fullscreen.
    */
   public isFullscreen(): boolean {
-    return this.getGameCanvas().isFullscreen();
+    return this.gameCanvas.isFullscreen();
   }
 
   /**
@@ -332,7 +350,7 @@ export class Game {
    * {@link [FullscreenAPI docs](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API/Guide)}.
    */
   public toggleFullscreen(): void {
-    this.getGameCanvas().toggleFullscreen();
+    this.gameCanvas.toggleFullscreen();
   }
 
   /**
