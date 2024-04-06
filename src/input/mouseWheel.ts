@@ -40,7 +40,8 @@ export class MouseWheel {
 
   /**
    * This method updates the `rotation` property to keep it consistent in a way
-   * that each rotation is only stored for the duration of `1` frame.
+   * that each rotation is only stored for the duration of `1` frame. For that,
+   * it is executed every frame.
    */
   public update(): void {
     if(this.isRotating()) this.rotatingFrames++;

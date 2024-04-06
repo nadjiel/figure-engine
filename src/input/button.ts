@@ -107,7 +107,7 @@ export class Button {
   }
 
   /**
-   * The `update` method should be executed every frame to update the button's
+   * The `update` method is executed every frame to update the button's
    * `pressed` and `released` properties making them register presses and
    * releases at maximum only one frame per time.
    */

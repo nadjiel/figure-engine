@@ -56,7 +56,7 @@ export class KeyboardInput {
   }
 
   /**
-   * This method should be called every frame to update all the keyboard
+   * This method is called every frame to update all the keyboard
    * buttons' information stored in this class, so that properties like
    * `pressed` and `released` don't stay inconsistent.
    */

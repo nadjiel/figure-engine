@@ -112,7 +112,7 @@ export class MouseInput {
   }
 
   /**
-   * This method should be called every frame to update all the mouse
+   * This method is called every frame to update all the mouse
    * information stored in this class, so that there isn't inconsistancy with
    * the stored values.
    */
