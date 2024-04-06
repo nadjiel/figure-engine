@@ -74,8 +74,6 @@ export class MouseInput {
    * @param e The event received from the event listener.
    */
   private onmousedown(e: MouseEvent): void {
-    e.preventDefault();
-
     if(this.buttons[e.button] === undefined) {
       this.buttons[e.button] = new Button();
     }

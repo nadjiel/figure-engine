@@ -119,11 +119,16 @@ export class GameCanvas {
   /**
    * The `createCanvas` method simply uses the
    * {@link [DOM](https://developer.mozilla.org/pt-BR/docs/Web/API/Document_Object_Model)}
-   * to create and return a new `canvas` element.
+   * to create and return a new `canvas` element with some necessary
+   * configurations for event listening.
    * @returns A new HTML `canvas` element.
    */
   private createCanvas(): HTMLCanvasElement {
-    return document.createElement("canvas");
+    const canvas = document.createElement("canvas");
+    canvas.tabIndex = 0;
+    canvas.style.outline = "none";
+
+    return canvas;
   }
 
   /**
