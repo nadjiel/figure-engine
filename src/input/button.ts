@@ -1,17 +1,4 @@
 /**
- * The `ButtonGroup` interface is useful to represent a group of buttons, like
- * the ones from a keyboard, a mouse, or a gamepad.
- * 
- * @version 0.2.0
- * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
- */
-export interface ButtonGroup {
-
-  [ code: string ]: Button;
-
-}
-
-/**
  * The `Button` class has useful methods for representing an input button state.
  * The class helps to keep track of button properties such as if it is pressed,
  * held or released.

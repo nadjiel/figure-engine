@@ -1,4 +1,4 @@
-import { ButtonGroup, Button } from "./button.js";
+import { ButtonGroup } from "./buttonGroup.js";
 import { MouseWheel } from "./mouseWheel.js";
 
 /**
@@ -34,7 +34,7 @@ export class MouseInput {
    * This property stores information about the mouse buttons that the user
    * interacts with.
    */
-  private buttons: ButtonGroup = {};
+  private buttons = new ButtonGroup();
 
   /**
    * This property stores information about the mouse wheel.
@@ -74,11 +74,11 @@ export class MouseInput {
    * @param e The event received from the event listener.
    */
   private onmousedown(e: MouseEvent): void {
-    if(this.buttons[e.button] === undefined) {
-      this.buttons[e.button] = new Button();
+    if(this.buttons.get(e.button) === undefined) {
+      this.buttons.add(e.button);
     }
-    
-    this.buttons[e.button].downEvent(e);
+
+    this.buttons.get(e.button)!.downEvent(e);
   }
   
   /**
@@ -90,11 +90,11 @@ export class MouseInput {
   private onmouseup(e: MouseEvent): void {
     e.preventDefault();
 
-    if(this.buttons[e.button] === undefined) {
-      this.buttons[e.button] = new Button();
+    if(this.buttons.get(e.button) === undefined) {
+      this.buttons.add(e.button);
     }
 
-    this.buttons[e.button].upEvent(e);
+    this.buttons.get(e.button)!.upEvent(e);
   }
 
   /**
@@ -115,10 +115,7 @@ export class MouseInput {
    * the stored values.
    */
   public update(): void {
-    for(const code in this.buttons) {
-      this.buttons[code].update();
-    }
-
+    this.buttons.update();
     this.wheel.update();
   }
 
@@ -157,9 +154,7 @@ export class MouseInput {
    * being held.
    */
   public getHeldTime(code: number): number {
-    if(this.buttons[code] === undefined) return 0;
-
-    return this.buttons[code].getHeldTime();
+    return this.buttons.getHeldTime(code);
   }
 
   /**
@@ -170,9 +165,7 @@ export class MouseInput {
    * @returns A `boolean` indicating if the button was pressed or not.
    */
   public isPressed(code: number): boolean {
-    if(this.buttons[code] === undefined) return false;
-
-    return this.buttons[code].isPressed();
+    return this.buttons.isPressed(code);
   }
 
   /**
@@ -183,9 +176,7 @@ export class MouseInput {
    * @returns A `boolean` indicating if the button is being held or not.
    */
   public isHeld(code: number): boolean {
-    if(this.buttons[code] === undefined) return false;
-
-    return this.buttons[code].isHeld();
+    return this.buttons.isHeld(code);
   }
 
   /**
@@ -196,9 +187,7 @@ export class MouseInput {
    * @returns A `boolean` indicating if the button was released or not.
    */
   public isReleased(code: number): boolean {
-    if(this.buttons[code] === undefined) return false;
-
-    return this.buttons[code].isReleased();
+    return this.buttons.isReleased(code);
   }
 
   /**

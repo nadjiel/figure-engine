@@ -1,4 +1,4 @@
-import { ButtonGroup, Button } from "./button.js";
+import { ButtonGroup } from "./buttonGroup.js";
 
 /**
  * The `KeyboardInput` class allows keeping track of the input coming from the
@@ -13,7 +13,7 @@ export class KeyboardInput {
    * This property stores a group of buttons representing the keys with which
    * the user has interacted so far.
    */
-  private keys: ButtonGroup = {};
+  private keys = new ButtonGroup();
 
   /**
    * @param canvas The game canvas which will listen for keyboard inputs.
@@ -32,11 +32,11 @@ export class KeyboardInput {
   private onkeydown(e: KeyboardEvent): void {
     e.preventDefault();
 
-    if(this.keys[e.code] === undefined) {
-      this.keys[e.code] = new Button();
+    if(this.keys.get(e.code) === undefined) {
+      this.keys.add(e.code);
     }
-    
-    this.keys[e.code].downEvent(e);
+
+    this.keys.get(e.code)!.downEvent(e);
   }
   
   /**
@@ -48,11 +48,11 @@ export class KeyboardInput {
   private onkeyup(e: KeyboardEvent): void {
     e.preventDefault();
 
-    if(this.keys[e.code] === undefined) {
-      this.keys[e.code] = new Button();
+    if(this.keys.get(e.code) === undefined) {
+      this.keys.add(e.code);
     }
-    
-    this.keys[e.code].upEvent(e);
+
+    this.keys.get(e.code)!.upEvent(e);
   }
 
   /**
@@ -61,9 +61,7 @@ export class KeyboardInput {
    * `pressed` and `released` don't stay inconsistent.
    */
   public update(): void {
-    for(const code in this.keys) {
-      this.keys[code].update();
-    }
+    this.keys.update();
   }
 
   /**
@@ -74,9 +72,7 @@ export class KeyboardInput {
    * held.
    */
   public getHeldTime(code: string): number {
-    if(this.keys[code] === undefined) return 0;
-
-    return this.keys[code].getHeldTime();
+    return this.keys.getHeldTime(code);
   }
 
   /**
@@ -86,9 +82,7 @@ export class KeyboardInput {
    * @returns A `boolean` indicating if the key was pressed or not.
    */
   public isPressed(code: string): boolean {
-    if(this.keys[code] === undefined) return false;
-
-    return this.keys[code].isPressed();
+    return this.keys.isPressed(code);
   }
 
   /**
@@ -98,9 +92,7 @@ export class KeyboardInput {
    * @returns A `boolean` indicating if the key is being held or not.
    */
   public isHeld(code: string): boolean {
-    if(this.keys[code] === undefined) return false;
-
-    return this.keys[code].isHeld();
+    return this.keys.isHeld(code);
   }
 
   /**
@@ -110,9 +102,7 @@ export class KeyboardInput {
    * @returns A `boolean` indicating if the key was released or not.
    */
   public isReleased(code: string): boolean {
-    if(this.keys[code] === undefined) return false;
-
-    return this.keys[code].isReleased();
+    return this.keys.isReleased(code);
   }
 
 }
