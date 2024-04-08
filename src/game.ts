@@ -1,5 +1,8 @@
 import { GameCanvas } from "./gameCanvas.js";
 import { GameClock } from "./gameClock.js";
+import { GameInput } from "./input/gameInput.js";
+import { KeyboardInput } from "./input/keyboardInput.js";
+import { MouseInput } from "./input/mouseInput.js";
 
 /**
  * This interface describes the possible properties the game configuration can
@@ -83,6 +86,12 @@ export class Game {
   private gameClock: GameClock;
 
   /**
+   * This property stores an instance to a {@linkcode GameInput}
+   * used to monitor the game input.
+   */
+  private gameInput: GameInput;
+
+  /**
    * @param config An object specifying configurations for this game, or
    * `undefined`, which makes the game use the default configurations.
    */
@@ -99,6 +108,8 @@ export class Game {
       this.update();
       this.draw(this.getContext());
     });
+
+    this.gameInput = new GameInput(this.getHTMLCanvas());
   }
 
   /**
@@ -471,6 +482,20 @@ export class Game {
   }
 
   /**
+   * @returns An object representing the input from the keyboard.
+   */
+  public getKeyboardInput(): KeyboardInput {
+    return this.gameInput.getKeyboard();
+  }
+
+  /**
+   * @returns An object representing the input from the mouse.
+   */
+  public getMouseInput(): MouseInput {
+    return this.gameInput.getMouse();
+  }
+
+  /**
    * This method starts the game execution if it hasn't already started.
    * 
    * It triggers the {@linkcode onStart} method, which you can use to define
@@ -489,10 +514,12 @@ export class Game {
    * The `update` method executes every frame of the game before the
    * {@linkcode draw} method.
    * 
-   * It triggers the {@linkcode onUpdate} method, which you can use to define
-   * what happens every frame of the game.
+   * It updates the input informaion and then triggers the {@linkcode onUpdate}
+   * method, which you can use to define what happens every frame of the game.
    */
   private update(): void {
+    this.gameInput.update();
+
     this.onUpdate();
   }
 
