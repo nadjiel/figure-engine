@@ -1,4 +1,4 @@
-import { Game } from "../../dist/game.js";
+import { Game } from "../../../dist/main/game.js";
 
 describe("Game class", () => {
 

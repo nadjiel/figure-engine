@@ -1,4 +1,4 @@
-import { GameCanvas } from "../../dist/gameCanvas.js";
+import { GameCanvas } from "../../../dist/main/gameCanvas.js";
 
 describe("GameCanvas class", () => {
 

@@ -1,9 +1,9 @@
 import { GameIterable } from "./gameIterable.js";
 import { GameCanvas } from "./gameCanvas.js";
 import { GameClock } from "./gameClock.js";
-import { GameInput } from "./input/gameInput.js";
-import { KeyboardInput } from "./input/keyboardInput.js";
-import { MouseInput } from "./input/mouseInput.js";
+import { GameInput } from "../input/gameInput.js";
+import { KeyboardInput } from "../input/keyboardInput.js";
+import { MouseInput } from "../input/mouseInput.js";
 
 /**
  * This interface describes the possible properties the game configuration can

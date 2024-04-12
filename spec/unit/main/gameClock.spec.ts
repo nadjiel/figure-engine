@@ -1,4 +1,4 @@
-import { GameClock } from "../../dist/gameClock.js";
+import { GameClock } from "../../../dist/main/gameClock.js";
 
 describe("GameClock class", () => {
 
