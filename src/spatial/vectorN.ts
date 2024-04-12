@@ -1,3 +1,5 @@
+import { ArgumentError } from "../errors/argumentError.js";
+
 /**
  * The `VectorN` class represents a generic sized vector that can't change it's
  * dimension once created.
@@ -25,11 +27,29 @@ export class VectorN {
   }
 
   /**
-   * Sets the component identified by the given index to the new value.
+   * Checks if a component is inside this vector (is in the `[0,
+   * <vectorDimension>)` interval).
+   * If it isn't, throws an error.
+   * @param component The component to check.
+   * @throws {ArgumentError} If the passed `component` is outside of the vector.
+   */
+  private checkComponent(component: number): void {
+    if(component < 0 || component >= this.getDimension()) {
+      throw new ArgumentError(`component must be inside of vector [0, ${this.getDimension()}[ (received ${component})`);
+    }
+  }
+
+  /**
+   * Sets the component identified by the given `component` to the new value or throws
+   * an error if you try to set a component outside of the vector.
    * @param component The index of the component you want to set.
    * @param value The new value you want to set for the component.
+   * @throws {ArgumentError} If you pass a `component` outside of the vector
+   * (not in the `[0, <vectorDimension>)` interval)
    */
   public setComponent(component: number, value: number) {
+    this.checkComponent(component);
+
     this.components[component] = value;
   }
 
@@ -44,11 +64,24 @@ export class VectorN {
   }
 
   /**
+   * Returns the component corresponding to the passed index or throws an error
+   * if you try to access a component outside of the vector.
    * @param component The index of the component you want to get.
    * @returns The component identified by the given index.
+   * @throws {ArgumentError} If the `component` looked for is outside of the
+   * vector (isn't in `[0, <vectorDimension>)` interval)
    */
   public getComponent(component: number): number {
+    this.checkComponent(component);
+
     return this.components[component];
+  }
+
+  /**
+   * @returns The dimension of this vector (it's amount of components).
+   */
+  public getDimension(): number {
+    return this.components.length;
   }
 
   /**
