@@ -3,6 +3,9 @@
  * It has methods for describing the class behavior on the iteration start,
  * update, draw and stop and also methods for the user to define what happens in
  * such events.
+ * 
+ * @version 0.3.0
+ * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
  */
 export interface GameIterable {
 
