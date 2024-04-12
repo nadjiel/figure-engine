@@ -1,3 +1,4 @@
+import { GameIterable } from "./gameIterable.js";
 import { GameCanvas } from "./gameCanvas.js";
 import { GameClock } from "./gameClock.js";
 import { GameInput } from "./input/gameInput.js";
@@ -71,7 +72,7 @@ interface GameConfig {
  * @version 0.0.1
  * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
  */
-export class Game {
+export class Game implements GameIterable {
 
   /**
    * The `gameCanvas` property stores an instance to a {@linkcode GameCanvas}
@@ -517,7 +518,7 @@ export class Game {
    * It updates the input informaion and then triggers the {@linkcode onUpdate}
    * method, which you can use to define what happens every frame of the game.
    */
-  private update(): void {
+  public update(): void {
     this.gameInput.update();
 
     this.onUpdate();
@@ -531,7 +532,7 @@ export class Game {
    * what is drawn every frame of the game.
    * @param ctx The canvas rendering context used to draw with.
    */
-  private draw(ctx: CanvasRenderingContext2D): void {
+  public draw(ctx: CanvasRenderingContext2D): void {
     this.onDraw(ctx);
   }
 
