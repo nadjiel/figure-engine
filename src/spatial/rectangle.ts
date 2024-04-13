@@ -162,6 +162,34 @@ export class Rectangle {
     return this.dimensions.getComponent(1);
   }
 
+  /**
+   * @returns The y coordinate referring to the top boundary of this rectangle.
+   */
+  public getTop(): number {
+    return this.getY();
+  }
+
+  /**
+   * @returns The x coordinate referring to the right boundary of this rectangle.
+   */
+  public getRight(): number {
+    return this.getX() + this.getWidth();
+  }
+
+  /**
+   * @returns The y coordinate referring to the bottom boundary of this rectangle.
+   */
+  public getBottom(): number {
+    return this.getY() + this.getHeight();
+  }
+
+  /**
+   * @returns The x coordinate referring to the left boundary of this rectangle.
+   */
+  public getLeft(): number {
+    return this.getX();
+  }
+
 }
 
 export default Rectangle;
