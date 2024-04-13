@@ -82,7 +82,7 @@ describe("Color class", () => {
     const blue = 255;
     const color = new Color(red, green, blue);
 
-    expect(color.getColor()).toBe(`rgba(${red}, ${green}, ${blue}, 1)`);
+    expect(color.toString()).toBe(`rgba(${red}, ${green}, ${blue}, 1)`);
   });
 
   it("Should intantiate with alpha", () => {
@@ -92,7 +92,7 @@ describe("Color class", () => {
     const alpha = 0;
     const color = new Color(red, green, blue, alpha);
 
-    expect(color.getColor()).toBe(`rgba(${red}, ${green}, ${blue}, ${alpha})`);
+    expect(color.toString()).toBe(`rgba(${red}, ${green}, ${blue}, ${alpha})`);
   });
 
 });

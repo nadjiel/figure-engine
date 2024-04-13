@@ -115,7 +115,7 @@ export class Color {
    * @returns A `string` representation of this color in the
    * `rgba(red, green, blue, alpha)` format.
    */
-  public getColor(): string {
+  public toString(): string {
     return this.color;
   }
 
