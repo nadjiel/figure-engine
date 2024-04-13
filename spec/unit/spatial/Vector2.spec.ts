@@ -2,6 +2,15 @@ import { Vector2 } from "../../../dist/spatial/vector2.js";
 
 describe("Vector2 class", () => {
 
+  it("Should instantiate properly", () => {
+    const x = 1;
+    const y = 2;
+    const v2 = new Vector2(x, y);
+
+    expect(v2.getX()).toBe(x);
+    expect(v2.getY()).toBe(y);
+  })
+
   describe("ZERO constant", () => {
 
     it("Should instantiate a vector zero", () => {
