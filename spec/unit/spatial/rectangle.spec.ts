@@ -214,4 +214,62 @@ describe("Rectangle class", () => {
 
   });
 
+  describe("getTop method", () => {
+
+    it("Should return the y coordinate", () => {
+      const y = 20;
+      const coordinates = new Vector2(10, y);
+      const dimensions = new Vector2(100, 40);
+      const rect = new Rectangle(coordinates, dimensions);
+      const expectedTop = y;
+
+      expect(rect.getTop()).toBe(expectedTop);
+    });
+
+  });
+
+  describe("getRight method", () => {
+
+    it("Should return the x coordinate plus width", () => {
+      const x = 10;
+      const coordinates = new Vector2(x, 20);
+      const width = 100;
+      const dimensions = new Vector2(width, 40);
+      const rect = new Rectangle(coordinates, dimensions);
+      const expectedRight = x + width;
+
+      expect(rect.getRight()).toBe(expectedRight);
+    });
+
+  });
+
+  describe("getBottom method", () => {
+
+    it("Should return the y coordinate plus height", () => {
+      const y = 20;
+      const coordinates = new Vector2(10, y);
+      const height = 40;
+      const dimensions = new Vector2(100, height);
+      const rect = new Rectangle(coordinates, dimensions);
+      const expectedBottom = y + height;
+
+      expect(rect.getBottom()).toBe(expectedBottom);
+    });
+
+  });
+
+  describe("getLeft method", () => {
+
+    it("Should return the x coordinate", () => {
+      const x = 10;
+      const coordinates = new Vector2(x, 20);
+      const dimensions = new Vector2(100, 40);
+      const rect = new Rectangle(coordinates, dimensions);
+      const expectedLeft = x;
+
+      expect(rect.getLeft()).toBe(expectedLeft);
+    });
+
+  });
+
 });
