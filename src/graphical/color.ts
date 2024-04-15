@@ -1,4 +1,5 @@
-import ArgumentError from "../errors/argumentError.js";
+import { ArgumentError } from "../errors/argumentError.js";
+import { VectorN } from "../spatial/vectorN.js";
 
 /**
  * The `Color` class is an utility to create rgba color representations. 
@@ -6,7 +7,7 @@ import ArgumentError from "../errors/argumentError.js";
  * @version 0.3.0
  * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
  */
-export class Color {
+export class Color extends VectorN {
 
   public static readonly TRANSPARENT = new Color(0, 0, 0, 0);
 
@@ -29,11 +30,6 @@ export class Color {
   public static readonly MAGENTA = new Color(255, 0, 255, 1);
 
   /**
-   * Stores a string representation of the color.
-   */
-  private color: string;
-
-  /**
    * This constructor creates a new color specified by its parameters.
    * 
    * The `red`, `green` and `blue` parameters accept only values greater or
@@ -53,10 +49,12 @@ export class Color {
    * interval.
    */
   constructor(red: number, green: number, blue: number, alpha?: number) {
-    // Supressing TS property not set in constructor error
-    this.color = "";
+    super(red, green, blue, alpha ?? 1);
 
-    this.createColor(red, green, blue, alpha);
+    this.checkColorComponent(red);
+    this.checkColorComponent(green);
+    this.checkColorComponent(blue);
+    this.checkAlphaComponent(alpha ?? 1);
   }
 
   /**
@@ -65,7 +63,7 @@ export class Color {
    * @param component The component to check.
    * @throws {ArgumentError} If the component is invalid.
    */
-  private checkComponent(component: number): void {
+  private checkColorComponent(component: number): void {
     if(component < 0 || component > 255) {
       throw new ArgumentError(`color components must be in [0, 255] interval (received ${component})`);
     }
@@ -77,38 +75,86 @@ export class Color {
    * @param alpha The alpha to check.
    * @throws {ArgumentError} If the alpha is invalid.
    */
-  private checkAlpha(alpha: number): void {
+  private checkAlphaComponent(alpha: number): void {
     if(alpha < 0 || alpha > 1) {
       throw new ArgumentError(`color alpha component must be in [0, 1] interval (received ${alpha})`);
     }
   }
 
   /**
-   * Creates and stores the color specified by the parameters in a `string`
-   * representation if every parameter is valid.
-   * 
-   * If any parameter is invalid, throws an error.
-   * @param red The red component of the color `[0, 255]`.
-   * @param green The green component of the color `[0, 255]`.
-   * @param blue The blue component of the color `[0, 255]`.
-   * @param alpha The alpha component of the color `[0, 1]`.
-   * @throws {ArgumentError} If any of the parameters are outside the required
-   * interval.
+   * Sets a new value to the red component of this color
+   * (which must be in the `[0, 255]` interval).
+   * @param value The new value to set to the red component.
+   * @throws {ArgumentError} If the value is invalid.
    */
-  private createColor(
-    red: number,
-    green: number,
-    blue: number,
-    alpha?: number
-  ): void {
-    if(alpha === undefined) alpha = 1;
+  public setRed(value: number): void {
+    this.checkColorComponent(value);
 
-    this.checkComponent(red);
-    this.checkComponent(green);
-    this.checkComponent(blue);
-    this.checkAlpha(alpha);
-    
-    this.color = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+    this.setComponent(0, value);
+  }
+
+  /**
+   * @returns The red component of this color.
+   */
+  public getRed(): number {
+    return this.getComponent(0);
+  }
+
+  /**
+   * Sets a new value to the green component of this color
+   * (which must be in the `[0, 255]` interval).
+   * @param value The new value to set to the green component.
+   * @throws {ArgumentError} If the value is invalid.
+   */
+  public setGreen(value: number): void {
+    this.checkColorComponent(value);
+
+    this.setComponent(1, value);
+  }
+
+  /**
+   * @returns The green component of this color.
+   */
+  public getGreen(): number {
+    return this.getComponent(1);
+  }
+
+  /**
+   * Sets a new value to the blue component of this color
+   * (which must be in the `[0, 255]` interval).
+   * @param value The new value to set to the blue component.
+   * @throws {ArgumentError} If the value is invalid.
+   */
+  public setBlue(value: number): void {
+    this.checkColorComponent(value);
+
+    this.setComponent(2, value);
+  }
+
+  /**
+   * @returns The blue component of this color.
+   */
+  public getBlue(): number {
+    return this.getComponent(2);
+  }
+
+  /**
+   * Sets a new value to the alpha component of this color
+   * (which must be in the `[0, 1]` interval).
+   * @param value The new value to set to the alpha component.
+   * @throws {ArgumentError} If the value is invalid.
+   */
+  public setAlpha(value: number): void {
+    this.checkAlphaComponent(value);
+
+    this.setComponent(3, value);
+  }
+
+  /**
+   * @returns The alpha component of this color.
+   */
+  public getAlpha(): number {
+    return this.getComponent(3);
   }
 
   /**
@@ -116,7 +162,7 @@ export class Color {
    * `rgba(red, green, blue, alpha)` format.
    */
   public toString(): string {
-    return this.color;
+    return `rgba(${this.getRed()}, ${this.getGreen()}, ${this.getBlue()}, ${this.getAlpha()})`;
   }
 
 }
