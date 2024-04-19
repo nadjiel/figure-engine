@@ -1,7 +1,6 @@
 import { GameObject } from "../../../dist/stage/gameObject.js";
 import { Vector2 } from "../../../dist/spatial/vector2.js";
 import { Rectangle } from "../../../dist/spatial/rectangle.js";
-import { Sprite } from "../../../dist/resources/sprite.js";
 import Color from "../../../dist/graphical/color.js";
 
 describe("GameObject class", () => {
@@ -87,6 +86,27 @@ describe("GameObject class", () => {
       gameObject.draw(ctx);
 
       expect(gameObject.onDraw).toHaveBeenCalledWith(ctx);
+    });
+
+    it("Should draw on canvas", () => {
+      const coordinates = Vector2.ZERO;
+      const dimensions = new Vector2(10, 20);
+      const gameObject = new ConcreteGameObject(coordinates, dimensions);
+      gameObject.setColor(new Color(255, 0, 0, 0.5));
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d")!;
+
+      spyOn(ctx, "fillRect");
+
+      gameObject.draw(ctx);
+
+      expect(ctx.fillStyle).toBe(gameObject.getColor().toString());
+      expect(ctx.fillRect).toHaveBeenCalledWith(
+        gameObject.getX(),
+        gameObject.getY(),
+        gameObject.getWidth(),
+        gameObject.getHeight()
+      );
     });
 
   });
