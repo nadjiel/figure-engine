@@ -1,5 +1,5 @@
 {
-  "watch": [ "spec" ],
+  "watch": [ "spec", "dist/index.js" ],
   "ext": ".ts",
   "ignore": [],
   "exec": "npm run build:test",
