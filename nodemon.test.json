@@ -1,0 +1,9 @@
+{
+  "watch": [ "spec" ],
+  "ext": ".ts",
+  "ignore": [],
+  "exec": "npm run build:test",
+  "env": {
+    "NODE_ENV": "development"
+  }
+}

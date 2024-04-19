@@ -12,14 +12,20 @@
     "clear:dist": "rimraf ./dist",
     "clear:test": "rimraf ./spec-build",
     "clear": "npm run clear:dist && npm run clear:test",
+
     "prebuild:dist": "npm run clear:dist",
     "build:dist": "tsc",
     "prebuild:test": "npm run clear:test",
     "build:test": "tsc --project ./tsconfig.test.json",
     "build": "npm run build:dist && npm run build:test",
+
     "test": "jasmine-browser-runner runSpecs --config=jasmine.json",
     "test-serve": "jasmine-browser-runner serve --config=jasmine.json",
-    "dev": " concurrently \"npm run test-serve\" \"nodemon\"",
+
+    "dev:test": "nodemon --config ./nodemon.test.json",
+    "dev:src": "concurrently \"npm run test-serve\" \"nodemon\"",
+    "dev": "concurrently \"npm run dev:test\" \"npm run dev:src\"",
+
     "prepublish": "npm run build:dist",
     "publish": "npm run test && npm publish",
     "publish:local": "npm run prepublish && npm run test && npm link"
