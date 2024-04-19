@@ -45,6 +45,7 @@ export interface GameIterable {
   /**
    * Should be overriden by the user, if they wish to define a custom drawing
    * behavior after the update event.
+   * @param ctx The canvas on which to draw.
    */
   onDraw(ctx: CanvasRenderingContext2D): void;
   
