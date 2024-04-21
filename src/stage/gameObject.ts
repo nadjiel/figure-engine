@@ -1,4 +1,4 @@
-import { GameIterable } from "../main/gameIterable.js";
+import { StageElement } from "./stageElement.js";
 import { Rectangle } from "../spatial/rectangle.js";
 import { Color } from "../graphical/color.js";
 import { Vector2 } from "../spatial/vector2.js";
@@ -16,7 +16,7 @@ import { Vector2 } from "../spatial/vector2.js";
  * @version 0.3.0
  * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
  */
-export abstract class GameObject implements GameIterable {
+export abstract class GameObject implements StageElement {
   
   /**
    * This property represents the area that this game object occupies
