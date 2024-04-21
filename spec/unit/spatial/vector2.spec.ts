@@ -11,13 +11,20 @@ describe("Vector2 class", () => {
     expect(v2.getY()).toBe(y);
   })
 
-  describe("ZERO constant", () => {
+  describe("createZero method", () => {
 
     it("Should instantiate a vector zero", () => {
-      const v2 = Vector2.ZERO;
+      const v2 = Vector2.createZero();
       const expectedComponents = [ 0, 0 ];
 
       expect(v2.getComponents()).toEqual(expectedComponents);
+    });
+
+    it("Should instantiate a vector zero each call", () => {
+      const v1 = Vector2.createZero();
+      const v2 = Vector2.createZero();
+
+      expect(v1).not.toBe(v2);
     });
 
   });

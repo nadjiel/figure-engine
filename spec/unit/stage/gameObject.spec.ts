@@ -7,26 +7,15 @@ describe("GameObject class", () => {
 
   class ConcreteGameObject extends GameObject {
 
-    onStart(): void {
-      
-    }
-
-    onUpdate(): void {
-      
-    }
-
-    onDraw(ctx: CanvasRenderingContext2D): void {
-      
-    }
-
-    onStop(): void {
-      
-    }
+    onStart(): void {}
+    onUpdate(): void {}
+    onDraw(ctx: CanvasRenderingContext2D): void {}
+    onStop(): void {}
     
   }
 
   it("Should instantiate properly", () => {
-    const coordinates = Vector2.ZERO;
+    const coordinates = Vector2.createZero();
     const dimensions = new Vector2(10, 15);
     const gameObject = new ConcreteGameObject(coordinates, dimensions);
 
@@ -43,7 +32,7 @@ describe("GameObject class", () => {
   describe("start method", () => {
 
     it("Should trigger onStart method", () => {
-      const coordinates = Vector2.ZERO;
+      const coordinates = Vector2.createZero();
       const dimensions = new Vector2(10, 20);
       const gameObject = new ConcreteGameObject(coordinates, dimensions);
 
@@ -59,7 +48,7 @@ describe("GameObject class", () => {
   describe("update method", () => {
 
     it("Should trigger onUpdate method", () => {
-      const coordinates = Vector2.ZERO;
+      const coordinates = Vector2.createZero();
       const dimensions = new Vector2(10, 20);
       const gameObject = new ConcreteGameObject(coordinates, dimensions);
 
@@ -75,7 +64,7 @@ describe("GameObject class", () => {
   describe("draw method", () => {
 
     it("Should trigger onDraw method", () => {
-      const coordinates = Vector2.ZERO;
+      const coordinates = Vector2.createZero();
       const dimensions = new Vector2(10, 20);
       const gameObject = new ConcreteGameObject(coordinates, dimensions);
       const canvas = document.createElement("canvas");
@@ -89,7 +78,7 @@ describe("GameObject class", () => {
     });
 
     it("Should draw on canvas", () => {
-      const coordinates = Vector2.ZERO;
+      const coordinates = Vector2.createZero();
       const dimensions = new Vector2(10, 20);
       const gameObject = new ConcreteGameObject(coordinates, dimensions);
       gameObject.setColor(new Color(255, 0, 0, 0.5));
@@ -114,7 +103,7 @@ describe("GameObject class", () => {
   describe("stop method", () => {
 
     it("Should trigger onStop method", () => {
-      const coordinates = Vector2.ZERO;
+      const coordinates = Vector2.createZero();
       const dimensions = new Vector2(10, 20);
       const gameObject = new ConcreteGameObject(coordinates, dimensions);
 

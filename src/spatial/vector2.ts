@@ -9,10 +9,12 @@ import { VectorN } from "./vectorN.js";
 export class Vector2 extends VectorN {
 
   /**
-   * This constant represents a zero vector (a vector that has its components
+   * This method returns a zero vector (a vector that has its components
    * equal to `0`).
    */
-  public static readonly ZERO = new Vector2(0, 0);
+  public static createZero(): Vector2 {
+    return new Vector2(0, 0);
+  }
 
   /**
    * @param x The x component of the vector
