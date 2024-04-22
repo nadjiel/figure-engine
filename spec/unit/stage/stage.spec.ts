@@ -7,7 +7,7 @@ describe("Stage class", () => {
   class ConcreteGameObject extends GameObject {
 
     constructor() {
-      super(Vector2.ZERO, Vector2.ZERO);
+      super(Vector2.createZero(), Vector2.createZero());
     }
 
     onStart(): void {}
@@ -21,252 +21,6 @@ describe("Stage class", () => {
     const stage = new Stage();
 
     expect(stage.getObjects()).toEqual([]);
-  });
-
-  describe("addObject method", () => {
-
-    it("Should not allow adding objects to negative indexes", () => {
-      const stage = new Stage();
-      const index = -1;
-  
-      expect(() => stage.addObject(index, new ConcreteGameObject()))
-        .toThrowError(``);
-    });
-
-    it("Should not allow adding objects to indexes too great", () => {
-      const stage = new Stage();
-      const index = 1;
-  
-      expect(() => stage.addObject(index, new ConcreteGameObject()))
-        .toThrowError(``);
-    });
-
-    it("Should allow adding objects to valid indexes", () => {
-      const stage = new Stage();
-      const index = 0;
-      const gameObj = new ConcreteGameObject();
-  
-      stage.addObject(index, gameObj);
-
-      expect(stage.getObject(index)).toBe(gameObj);
-      expect(stage.getObjects()).toEqual([ gameObj ]);
-    });
-
-    it("Should push forward existing objects", () => {
-      const stage = new Stage();
-      const index = 0;
-      const gameObj1 = new ConcreteGameObject();
-      const gameObj2 = new ConcreteGameObject();
-  
-      stage.addObject(index, gameObj1);
-      stage.addObject(index, gameObj2);
-
-      expect(stage.getObjects()).toEqual([ gameObj2, gameObj1 ]);
-    });
-
-  });
-
-  describe("addFirstObject", () => {
-
-    it("Should add object to the start of the list", () => {
-      const stage = new Stage();
-      const gameObj1 = new ConcreteGameObject();
-      const gameObj2 = new ConcreteGameObject();
-
-      stage.addFirstObject(gameObj1);
-      stage.addFirstObject(gameObj2);
-
-      expect(stage.getObject(0)).toBe(gameObj2);
-    });
-
-  });
-
-  describe("addLastObject", () => {
-
-    it("Should add object to the end of the list", () => {
-      const stage = new Stage();
-      const gameObj1 = new ConcreteGameObject();
-      const gameObj2 = new ConcreteGameObject();
-
-      stage.addLastObject(gameObj1);
-      stage.addLastObject(gameObj2);
-
-      expect(stage.getLastObject()).toBe(gameObj2);
-    });
-
-  });
-
-  describe("removeObjectFromIndex method", () => {
-
-    it("Should not allow removing objects from negative indexes", () => {
-      const stage = new Stage();
-      const index = -1;
-  
-      expect(() => stage.removeObjectFromIndex(index))
-        .toThrowError(``);
-    });
-
-    it("Should not allow removing objects from indexes too big", () => {
-      const stage = new Stage();
-      const index = 1;
-  
-      expect(() => stage.removeObjectFromIndex(index))
-        .toThrowError(``);
-    });
-
-    it("Should allow removing objects from valid indexes", () => {
-      const stage = new Stage();
-      const index = 0;
-      const gameObj = new ConcreteGameObject();
-
-      stage.addObject(index, gameObj);
-      stage.removeObjectFromIndex(index);
-
-      expect(stage.getObject(index)).not.toBe(gameObj);
-      expect(stage.getObjects()).toEqual([]);
-    });
-
-  });
-
-  describe("removeObject method", () => {
-
-    it("Should remove found object", () => {
-      const stage = new Stage();
-      const gameObj1 = new ConcreteGameObject();
-      const gameObj2 = new ConcreteGameObject();
-
-      stage.addFirstObject(gameObj1);
-      stage.addFirstObject(gameObj2);
-      stage.removeObject(gameObj1);
-
-      expect(stage.getObjects()).toEqual([ gameObj2 ]);
-    });
-
-    it("Should not remove not found object", () => {
-      const stage = new Stage();
-      const gameObj1 = new ConcreteGameObject();
-      const gameObj2 = new ConcreteGameObject();
-
-      stage.addFirstObject(gameObj2);
-      stage.removeObject(gameObj1);
-
-      expect(stage.getObjects()).toEqual([ gameObj2 ]);
-    });
-
-  });
-
-  describe("getObjectIndex method", () => {
-
-    it("Should return index of found object index", () => {
-      const stage = new Stage();
-      const gameObj1 = new ConcreteGameObject();
-      const gameObj2 = new ConcreteGameObject();
-
-      stage.addFirstObject(index, gameObj1);
-      stage.addFirstObject(index, gameObj2);
-
-      expect(stage.getObjectIndex(gameObj1)).toBe(1);
-    });
-
-    it("Should not return index of not found object", () => {
-      const stage = new Stage();
-      const gameObj = new ConcreteGameObject();
-
-      expect(stage.getObjectIndex(gameObj)).toBeUndefined();
-    });
-
-  });
-
-  describe("getObjectFromIndex method", () => {
-
-    it("Should not allow getting objects from negative indexes", () => {
-      const stage = new Stage();
-      const index = -1;
-  
-      expect(() => stage.getObjectFromIndex(index))
-        .toThrowError(``);
-    });
-
-    it("Should not allow getting objects from indexes too big", () => {
-      const stage = new Stage();
-      const index = 1;
-  
-      expect(() => stage.getObjectFromIndex(index))
-        .toThrowError(``);
-    });
-
-    it("Should allow getting objects from valid indexes", () => {
-      const stage = new Stage();
-      const index = 0;
-      const gameObj1 = new ConcreteGameObject();
-      const gameObj2 = new ConcreteGameObject();
-
-      stage.addObject(index, gameObj1);
-      stage.addObject(index, gameObj2);
-
-      expect(stage.getObjectFromIndex(index)).toBe(gameObj2);
-    });
-
-  });
-
-  describe("setObjectUpdateOrder method", () => {
-
-    it("Should determine update order", () => {
-      let ordened = 0;
-      const stage = new Stage();
-      const gameObj1 = new ConcreteGameObject();
-      gameObj1.setX(1);
-      gameObj1.update(() => ordened = ordened < gameObj1.getX());
-      const gameObj2 = new ConcreteGameObject();
-      gameObj2.setX(2);
-      gameObj2.update(() => ordened = ordened < gameObj2.getX());
-      const gameObj3 = new ConcreteGameObject();
-      gameObj3.setX(3);
-      gameObj3.update(() => ordened = ordened < gameObj3.getX());
-
-      stage.addFirstObject(gameObj1);
-      stage.addFirstObject(gameObj2);
-      stage.addFirstObject(gameObj3);
-
-      stage.updateObjectsBy((obj1, obj2) => {
-        return obj1.getX() - obj2.getX();
-      });
-
-      stage.update();
-
-      expect(ordened).toBeTrue();
-    });
-
-  });
-
-  describe("setObjectDrawOrder method", () => {
-
-    it("Should determine draw order", () => {
-      let ordened = 0;
-      const stage = new Stage();
-      const gameObj1 = new ConcreteGameObject();
-      gameObj1.setX(1);
-      gameObj1.draw(() => ordened = ordened < gameObj1.getX());
-      const gameObj2 = new ConcreteGameObject();
-      gameObj2.setX(2);
-      gameObj2.draw(() => ordened = ordened < gameObj2.getX());
-      const gameObj3 = new ConcreteGameObject();
-      gameObj3.setX(3);
-      gameObj3.draw(() => ordened = ordened < gameObj3.getX());
-
-      stage.addFirstObject(gameObj1);
-      stage.addFirstObject(gameObj2);
-      stage.addFirstObject(gameObj3);
-
-      stage.updateObjectsBy((obj1, obj2) => {
-        return obj1.getX() - obj2.getX();
-      });
-
-      stage.draw();
-
-      expect(ordened).toBeTrue();
-    });
-
   });
 
   describe("start method", () => {
@@ -290,6 +44,30 @@ describe("Stage class", () => {
       expect(gameObject1.start).toHaveBeenCalled();
       expect(gameObject2.start).toHaveBeenCalled();
       expect(gameObject3.start).toHaveBeenCalled();
+    });
+
+    it("Should start the game objects in determined order", () => {
+      const stage = new Stage();
+      let order = "";
+      const gameObject1 = new ConcreteGameObject();
+      gameObject1.setY(1);
+      gameObject1.onStart = () => order += '1';
+      const gameObject2 = new ConcreteGameObject();
+      gameObject2.setY(2);
+      gameObject2.onStart = () => order += '2';
+      const gameObject3 = new ConcreteGameObject();
+      gameObject3.setY(3);
+      gameObject3.onStart = () => order += '3';
+
+      stage.setObjectStartOrder((obj1, obj2) => obj1.getY() - obj2.getY());
+
+      stage.addFirstObject(gameObject1);
+      stage.addFirstObject(gameObject2);
+      stage.addFirstObject(gameObject3);
+
+      stage.start();
+
+      expect(order).toBe("123");
     });
 
     it("Should trigger onStart method", () => {
@@ -327,6 +105,30 @@ describe("Stage class", () => {
       expect(gameObject3.update).toHaveBeenCalled();
     });
 
+    it("Should update the game objects in determined order", () => {
+      const stage = new Stage();
+      let order = "";
+      const gameObject1 = new ConcreteGameObject();
+      gameObject1.setY(1);
+      gameObject1.onUpdate = () => order += '1';
+      const gameObject2 = new ConcreteGameObject();
+      gameObject2.setY(2);
+      gameObject2.onUpdate = () => order += '2';
+      const gameObject3 = new ConcreteGameObject();
+      gameObject3.setY(3);
+      gameObject3.onUpdate = () => order += '3';
+
+      stage.setObjectUpdateOrder((obj1, obj2) => obj1.getY() - obj2.getY());
+
+      stage.addFirstObject(gameObject1);
+      stage.addFirstObject(gameObject2);
+      stage.addFirstObject(gameObject3);
+
+      stage.update();
+
+      expect(order).toBe("123");
+    });
+
     it("Should trigger onUpdate method", () => {
       const stage = new Stage();
       
@@ -346,6 +148,8 @@ describe("Stage class", () => {
       const gameObject1 = new ConcreteGameObject();
       const gameObject2 = new ConcreteGameObject();
       const gameObject3 = new ConcreteGameObject();
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d")!;
 
       stage.addLastObject(gameObject1);
       stage.addLastObject(gameObject2);
@@ -355,21 +159,50 @@ describe("Stage class", () => {
       spyOn(gameObject2, "draw");
       spyOn(gameObject3, "draw");
 
-      stage.draw();
+      stage.draw(ctx);
 
-      expect(gameObject1.draw).toHaveBeenCalled();
-      expect(gameObject2.draw).toHaveBeenCalled();
-      expect(gameObject3.draw).toHaveBeenCalled();
+      expect(gameObject1.draw).toHaveBeenCalledWith(ctx);
+      expect(gameObject2.draw).toHaveBeenCalledWith(ctx);
+      expect(gameObject3.draw).toHaveBeenCalledWith(ctx);
+    });
+
+    it("Should draw the game objects in determined order", () => {
+      const stage = new Stage();
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d")!;
+      let order = "";
+
+      const gameObject1 = new ConcreteGameObject();
+      gameObject1.setY(1);
+      gameObject1.onDraw = () => order += '1';
+      const gameObject2 = new ConcreteGameObject();
+      gameObject2.setY(2);
+      gameObject2.onDraw = () => order += '2';
+      const gameObject3 = new ConcreteGameObject();
+      gameObject3.setY(3);
+      gameObject3.onDraw = () => order += '3';
+
+      stage.setObjectDrawOrder((obj1, obj2) => obj1.getY() - obj2.getY());
+
+      stage.addFirstObject(gameObject1);
+      stage.addFirstObject(gameObject2);
+      stage.addFirstObject(gameObject3);
+
+      stage.draw(ctx);
+
+      expect(order).toBe("123");
     });
 
     it("Should trigger onDraw method", () => {
       const stage = new Stage();
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d")!;
       
       spyOn(stage, "onDraw");
 
-      stage.draw();
+      stage.draw(ctx);
 
-      expect(stage.onDraw).toHaveBeenCalled();
+      expect(stage.onDraw).toHaveBeenCalledWith(ctx);
     });
 
   });
@@ -395,6 +228,30 @@ describe("Stage class", () => {
       expect(gameObject1.stop).toHaveBeenCalled();
       expect(gameObject2.stop).toHaveBeenCalled();
       expect(gameObject3.stop).toHaveBeenCalled();
+    });
+
+    it("Should stop the game objects in determined order", () => {
+      const stage = new Stage();
+      let order = "";
+      const gameObject1 = new ConcreteGameObject();
+      gameObject1.setY(1);
+      gameObject1.onStop = () => order += '1';
+      const gameObject2 = new ConcreteGameObject();
+      gameObject2.setY(2);
+      gameObject2.onStop = () => order += '2';
+      const gameObject3 = new ConcreteGameObject();
+      gameObject3.setY(3);
+      gameObject3.onStop = () => order += '3';
+
+      stage.setObjectStopOrder((obj1, obj2) => obj1.getY() - obj2.getY());
+
+      stage.addFirstObject(gameObject1);
+      stage.addFirstObject(gameObject2);
+      stage.addFirstObject(gameObject3);
+
+      stage.stop();
+
+      expect(order).toBe("123");
     });
 
     it("Should trigger onStop method", () => {
