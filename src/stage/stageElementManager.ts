@@ -1,4 +1,5 @@
 import { StageElement } from "./stageElement.js";
+import { Sequence } from "../util/sequence.js";
 import { ArgumentError } from "../errors/argumentError.js";
 import { CallError } from "../errors/callError.js";
 
@@ -25,9 +26,9 @@ export type StageElementComparer<E extends StageElement> = (element1: E, element
 export class StageElementManager<E extends StageElement> {
 
   /**
-   * This property stores all the elements this class manages.
+   * This property stores all the elements this class manages in a sequence.
    */
-  private elements = new Array<E>();
+  private elements = new Sequence<E>();
 
   /**
    * The `elementStartComparer` property stores a comparer function that tells
@@ -78,19 +79,6 @@ export class StageElementManager<E extends StageElement> {
   private elementStopComparer?: StageElementComparer<E>;
 
   /**
-   * Checks if a given index is valid.
-   * That means it specifies a valid position where to insert an element from.
-   * @param index The index to check.
-   * @throws {ArgumentError} If the `index` is less than `0` or greater than the
-   * amount of elements currently in this manager.
-   */
-  private checkAdditionIndex(index: number): void {
-    if(index < 0 || index > this.getAmount()) {
-      throw new ArgumentError(`index must be inside [0, ${this.getAmount()}] (received ${index})`);
-    }
-  }
-
-  /**
    * This method adds an element to this manager in a given index, if it is
    * valid.
    * @param index The index where to add the element.
@@ -99,9 +87,7 @@ export class StageElementManager<E extends StageElement> {
    * represent a valid position).
    */
   public add(index: number, element: E): void {
-    this.checkAdditionIndex(index);
-
-    this.elements.splice(index, 0, element);
+    this.elements.add(index, element);
   }
 
   /**
@@ -109,7 +95,7 @@ export class StageElementManager<E extends StageElement> {
    * @param element The element to add.
    */
   public addFirst(element: E): void {
-    this.elements.unshift(element);
+    this.elements.addFirst(element);
   }
 
   /**
@@ -117,25 +103,7 @@ export class StageElementManager<E extends StageElement> {
    * @param element The element to add.
    */
   public addLast(element: E): void {
-    this.elements.push(element);
-  }
-
-  /**
-   * Checks if a given index is valid.
-   * That means it specifies a valid position where to access an element from.
-   * @param index The index to check.
-   * @throws {CallError} If there aren't any elements in this manager to access.
-   * @throws {ArgumentError} If the `index` is less than `0` or greater or equal
-   * to the amount of elements currently in this manager.
-   */
-  private checkAccessIndex(index: number): void {
-    if(this.getAmount() === 0) {
-      throw new CallError(`can't access element in empty manager`);
-    }
-
-    if(index < 0 || index >= this.getAmount()) {
-      throw new ArgumentError(`index must be inside [0, ${this.getAmount()}[ (received ${index})`);
-    }
+    this.elements.addLast(element);
   }
 
   /**
@@ -148,9 +116,7 @@ export class StageElementManager<E extends StageElement> {
    * where to remove an element.
    */
   public removeFrom(index: number): E {
-    this.checkAccessIndex(index);
-
-    return this.elements.splice(index, 1)[0];
+    return this.elements.removeFrom(index);
   }
 
   /**
@@ -160,13 +126,7 @@ export class StageElementManager<E extends StageElement> {
    * @returns A boolean indicating if the element was removed.
    */
   public remove(element: E): boolean {
-    const elementIndex = this.getIndex(element);
-
-    if(elementIndex === -1) return false;
-
-    this.removeFrom(elementIndex);
-
-    return true;
+    return this.elements.remove(element);
   }
 
   /**
@@ -176,7 +136,7 @@ export class StageElementManager<E extends StageElement> {
    * removed.
    */
   public removeFirst(): E | undefined {
-    return this.elements.shift();
+    return this.elements.removeFirst();
   }
 
   /**
@@ -186,14 +146,22 @@ export class StageElementManager<E extends StageElement> {
    * removed.
    */
   public removeLast(): E | undefined {
-    return this.elements.pop();
+    return this.elements.removeLast();
+  }
+
+  /**
+   * Removes all elements of this manager and returns them.
+   * @returns The former elements of this manager.
+   */
+  public removeAll(): Array<E> {
+    return this.elements.removeAll();
   }
 
   /**
    * @returns The stage elements of this manager.
    */
   public getElements(): Array<E> {
-    return this.elements;
+    return this.elements.getElements();
   }
 
   /**
@@ -206,9 +174,7 @@ export class StageElementManager<E extends StageElement> {
    * valid stage element in this manager.
    */
   public getFrom(index: number): E {
-    this.checkAccessIndex(index);
-    
-    return this.elements[index];
+    return this.elements.getFrom(index);
   }
 
   /**
@@ -218,7 +184,7 @@ export class StageElementManager<E extends StageElement> {
    * @returns The index of the given `element`.
    */
   public getIndex(element: E): number {
-    return this.elements.indexOf(element);
+    return this.elements.getIndex(element);
   }
 
   /**
@@ -226,7 +192,7 @@ export class StageElementManager<E extends StageElement> {
    * no elements.
    */
   public getFirst(): E | undefined {
-    return this.elements[0];
+    return this.elements.getFirst();
   }
 
   /**
@@ -234,14 +200,14 @@ export class StageElementManager<E extends StageElement> {
    * no elements.
    */
   public getLast(): E | undefined {
-    return this.elements[this.getAmount() - 1];
+    return this.elements.getLast();
   }
 
   /**
    * @returns The amount of elements in this manager.
    */
   public getAmount(): number {
-    return this.elements.length;
+    return this.elements.getAmount();
   }
 
   /**
@@ -345,26 +311,13 @@ export class StageElementManager<E extends StageElement> {
   }
 
   /**
-   * Returns the elements of this manager sorted by a certain order.
-   * @param comparer A function that specifies how the elements should
-   * be sorted.
-   * @returns The stage elements of this manager, but attending to the order
-   * specified by the `comparer` parameter.
-   */
-  public getSortedElements(comparer: StageElementComparer<E>): Array<E> {
-    const elementsClone = [ ...this.elements ];
-
-    return elementsClone.sort(comparer);
-  }
-
-  /**
    * Starts all the elements in this manager following the predefined order.
    */
   public start(): void {
-    let elements = this.elements;
+    let elements = this.elements.getElements();
 
     if(this.elementStartComparer !== undefined) {
-      elements = this.getSortedElements(this.elementStartComparer);
+      elements = elements.sort(this.elementStartComparer);
     }
 
     elements.forEach(element => element.start());
@@ -374,10 +327,10 @@ export class StageElementManager<E extends StageElement> {
    * Updates all the elements in this manager following the predefined order.
    */
   public update(): void {
-    let elements = this.elements;
+    let elements = this.elements.getElements();
 
     if(this.elementUpdateComparer !== undefined) {
-      elements = this.getSortedElements(this.elementUpdateComparer);
+      elements = elements.sort(this.elementUpdateComparer);
     }
 
     elements.forEach(element => element.update());
@@ -388,10 +341,10 @@ export class StageElementManager<E extends StageElement> {
    * @param ctx The canvas rendering context used for drawing the elements.
    */
   public draw(ctx: CanvasRenderingContext2D): void {
-    let elements = this.elements;
+    let elements = this.elements.getElements();
 
     if(this.elementDrawComparer !== undefined) {
-      elements = this.getSortedElements(this.elementDrawComparer);
+      elements = elements.sort(this.elementDrawComparer);
     }
 
     elements.forEach(element => element.draw(ctx));
@@ -401,10 +354,10 @@ export class StageElementManager<E extends StageElement> {
    * Stops all the elements in this manager following the predefined order.
    */
   public stop(): void {
-    let elements = this.elements;
+    let elements = this.elements.getElements();
 
     if(this.elementStopComparer !== undefined) {
-      elements = this.getSortedElements(this.elementStopComparer);
+      elements = elements.sort(this.elementStopComparer);
     }
 
     elements.forEach(element => element.stop());

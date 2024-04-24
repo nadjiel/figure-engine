@@ -145,7 +145,7 @@ describe("StageElementManager class", () => {
       const index = 0;
   
       expect(() => manager.removeFrom(index))
-        .toThrowError(`can't access element in empty manager`);
+        .toThrowError(`can't access element from empty sequence`);
     });
 
     it("Should not allow removing elements from negative indexes", () => {
@@ -232,7 +232,7 @@ describe("StageElementManager class", () => {
       const index = 0;
   
       expect(() => manager.getFrom(index))
-        .toThrowError(`can't access element in empty manager`);
+        .toThrowError(`can't access element from empty sequence`);
     });
 
     it("Should not allow getting elements from negative indexes", () => {
@@ -329,30 +329,6 @@ describe("StageElementManager class", () => {
       manager.addFirst(gameObj2);
 
       expect(manager.getLast()).toBe(gameObj1);
-    });
-
-  });
-
-  describe("getSortedElements method", () => {
-
-    it("Should sort correctly", () => {
-      const manager = new StageElementManager<GameObject>();
-      const gameObj1 = new ConcreteGameObject();
-      gameObj1.setY(1);
-      const gameObj2 = new ConcreteGameObject();
-      gameObj2.setY(2);
-      const gameObj3 = new ConcreteGameObject();
-      gameObj3.setY(3);
-
-      manager.addFirst(gameObj1);
-      manager.addFirst(gameObj2);
-      manager.addFirst(gameObj3);
-
-      const sortedElements = manager.getSortedElements((el1, el2) => {
-        return el1.getY() - el2.getY();
-      });
-
-      expect(sortedElements).toEqual([ gameObj1, gameObj2, gameObj3 ]);
     });
 
   });
