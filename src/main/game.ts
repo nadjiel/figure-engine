@@ -4,6 +4,9 @@ import { GameClock } from "./gameClock.js";
 import { GameInput } from "../input/gameInput.js";
 import { KeyboardInput } from "../input/keyboardInput.js";
 import { MouseInput } from "../input/mouseInput.js";
+import { StageManager } from "../stage/stageManager.js";
+import { Stage } from "../stage/stage.js";
+import { ArgumentError } from "../errors/argumentError.js";
 
 /**
  * This interface describes the possible properties the game configuration can
@@ -91,6 +94,12 @@ export class Game implements GameIterable {
    * used to monitor the game input.
    */
   private gameInput: GameInput;
+
+  /**
+   * This property stores an instance to a {@linkcode StageManager} that
+   * provides methods for organizing and selecting stages.
+   */
+  private stageManager = new StageManager();
 
   /**
    * @param config An object specifying configurations for this game, or
@@ -497,6 +506,218 @@ export class Game implements GameIterable {
   }
 
   /**
+   * This method adds a `stage` to this game in a given `index`, if it is valid.
+   * 
+   * To be valid, the `index` must be greater or equal to `0` and less or equal
+   * to the amount of stages currently in the game.
+   * Unless the game has no stages, in which case the `index` can only be `0`.
+   * 
+   * If the `index` is invalid, an error is thrown.
+   * @param index The index where to add a stage.
+   * @param stage The stage to add.
+   * @throws {ArgumentError} if the received `index` is invalid.
+   */
+  public addStage(index: number, stage: Stage): void {
+    this.stageManager.add(index, stage);
+  }
+
+  /**
+   * Adds a stage as the first one of the game.
+   * @param stage The stage to add.
+   */
+  public addFirstStage(stage: Stage): void {
+    this.stageManager.addFirst(stage);
+  }
+
+  /**
+   * Adds a stage as the last one of the game.
+   * @param stage The stage to add.
+   */
+  public addLastStage(stage: Stage): void {
+    this.stageManager.addLast(stage);
+  }
+
+  /**
+   * Removes and returns the stage that corresponds to the given `index`, if
+   * there is one. If not, an error is thrown.
+   * 
+   * If there are no stages added to this game whatsoever, an error also is
+   * thrown.
+   * @param index The index from where to remove a stage.
+   * @returns The removed stage.
+   * @throws {CallError} If there are no stages added to this game.
+   * @throws {ArgumentError} If the `index` doesn't correspond to any added
+   * stage.
+   */
+  public removeStageFrom(index: number): Stage {
+    return this.stageManager.removeFrom(index);
+  }
+
+  /**
+   * Removes a `stage` from this game and returns `true`.
+   * If the `stage` is not found, though, nothing is made and `false`
+   * is returned.
+   * @param stage The stage to remove.
+   * @returns A boolean indicating if the stage was removed.
+   */
+  public removeStage(stage: Stage): boolean {
+    return this.stageManager.remove(stage);
+  }
+
+  /**
+   * Removes and returns the first stage of this game if there are any stages
+   * added. Else, does nothing and returns `undefined`.
+   * @returns The removed stage or `undefined`.
+   */
+  public removeFirstStage(): Stage | undefined {
+    return this.stageManager.removeFirst();
+  }
+
+  /**
+   * Removes and returns the last stage of this game if there are any stages
+   * added. Else, does nothing and returns `undefined`.
+   * @returns The removed stage or `undefined`.
+   */
+  public removeLastStage(): Stage | undefined {
+    return this.stageManager.removeLast();
+  }
+
+  /**
+   * Removes and returns all stages added to this game.
+   * @returns An array with the removed stages.
+   */
+  public removeAllStages(): Array<Stage> {
+    return this.stageManager.removeAll();
+  }
+
+  /**
+   * @returns An array with all the stages added to this game.
+   */
+  public getStages(): Array<Stage> {
+    return this.stageManager.getStages();
+  }
+
+  /**
+   * Returns the stage that corresponds to the given `index`.
+   * 
+   * If no stage corresponds to the `index` an error is thrown.
+   * @param index The index of the stage to get.
+   * @returns The stage specified by the given `index`.
+   * @throws {CallError} If there are no stages in this manager.
+   * @throws {ArgumentError} If the received `index` doesn't specify a
+   * valid stage in this manager.
+   */
+  public getStageFrom(index: number): Stage {
+    return this.stageManager.getFrom(index);
+  }
+
+  /**
+   * Returns the index of the given `stage` if it is added to this game, else
+   * returns `-1`.
+   * @param stage The stage to get the index of.
+   * @returns The index of the received `stage`, or `-1`.
+   */
+  public getStageIndex(stage: Stage): number {
+    return this.stageManager.getIndex(stage);
+  }
+
+  /**
+   * @returns The first stage of this game or `undefined` if there aren't any
+   * stages added.
+   */
+  public getFirstStage(): Stage | undefined {
+    return this.stageManager.getFirst();
+  }
+
+  /**
+   * @returns The last stage of this game or `undefined` if there aren't any
+   * stages added.
+   */
+  public getLastStage(): Stage | undefined {
+    return this.stageManager.getLast();
+  }
+
+  /**
+   * @returns How many stages are added to this game.
+   */
+  public getStageAmount(): number {
+    return this.stageManager.getAmount();
+  }
+
+  /**
+   * This method selects and returns the stage specified by the given `index`,
+   * if there is one, if not throws an error.
+   * 
+   * If the `index` corresponds to the stage that is already selected, this
+   * method just returns that stage.
+   * 
+   * When executed, this method will trigger the `stop` of the previously
+   * selected stage (if there was one) and the `start` of the new one.
+   * @param index The index of the stage to select.
+   * @returns The new selected stage.
+   * @throws {CallError} If there aren't any stages added to this game to select
+   * from.
+   * @throws {ArgumentError} If the received `index` doesn't correspond to any
+   * stages added to this game.
+   */
+  public selectStage(index: number): Stage {
+    return this.stageManager.select(index);
+  }
+
+  /**
+   * This method selects the next stage in the list of stages relative to the
+   * currently selected one.
+   * 
+   * If there is no next stage, that is, the current one is the last of the
+   * list, an error is thrown.
+   * And if there are no stages selected currently, this method selects the
+   * first of the list.
+   * 
+   * When executed, this method will trigger the `stop` of the previously
+   * selected stage (if there was one) and the `start` of the new one.
+   * @returns The new selected stage.
+   * @throws {CallError} If there aren't any stages added to this game to select
+   * from or if the current stage is already the last of the list.
+   */
+  public selectNextStage(): Stage {
+    return this.stageManager.selectNext();
+  }
+
+  /**
+   * This method selects the previous stage in the list of stages relative to the
+   * currently selected one.
+   * 
+   * If there is no previous stage, that is, the current one is the first of the
+   * list, an error is thrown.
+   * And if there are no stages selected currently, this method selects the
+   * last of the list.
+   * 
+   * When executed, this method will trigger the `stop` of the previously
+   * selected stage (if there was one) and the `start` of the new one.
+   * @returns The new selected stage.
+   * @throws {CallError} If there aren't any stages added to this game to select
+   * from or if the current stage is already the first of the list.
+   */
+  public selectPreviousStage(): Stage {
+    return this.stageManager.selectPrevious();
+  }
+
+  /**
+   * @returns The index of the current stage or `undefined` if no stages is
+   * selected.
+   */
+  public getSelectedStageIndex(): number | undefined {
+    return this.stageManager.getSelectedIndex();
+  }
+
+  /**
+   * @returns The current stage or `undefined` if no stage is selected.
+   */
+  public getSelectedStage(): Stage | undefined {
+    return this.stageManager.getSelectedStage();
+  }
+
+  /**
    * This method starts the game execution if it hasn't already started.
    * 
    * It triggers the {@linkcode onStart} method, which you can use to define
@@ -517,11 +738,19 @@ export class Game implements GameIterable {
    * 
    * It updates the input informaion and then triggers the {@linkcode onUpdate}
    * method, which you can use to define what happens every frame of the game.
+   * 
+   * It also triggers the update of the currently selected stage, if any.
    */
   public update(): void {
     this.gameInput.update();
 
     this.onUpdate();
+
+    const selectedStage = this.getSelectedStage();
+
+    if(selectedStage !== undefined) {
+      selectedStage.update();
+    }
   }
 
   /**
@@ -530,10 +759,18 @@ export class Game implements GameIterable {
    * 
    * It triggers the {@linkcode onDraw} method, which you can use to define
    * what is drawn every frame of the game.
+   * 
+   * It also triggers the draw of the currently selected stage, if any.
    * @param ctx The canvas rendering context used to draw with.
    */
   public draw(ctx: CanvasRenderingContext2D): void {
     this.onDraw(ctx);
+
+    const selectedStage = this.getSelectedStage();
+
+    if(selectedStage !== undefined) {
+      selectedStage.draw(ctx);
+    }
   }
 
   /**
@@ -541,12 +778,21 @@ export class Game implements GameIterable {
    * 
    * It triggers the {@linkcode onStop} method, which you can use to define
    * what happens when the game stops.
+   * 
+   * If a stage is selected, this method also triggers its `stop`.
+   * 
    * @throws {CallError} If called with the game already stopped.
    */
   public stop(): void {
+    this.gameClock.stop();
+
     this.onStop();
 
-    this.gameClock.stop();
+    const selectedStage = this.getSelectedStage();
+
+    if(selectedStage !== undefined) {
+      selectedStage.stop();
+    }
   }
 
   public onStart(): void {
