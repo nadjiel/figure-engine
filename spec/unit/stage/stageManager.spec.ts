@@ -48,6 +48,36 @@ describe("StageManager class", () => {
       expect(manager.getSelectedStage()).toBe(stage);
     });
 
+    it("Should start new stage", () => {
+      const manager = new StageManager();
+      const stage = new Stage();
+      
+      spyOn(stage, "start");
+
+      manager.addFirst(stage);
+
+      manager.select(0);
+
+      expect(stage.start).toHaveBeenCalled();
+    });
+
+    it("Should stop previous stage and start next", () => {
+      let order = "";
+      const manager = new StageManager();
+      const stage1 = new Stage();
+      stage1.stop = () => order += '1';
+      const stage2 = new Stage();
+      stage2.start = () => order += '2';
+
+      manager.addLast(stage1);
+      manager.addLast(stage2);
+
+      manager.select(0);
+      manager.select(1);
+
+      expect(order).toBe("12");
+    });
+
   });
 
   describe("selectNext method", () => {
@@ -66,7 +96,7 @@ describe("StageManager class", () => {
       manager.selectNext();
 
       expect(() => manager.selectNext())
-        .toThrowError(`index must be inside [0, ${manager.getAmount()}[ (received ${1})`);
+        .toThrowError(`can't select next stage from last one`);
     });
 
     it("Should select first if no one is selected", () => {
@@ -95,6 +125,36 @@ describe("StageManager class", () => {
       expect(manager.getSelectedStage()).toBe(stage2);
     });
 
+    it("Should start new stage", () => {
+      const manager = new StageManager();
+      const stage = new Stage();
+      
+      spyOn(stage, "start");
+
+      manager.addFirst(stage);
+
+      manager.selectNext();
+
+      expect(stage.start).toHaveBeenCalled();
+    });
+
+    it("Should stop previous stage and start next", () => {
+      let order = "";
+      const manager = new StageManager();
+      const stage1 = new Stage();
+      stage1.stop = () => order += '1';
+      const stage2 = new Stage();
+      stage2.start = () => order += '2';
+
+      manager.addLast(stage1);
+      manager.addLast(stage2);
+
+      manager.selectNext();
+      manager.selectNext();
+
+      expect(order).toBe("12");
+    });
+
   });
 
   describe("selectPrevious method", () => {
@@ -113,7 +173,7 @@ describe("StageManager class", () => {
       manager.selectPrevious();
 
       expect(() => manager.selectPrevious())
-        .toThrowError(`index must be inside [0, ${manager.getAmount()}[ (received ${-1})`);
+        .toThrowError(`can't select previous stage from first one`);
     });
 
     it("Should select last if no one is selected", () => {
@@ -140,6 +200,36 @@ describe("StageManager class", () => {
       expect(manager.selectPrevious()).toBe(stage1);
       expect(manager.getSelectedIndex()).toBe(index);
       expect(manager.getSelectedStage()).toBe(stage1);
+    });
+
+    it("Should start new stage", () => {
+      const manager = new StageManager();
+      const stage = new Stage();
+      
+      spyOn(stage, "start");
+
+      manager.addFirst(stage);
+
+      manager.selectPrevious();
+
+      expect(stage.start).toHaveBeenCalled();
+    });
+
+    it("Should stop previous stage and start next", () => {
+      let order = "";
+      const manager = new StageManager();
+      const stage1 = new Stage();
+      stage1.start = () => order += '1';
+      const stage2 = new Stage();
+      stage2.stop = () => order += '2';
+
+      manager.addLast(stage1);
+      manager.addLast(stage2);
+
+      manager.selectPrevious();
+      manager.selectPrevious();
+
+      expect(order).toBe("21");
     });
 
   });
