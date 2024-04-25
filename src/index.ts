@@ -3,6 +3,7 @@ export { Game } from "./main/game.js";
 export { KeyboardInput } from "./input/keyboardInput.js";
 export { MouseInput } from "./input/mouseInput.js";
 
+export { Stage } from "./stage/stage.js";
 export { GameObject } from "./stage/gameObject.js";
 
 export { VectorN } from "./spatial/vectorN.js";
