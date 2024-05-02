@@ -84,6 +84,38 @@ export class VectorN {
     return this.components.length;
   }
 
+  public plus(vector: VectorN): VectorN {
+    if(vector.getDimension() !== this.getDimension()) {
+      throw new ArgumentError(`vectors must have same dimension (tried adding vector${this.getDimension()} with vector${vector.getDimension()})`);
+    }
+
+    const adder = (component: number, index: number) => {
+      return component + vector.getComponent(index);
+    };
+
+    return new VectorN(...this.getComponents().map(adder));
+  }
+
+  public incrementBy(value: number): VectorN {
+    const incrementer = (component: number) => {
+      return component + value;
+    };
+
+    return new VectorN(...this.getComponents().map(incrementer));
+  }
+
+  public increment(): VectorN {
+    return this.incrementBy(1);
+  }
+
+  public scaleBy(scalar: number): VectorN {
+    const scaler = (component: number) => {
+      return component * scalar;
+    };
+
+    return new VectorN(...this.getComponents().map(scaler));
+  }
+
   /**
    * This method iterates through each component of this vector and calls the
    * given callback passing each one of them.

@@ -78,6 +78,62 @@ describe("VectorN class", () => {
 
   });
 
+  describe("plus method", () => {
+
+    it("Should not accept vector with different dimension", () => {
+      const v1 = new VectorN(-1, 5);
+      const v2 = new VectorN(3);
+
+      expect(() => v1.plus(v2)).toThrowError(
+        `vectors must have same dimension (tried adding vector${v1.getDimension()} with vector${v2.getDimension()})`
+      );
+    });
+
+    it("Should add vectors", () => {
+      const v1 = new VectorN(-1, 5);
+      const v2 = new VectorN(3, -7);
+      const expectedResult = new VectorN(2, -2);
+
+      expect(v1.plus(v2)).toEqual(expectedResult);
+    });
+
+  });
+
+  describe("incrementBy method", () => {
+
+    it("Should increment vector by a value", () => {
+      const v1 = new VectorN(0, -9);
+      const value = 3.25;
+      const expectedResult = new VectorN(3.25, -5.75);
+
+      expect(v1.incrementBy(value)).toEqual(expectedResult);
+    });
+
+  });
+
+  describe("increment method", () => {
+
+    it("Should increment vector by 1", () => {
+      const v = new VectorN(0, -9);
+      const expectedResult = new VectorN(1, -8);
+
+      expect(v.increment()).toEqual(expectedResult);
+    });
+
+  });
+
+  describe("scaleBy method", () => {
+
+    it("Should scale vector by a scalar", () => {
+      const v1 = new VectorN(-1, 5);
+      const scalar = 4;
+      const expectedResult = new VectorN(-4, 20);
+
+      expect(v1.scaleBy(scalar)).toEqual(expectedResult);
+    });
+
+  });
+
   describe("forEach method", () => {
 
     it("Should execute callback for each component", () => {
