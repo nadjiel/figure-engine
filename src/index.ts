@@ -11,3 +11,4 @@ export { Vector2 } from "./spatial/vector2.js";
 export { Rectangle } from "./spatial/rectangle.js";
 
 export { Color } from "./graphical/color.js";
+export { ColorFactory } from "./graphical/color.js";
