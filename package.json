@@ -26,9 +26,9 @@
     "dev:src": "concurrently \"npm run test-serve\" \"nodemon\"",
     "dev": "concurrently \"npm run dev:test\" \"npm run dev:src\"",
 
-    "prepublish": "npm run build:dist",
-    "publish": "npm run test && npm publish",
-    "publish:local": "npm run prepublish && npm run test && npm link"
+    "prepublish": "npm run build:dist && npm run test",
+    "publish": "npm publish",
+    "publish:local": "npm run prepublish && npm link"
   },
   "repository": {
     "type": "git",
