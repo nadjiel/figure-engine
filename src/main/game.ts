@@ -764,6 +764,8 @@ export class Game implements GameIterable {
    * @param ctx The canvas rendering context used to draw with.
    */
   public draw(ctx: CanvasRenderingContext2D): void {
+    ctx.clearRect(0, 0, this.getWidth(), this.getHeight());
+    
     this.onDraw(ctx);
 
     const selectedStage = this.getSelectedStage();
