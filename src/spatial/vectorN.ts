@@ -84,6 +84,15 @@ export class VectorN {
     return this.components.length;
   }
 
+  /**
+   * Sums this vector with another vector and returns the result.
+   * 
+   * If the `vector` passed in the parameter has a different dimension than this
+   * one, an error is thrown. 
+   * @param vector A vector with which to sum.
+   * @returns The result of the sum.
+   * @throws {ArgumentError} If the received `vector` has a different dimension.
+   */
   public plus(vector: VectorN): VectorN {
     if(vector.getDimension() !== this.getDimension()) {
       throw new ArgumentError(`vectors must have same dimension (tried adding vector${this.getDimension()} with vector${vector.getDimension()})`);
@@ -96,6 +105,12 @@ export class VectorN {
     return new VectorN(...this.getComponents().map(adder));
   }
 
+  /**
+   * Returns the result of the increment of the components of this vector by a
+   * given `value`.
+   * @param value A number by which to increment this vector components.
+   * @returns The result of the increment operation.
+   */
   public incrementBy(value: number): VectorN {
     const incrementer = (component: number) => {
       return component + value;
@@ -104,10 +119,21 @@ export class VectorN {
     return new VectorN(...this.getComponents().map(incrementer));
   }
 
+  /**
+   * @returns A vector corresponding to this vector with every component
+   * incremented by `1`.
+   */
   public increment(): VectorN {
     return this.incrementBy(1);
   }
 
+  /**
+   * Returns a new vector corresponding to this vector scaled by a
+   * given `value`.
+   * @param scalar A number by which to scale this vector.
+   * @returns A vector resulting of the scale of this vector by the received
+   * `value`.
+   */
   public scaleBy(scalar: number): VectorN {
     const scaler = (component: number) => {
       return component * scalar;
