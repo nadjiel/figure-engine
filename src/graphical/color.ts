@@ -147,6 +147,9 @@ export class Color extends VectorN {
 
 }
 
+/**
+ * The `ColorFactory` class holds static methods for predefined colors creation.
+ */
 export class ColorFactory {
 
   public static createTransparent(): Color {
