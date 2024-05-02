@@ -1,4 +1,4 @@
-import { Color } from "../../../dist/graphical/color.js";
+import { Color, ColorFactory } from "../../../dist/graphical/color.js";
 
 describe("Color class", () => {
 
@@ -209,6 +209,18 @@ describe("Color class", () => {
       expect(color.getAlpha()).toBe(newAlpha);
     });
 
+  });
+
+});
+
+describe("ColorFactory class", () => {
+
+  it("Should instantiate new colors every time", () => {
+    const transparent1 = ColorFactory.createTransparent();
+    const transparent2 = ColorFactory.createTransparent();
+
+    expect(transparent1).not.toBe(transparent2);
+    expect(transparent1).toEqual(transparent2);
   });
 
 });

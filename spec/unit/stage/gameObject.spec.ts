@@ -1,7 +1,7 @@
 import { GameObject } from "../../../dist/stage/gameObject.js";
 import { Vector2 } from "../../../dist/spatial/vector2.js";
 import { Rectangle } from "../../../dist/spatial/rectangle.js";
-import Color from "../../../dist/graphical/color.js";
+import { Color, ColorFactory } from "../../../dist/graphical/color.js";
 
 describe("GameObject class", () => {
 
@@ -26,7 +26,7 @@ describe("GameObject class", () => {
     expect(gameObject.getWidth()).toBe(dimensions.getComponent(0));
     expect(gameObject.getHeight()).toBe(dimensions.getComponent(1));
     expect(gameObject.getDimensions()).toBe(dimensions);
-    expect(gameObject.getColor()).toEqual(Color.NONE);
+    expect(gameObject.getColor()).toEqual(ColorFactory.createTransparent());
   });
 
   describe("start method", () => {

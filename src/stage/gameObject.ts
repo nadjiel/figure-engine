@@ -1,6 +1,6 @@
 import { StageElement } from "./stageElement.js";
 import { Rectangle } from "../spatial/rectangle.js";
-import { Color } from "../graphical/color.js";
+import { Color, ColorFactory } from "../graphical/color.js";
 import { Vector2 } from "../spatial/vector2.js";
 
 /**
@@ -32,7 +32,7 @@ export abstract class GameObject implements StageElement {
    * yet and is initially set to no color so that you adjust it to your
    * preference.
    */
-  private color = Color.NONE;
+  private color = ColorFactory.createTransparent();
 
   /**
    * @param coordinates The coordinates of this object in the game space.

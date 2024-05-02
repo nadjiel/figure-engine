@@ -9,26 +9,6 @@ import { VectorN } from "../spatial/vectorN.js";
  */
 export class Color extends VectorN {
 
-  public static readonly TRANSPARENT = new Color(0, 0, 0, 0);
-
-  public static readonly NONE = this.TRANSPARENT;
-  
-  public static readonly BLACK = new Color(0, 0, 0, 1);
-  
-  public static readonly WHITE = new Color(255, 255, 255, 1);
-  
-  public static readonly RED = new Color(255, 0, 0, 1);
-  
-  public static readonly GREEN = new Color(0, 255, 0, 1);
-  
-  public static readonly BLUE = new Color(0, 0, 255, 1);
-  
-  public static readonly YELLOW = new Color(255, 255, 0, 1);
-  
-  public static readonly CYAN = new Color(0, 255, 255, 1);
-  
-  public static readonly MAGENTA = new Color(255, 0, 255, 1);
-
   /**
    * This constructor creates a new color specified by its parameters.
    * 
@@ -163,6 +143,46 @@ export class Color extends VectorN {
    */
   public toString(): string {
     return `rgba(${this.getRed()}, ${this.getGreen()}, ${this.getBlue()}, ${this.getAlpha()})`;
+  }
+
+}
+
+export class ColorFactory {
+
+  public static createTransparent(): Color {
+    return new Color(0, 0, 0, 0);
+  }
+
+  public static createBlack(): Color {
+    return new Color(0, 0, 0, 1);
+  }
+
+  public static createWhite(): Color {
+    return new Color(255, 255, 255, 1);
+  }
+  
+  public static createRed(): Color {
+    return new Color(255, 0, 0, 1);
+  }
+
+  public static createGreen(): Color {
+    return new Color(0, 255, 0, 1);
+  }
+
+  public static createBlue(): Color {
+    return new Color(0, 0, 255, 1);
+  }
+  
+  public static createYellow(): Color {
+    return new Color(255, 255, 0, 1);
+  }
+
+  public static createCyan(): Color {
+    return new Color(0, 255, 255, 1);
+  }
+  
+  public static createMagenta(): Color {
+    return new Color(255, 0, 255, 1);
   }
 
 }
