@@ -1,6 +1,6 @@
 {
   "name": "figure-engine",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A typescript open source 2D game engine for HTML5 games with the Canvas API",
   "main": "dist/index.js",
   "type": "module",
@@ -12,17 +12,23 @@
     "clear:dist": "rimraf ./dist",
     "clear:test": "rimraf ./spec-build",
     "clear": "npm run clear:dist && npm run clear:test",
+
     "prebuild:dist": "npm run clear:dist",
     "build:dist": "tsc",
     "prebuild:test": "npm run clear:test",
     "build:test": "tsc --project ./tsconfig.test.json",
     "build": "npm run build:dist && npm run build:test",
+
     "test": "jasmine-browser-runner runSpecs --config=jasmine.json",
     "test-serve": "jasmine-browser-runner serve --config=jasmine.json",
-    "dev": " concurrently \"npm run test-serve\" \"nodemon\"",
-    "prepublish": "npm run build:dist",
-    "publish": "npm run test && npm publish",
-    "publish:local": "npm run prepublish && npm run test && npm link"
+
+    "dev:test": "nodemon --config ./nodemon.test.json",
+    "dev:src": "concurrently \"npm run test-serve\" \"nodemon\"",
+    "dev": "concurrently \"npm run dev:test\" \"npm run dev:src\"",
+
+    "prepublish": "npm run build:dist && npm run test",
+    "publish": "npm publish",
+    "publish:local": "npm run prepublish && npm link"
   },
   "repository": {
     "type": "git",

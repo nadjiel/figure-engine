@@ -1,4 +1,4 @@
-import { ArgumentError, CallError } from "./errors/index.js";
+import { ArgumentError, CallError } from "../errors/index.js";
 
 type OnStep = () => void;
 
