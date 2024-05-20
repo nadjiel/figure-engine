@@ -1,4 +1,5 @@
 import { Resource } from "./resource.js";
+import { ResourceError } from "../errors/resourceError.js";
 
 export class ImageResource implements Resource<HTMLImageElement> {
 
@@ -26,7 +27,9 @@ export class ImageResource implements Resource<HTMLImageElement> {
         this.loaded = true;
         resolve(this.image);
       }
-      this.image.onerror = () => reject("Error loading image");
+      this.image.onerror = () => reject(
+        new ResourceError(`Couldn't load the resource with path "${this.path}".`)
+      );
 
       this.image.src = this.path;
     });
