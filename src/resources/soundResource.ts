@@ -56,7 +56,7 @@ export class SoundResource implements Resource<HTMLAudioElement> {
    */
   public async load(): Promise<HTMLAudioElement> {
     return new Promise((resolve, reject) => {
-      this.sound.onload = () => {
+      this.sound.oncanplaythrough = () => {
         this.loaded = true;
         resolve(this.sound);
       }
