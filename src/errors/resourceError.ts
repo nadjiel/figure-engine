@@ -1,6 +1,6 @@
 /**
  * The `ResourceError` class represents any error related to
- * a game {@code Resource}.
+ * a game `Resource`.
  * 
  * @version 0.4.0
  * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
