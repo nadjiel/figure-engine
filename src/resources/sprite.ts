@@ -5,12 +5,14 @@ export class Sprite {
 
   constructor(
     image: ImageResource,
-    topMargin?: number,
-    rightMargin?: number,
-    bottomMargin?: number,
-    leftMargin?: number,
-    horizontalGap?: number,
-    verticalGap?: number
+    columns = 1,
+    rows = 1,
+    leftMargin = 0,
+    rightMargin = 0,
+    topMargin = 0,
+    bottomMargin = 0,
+    horizontalGap = 0,
+    verticalGap = 0
   ) {
 
   }
@@ -24,6 +26,22 @@ export class Sprite {
   }
 
   public getHeight(): number {
+    return 0;
+  }
+
+  public setRows(amount: number): void {
+
+  }
+
+  public getRows(): number {
+    return 0;
+  }
+
+  public setColumns(amount: number): void {
+
+  }
+
+  public getColumns(): number {
     return 0;
   }
 
@@ -100,15 +118,23 @@ export class Sprite {
 
   }
 
-  public getFrameId(): number {
+  public nextFrameInRow(): void {
+
+  }
+
+  public nextFrameInColumn(): void {
+
+  }
+
+  public getFrame(): number {
     return 0;
   }
 
-  public getFrame(): HTMLImageElement {
-    return new Image();
-  }
-
-  public draw(ctx: CanvasRenderingContext2D): void {
+  public draw(
+    ctx: CanvasRenderingContext2D,
+    position: Vector2,
+    scale = new Vector2(1, 1)
+  ): void {
 
   }
 
