@@ -346,8 +346,11 @@ export class Sprite {
   private getImageFrameX(): number {
     let x = 0;
 
+    const frameCoords = this.getFrameCoordinates();
+
     x += this.margins.left;
-    x += this.gaps.getX() * this.getFrameCoordinates().getX();
+    x += this.gaps.getX() * frameCoords.getX();
+    x += this.getImageFrameWidth() * frameCoords.getX();
 
     return x;
   }
@@ -355,8 +358,11 @@ export class Sprite {
   private getImageFrameY(): number {
     let y = 0;
 
+    const frameCoords = this.getFrameCoordinates();
+
     y += this.margins.top;
     y += this.gaps.getY() * this.getFrameCoordinates().getY();
+    y += this.getImageFrameHeight() * frameCoords.getY();
 
     return y;
   }
