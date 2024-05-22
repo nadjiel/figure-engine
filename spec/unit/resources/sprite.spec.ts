@@ -7,8 +7,8 @@ const image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJ
 const imageResource = new ImageResource(image);
 let initialWidth: number;
 let initialHeight: number;
-let initialRows: number;
-let initialColumns: number;
+let initialRows = 1;
+let initialColumns = 1;
 let initialMargins = 0;
 let initialGaps = 0;
 let initialIncludedFrames = [0];
@@ -26,7 +26,7 @@ describe("Sprite class", () => {
     sprite = new Sprite(imageResource);
   });
 
-  it("Should instantiate properly without configurations", () => {
+  it("Should instantiate properly", () => {
     expect(sprite.getImage()).toBe(imageResource.get());
     expect(sprite.getWidth()).toBe(initialWidth);
     expect(sprite.getHeight()).toBe(initialHeight);
@@ -42,7 +42,7 @@ describe("Sprite class", () => {
     expect(sprite.getHorizontalGap()).toBe(initialGaps);
     expect(sprite.getVerticalGap()).toBe(initialGaps);
 
-    expect(sprite.getIncludedFrames()).toBe(initialIncludedFrames);
+    expect(sprite.getIncludedFrames()).toEqual(initialIncludedFrames);
     expect(sprite.getFrame()).toBe(initialFrame);
   });
 
@@ -52,7 +52,7 @@ describe("Sprite class", () => {
       const columns = 0;
 
       expect(() => sprite.setColumns(columns))
-        .toThrowError(`Sprite must have 1 or more columns (received ${columns})`);
+        .toThrowError(`Sprite must have 1 or more columns and rows (received ${columns})`);
     });
 
     it("Should accept values greater or equal to 1", () => {
@@ -71,7 +71,7 @@ describe("Sprite class", () => {
       const rows = 0;
 
       expect(() => sprite.setRows(rows))
-        .toThrowError(`Sprite must have 1 or more rows (received ${rows})`);
+        .toThrowError(`Sprite must have 1 or more columns and rows (received ${rows})`);
     });
 
     it("Should accept values greater or equal to 1", () => {
@@ -101,16 +101,6 @@ describe("Sprite class", () => {
       expect(sprite.getLeftMargin()).toBe(margin);
     });
 
-    it("Should handle values bigger than the image usable area", () => {
-      const margin = 250;
-      // Expected 225 because it's the image width
-      const expectedMargin = 225;
-
-      sprite.setLeftMargin(margin);
-
-      expect(sprite.getLeftMargin()).toBe(expectedMargin);
-    });
-
   });
 
   describe("setRightMargin method", () => {
@@ -128,16 +118,6 @@ describe("Sprite class", () => {
       sprite.setRightMargin(margin);
 
       expect(sprite.getRightMargin()).toBe(margin);
-    });
-
-    it("Should handle values bigger than the image usable area", () => {
-      const margin = 250;
-      // Expected 225 because it's the image width
-      const expectedMargin = 225;
-
-      sprite.setRightMargin(margin);
-
-      expect(sprite.getRightMargin()).toBe(expectedMargin);
     });
 
   });
@@ -159,16 +139,6 @@ describe("Sprite class", () => {
       expect(sprite.getTopMargin()).toBe(margin);
     });
 
-    it("Should handle values bigger than the image usable area", () => {
-      const margin = 250;
-      // Expected 225 because it's the image width
-      const expectedMargin = 225;
-
-      sprite.setTopMargin(margin);
-
-      expect(sprite.getTopMargin()).toBe(expectedMargin);
-    });
-
   });
 
   describe("setBottomMargin method", () => {
@@ -186,16 +156,6 @@ describe("Sprite class", () => {
       sprite.setBottomMargin(margin);
 
       expect(sprite.getBottomMargin()).toBe(margin);
-    });
-
-    it("Should handle values bigger than the image usable area", () => {
-      const margin = 250;
-      // Expected 225 because it's the image width
-      const expectedMargin = 225;
-
-      sprite.setBottomMargin(margin);
-
-      expect(sprite.getBottomMargin()).toBe(expectedMargin);
     });
 
   });
@@ -217,16 +177,6 @@ describe("Sprite class", () => {
       expect(sprite.getHorizontalGap()).toBe(gap);
     });
 
-    it("Should handle values bigger than the image usable area", () => {
-      const gap = 250;
-      // Expected 225 because it's the image width
-      const expectedGap = 225;
-
-      sprite.setHorizontalGap(gap);
-
-      expect(sprite.getHorizontalGap()).toBe(expectedGap);
-    });
-
   });
 
   describe("setVerticalGap method", () => {
@@ -246,41 +196,44 @@ describe("Sprite class", () => {
       expect(sprite.getVerticalGap()).toBe(gap);
     });
 
-    it("Should handle values bigger than the image usable area", () => {
-      const gap = 250;
-      // Expected 225 because it's the image width
-      const expectedGap = 225;
-
-      sprite.setVerticalGap(gap);
-
-      expect(sprite.getVerticalGap()).toBe(expectedGap);
-    });
-
   });
 
-  describe("includeOnly method", () => {
-
-    it("Shouldn't accept empty array", () => {
-      const frames: Array<number> = [];
-
-      expect(() => sprite.includeOnly(...frames))
-        .toThrowError(`Sprite can't have no included frames (received ${frames})`);
-    });
+  describe("includeFrames method", () => {
 
     it("Should not accept unavailable frames", () => {
       const frames: Array<number> = [ 0, 1 ];
       const expectedErrorFrame = 1;
 
-      expect(() => sprite.includeOnly(...frames))
-        .toThrowError(`Sprite can't include unexisting frame ${expectedErrorFrame}`);
+      expect(() => sprite.includeFrames(...frames))
+        .toThrowError(`This sprite doesn't have a frame ${expectedErrorFrame}`);
     });
 
     it("Should accept available frames", () => {
       const frames: Array<number> = [ 0 ];
 
-      sprite.includeOnly(...frames);
+      sprite.includeFrames(...frames);
 
-      expect(sprite.getIncludedFrames()).toBe(frames);
+      expect(sprite.getIncludedFrames()).toEqual(frames);
+    });
+
+  });
+
+  describe("excludeFrames method", () => {
+
+    it("Should not accept unavailable frames", () => {
+      const frames: Array<number> = [ 0, 1 ];
+      const expectedErrorFrame = 1;
+
+      expect(() => sprite.excludeFrames(...frames))
+        .toThrowError(`This sprite doesn't have a frame ${expectedErrorFrame}`);
+    });
+
+    it("Should accept available frames", () => {
+      const frames: Array<number> = [ 0 ];
+
+      sprite.excludeFrames(...frames);
+
+      expect(sprite.getIncludedFrames()).toEqual([]);
     });
 
   });
@@ -291,16 +244,16 @@ describe("Sprite class", () => {
       const frame = 1;
 
       expect(() => sprite.selectFrame(frame))
-        .toThrowError(`Can't select unexisting frame ${frame}`);
+        .toThrowError(`This Sprite has only [0, ${0}] frames (received ${frame}).`);
     });
 
-    it("Should not accept unincluded frames", () => {
+    it("Should not accept excluded frames", () => {
       sprite.setColumns(2);
-      sprite.includeOnly(0);
+      sprite.excludeFrame(1);
       const frame = 1;
 
       expect(() => sprite.selectFrame(frame))
-        .toThrowError(`Can't select unincluded frame ${frame}`);
+        .toThrowError(`The frame ${frame} isn't included in this Sprite.`);
     });
 
     it("Should accept valid frames", () => {
@@ -428,7 +381,7 @@ describe("Sprite class", () => {
 
       spyOn(ctx, "drawImage");
 
-      sprite.draw(ctx, drawPosition);
+      sprite.draw(ctx, drawPosition, drawScale);
 
       expect(ctx.drawImage).toHaveBeenCalledWith(
         sprite.getImage(),

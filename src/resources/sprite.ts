@@ -198,9 +198,28 @@ export class Sprite {
     return this;
   }
 
+  public excludeFrame(frame: number): Sprite {
+    if(this.includedFrames.get(frame) === undefined) {
+      throw new ArgumentError(
+        `This sprite doesn't have a frame ${frame}`
+      );
+    }
+
+    this.includedFrames.set(frame, false);
+
+    return this;
+  }
+
   // Specify the only frames that should be considered
-  public includeOnlyFrames(...frames: Array<number>): Sprite {
+  public includeFrames(...frames: Array<number>): Sprite {
     frames.forEach(frame => this.includeFrame(frame));
+
+    return this;
+  }
+
+  // Specify the only frames that should be considered
+  public excludeFrames(...frames: Array<number>): Sprite {
+    frames.forEach(frame => this.excludeFrame(frame));
 
     return this;
   }
@@ -223,7 +242,7 @@ export class Sprite {
 
     if(frame < 0 || frame >= frameAmount) {
       throw new ArgumentError(
-        `This Sprite has only [0, ${frameAmount - 1} frames (received ${frame}).`
+        `This Sprite has only [0, ${frameAmount - 1}] frames (received ${frame}).`
       );
     }
     if(!this.includedFrames.get(frame)) {
@@ -256,12 +275,16 @@ export class Sprite {
     let nextFrame = this.frame + 1;
 
     if(nextFrame === this.getFrameAmount()) nextFrame = 0;
+
+    this.selectFrame(nextFrame);
   }
 
   public previousFrame(): void {
     let previousFrame = this.frame - 1;
 
     if(previousFrame === -1) previousFrame = this.getFrameAmount() - 1;
+
+    this.selectFrame(previousFrame);
   }
 
   public nextFrameInRow(): void {
