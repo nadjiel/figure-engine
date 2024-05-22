@@ -40,6 +40,20 @@ export class ImageResource implements Resource<HTMLImageElement> {
   }
 
   /**
+   * @returns The width of this image resource if it is loaded or `0` otherwise.
+   */
+  public getWidth(): number {
+    return this.image.width;
+  }
+
+  /**
+   * @returns The height of this image resource if it is loaded or `0` otherwise.
+   */
+  public getHeight(): number {
+    return this.image.height;
+  }
+
+  /**
    * @returns The path of the image that this `ImageResource` imports.
    */
   public getPath(): string {
