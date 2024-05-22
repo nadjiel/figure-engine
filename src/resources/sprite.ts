@@ -2,6 +2,12 @@ import { ImageResource } from "./imageResource.js";
 import { Vector2 } from "../spatial/vector2.js";
 import { ArgumentError } from "../errors/argumentError.js";
 
+/**
+ * This interface describes the four boundings of a rectangular area.
+ * 
+ * @version 0.4.0
+ * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
+ */
 interface BoundingBox {
   top: number;
   right: number;
@@ -9,12 +15,31 @@ interface BoundingBox {
   left: number;
 }
 
+/**
+ * The `Sprite` class allows defining and customizing the properties of a sprite
+ * for the `Game`.
+ * 
+ * @version 0.4.0
+ * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
+ */
 export class Sprite {
 
+  /**
+   * Stores the {@linkcode ImageResource} that was imported to this `Sprite`.
+   */
   private image: ImageResource;
 
+  /**
+   * Stores a {@linkcode Vector2} describing how many columns and rows,
+   * respectively, this `Sprite` has in the case it is a sprite sheet with
+   * various sprites.
+   */
   private cells = new Vector2(1, 1);
 
+  /**
+   * Describes how many pixels this sprites has in its top, right, left and
+   * bottom margins.
+   */
   private margins: BoundingBox = {
     top: 0,
     right: 0,
@@ -22,25 +47,53 @@ export class Sprite {
     left: 0
   };
 
+  /**
+   * Stores a {@linkcode Vector2} describing how many pixels are there between
+   * the sprites (horizontally and vertically) in the case this `Sprite`
+   * represents a sprite sheet.
+   */
   private gaps = Vector2.createZero();
 
+  /**
+   * Stores information about wether a frame is supposed to be counted in the
+   * sprite sheet or not.
+   */
   private includedFrames = new Map<number, boolean>();
 
+  /**
+   * Points to what is the currently selected frame.
+   */
   private frame = 0;
 
+  /**
+   * @param image A {@linkcode ImageResource} with which to create this `Sprite`.
+   */
   constructor(image: ImageResource) {
     this.image = image;
     this.includedFrames.set(0, true);
   }
 
+  /**
+   * @returns The {@linkcode HTMLImageElement} that this sprite stores.
+   * If this `Sprite`'s {@linkcode ImageResource} wasn't loaded yet, this
+   * returns an `HTMLImageElement` without a `src`.
+   */
   public getImage(): HTMLImageElement {
     return this.image.get();
   }
 
+  /**
+   * @returns Returns the width of this `Sprite` or `0` if it's
+   * {@linkcode ImageResource} wasn't loaded yet.
+   */
   public getWidth(): number {
     return this.image.getWidth();
   }
 
+  /**
+   * @returns Returns the height of this `Sprite` or `0` if it's
+   * {@linkcode ImageResource} wasn't loaded yet.
+   */
   public getHeight(): number {
     return this.image.getHeight();
   }
@@ -50,10 +103,13 @@ export class Sprite {
       `Sprite must have 1 or more columns and rows (received ${amount})`
     );
 
-    // Makes sure cell amount is an integer
     return Math.floor(amount);
   }
 
+  /**
+   * Updates the information of the amount of frames this `Sprite` stores
+   * according to the current `rows` and `columns` set.
+   */
   private updateFrameAmount(): void {
     const totalFrames = this.getColumns() * this.getRows();
 
@@ -70,6 +126,11 @@ export class Sprite {
     }
   }
 
+  /**
+   * Configures this `Sprite` to have a certain amount of `columns`.
+   * @param amount The new amount of `columns` to considerate.
+   * @returns This `Sprite`, for chaining methods.
+   */
   public setColumns(amount: number): Sprite {
     amount = this.treatCells(amount);
 
@@ -80,6 +141,11 @@ export class Sprite {
     return this;
   }
 
+  /**
+   * Configures this `Sprite` to have a certain amount of `rows`.
+   * @param amount The new amount of `rows` to considerate.
+   * @returns This `Sprite`, for chaining methods.
+   */
   public setRows(amount: number): Sprite {
     amount = this.treatCells(amount);
 
@@ -90,10 +156,16 @@ export class Sprite {
     return this;
   }
 
+  /**
+   * @returns How many `columns` are set for this `Sprite`.
+   */
   public getColumns(): number {
     return this.cells.getX();
   }
 
+  /**
+   * @returns How many `rows` are set for this `Sprite`.
+   */
   public getRows(): number {
     return this.cells.getY();
   }
@@ -106,6 +178,11 @@ export class Sprite {
     return Math.floor(margin);
   }
 
+  /**
+   * Sets how many pixels are there of left `margin` in the image of this `Sprite`.
+   * @param margin The new left `margin` to set.
+   * @returns This `Sprite`, for chaining methods.
+   */
   public setLeftMargin(margin: number): Sprite {
     margin = this.treatMargin(margin);
 
@@ -114,6 +191,11 @@ export class Sprite {
     return this;
   }
 
+  /**
+   * Sets how many pixels are there of right `margin` in the image of this `Sprite`.
+   * @param margin The new right `margin` to set.
+   * @returns This `Sprite`, for chaining methods.
+   */
   public setRightMargin(margin: number): Sprite {
     margin = this.treatMargin(margin);
 
@@ -122,6 +204,11 @@ export class Sprite {
     return this;
   }
 
+  /**
+   * Sets how many pixels are there of top `margin` in the image of this `Sprite`.
+   * @param margin The new top `margin` to set.
+   * @returns This `Sprite`, for chaining methods.
+   */
   public setTopMargin(margin: number): Sprite {
     margin = this.treatMargin(margin);
 
@@ -130,6 +217,11 @@ export class Sprite {
     return this;
   }
 
+  /**
+   * Sets how many pixels are there of bottom `margin` in the image of this `Sprite`.
+   * @param margin The new bottom `margin` to set.
+   * @returns This `Sprite`, for chaining methods.
+   */
   public setBottomMargin(margin: number): Sprite {
     margin = this.treatMargin(margin);
 
@@ -138,18 +230,30 @@ export class Sprite {
     return this;
   }
 
+  /**
+   * @returns The margin in pixels in the left of the image of this `Sprite`s
+   */
   public getLeftMargin(): number {
     return this.margins.left;
   }
 
+  /**
+   * @returns The margin in pixels in the right of the image of this `Sprite`s
+   */
   public getRightMargin(): number {
     return this.margins.right;
   }
 
+  /**
+   * @returns The margin in pixels in the top of the image of this `Sprite`s
+   */
   public getTopMargin(): number {
     return this.margins.top;
   }
 
+  /**
+   * @returns The margin in pixels in the bottom of the image of this `Sprite`s
+   */
   public getBottomMargin(): number {
     return this.margins.bottom;
   }
@@ -162,6 +266,12 @@ export class Sprite {
     return Math.floor(gap);
   }
 
+  /**
+   * Sets how many pixels are there of horizontal gap
+   * between the frames of this sprite sheet.
+   * @param gap The new horizontal `gap` to set.
+   * @returns This `Sprite`, for chaining methods.
+   */
   public setHorizontalGap(gap: number): Sprite {
     gap = this.treatGap(gap);
 
@@ -170,6 +280,12 @@ export class Sprite {
     return this;
   }
 
+  /**
+   * Sets how many pixels are there of vertical gap
+   * between the frames of this sprite sheet.
+   * @param gap The new vertical `gap` to set.
+   * @returns This `Sprite`, for chaining methods.
+   */
   public setVerticalGap(gap: number): Sprite {
     gap = this.treatGap(gap);
 
@@ -178,14 +294,28 @@ export class Sprite {
     return this;
   }
 
+  /**
+   * @returns How many pixels are there of horizontal gap
+   * between the frames of this sprite sheet.
+   */
   public getHorizontalGap(): number {
     return this.gaps.getX();
   }
 
+  /**
+   * @returns How many pixels are there of vertical gap
+   * between the frames of this sprite sheet.
+   */
   public getVerticalGap(): number {
     return this.gaps.getY();
   }
 
+  /**
+   * Marks the given `frame` as included in this sprite sheet, so that it
+   * can be used with the frame selection methods.
+   * @param frame The frame to include in frame selections.
+   * @returns This `Sprite`, for chaining methods.
+   */
   public includeFrame(frame: number): Sprite {
     if(this.includedFrames.get(frame) === undefined) {
       throw new ArgumentError(
@@ -198,6 +328,12 @@ export class Sprite {
     return this;
   }
 
+  /**
+   * Marks the given `frame` as excluded in this sprite sheet, so that it
+   * can't be used with the frame selection methods.
+   * @param frame The frame to exclude in frame selections.
+   * @returns This `Sprite`, for chaining methods.
+   */
   public excludeFrame(frame: number): Sprite {
     if(this.includedFrames.get(frame) === undefined) {
       throw new ArgumentError(
@@ -210,20 +346,35 @@ export class Sprite {
     return this;
   }
 
-  // Specify the only frames that should be considered
+  /**
+   * Marks the given `frame`s as included in this sprite sheet, so that they
+   * can be used with the frame selection methods.
+   * @param frames The various frames that you want to be included in this
+   * sprite sheet.
+   * @returns This `Sprite`, for chaining methods.
+   */
   public includeFrames(...frames: Array<number>): Sprite {
     frames.forEach(frame => this.includeFrame(frame));
 
     return this;
   }
 
-  // Specify the only frames that should be considered
+  /**
+   * Marks the given `frame`s as excluded in this sprite sheet, so that they
+   * can't be used with the frame selection methods.
+   * @param frames The various frames that you want to be excluded in this
+   * sprite sheet.
+   * @returns This `Sprite`, for chaining methods.
+   */
   public excludeFrames(...frames: Array<number>): Sprite {
     frames.forEach(frame => this.excludeFrame(frame));
 
     return this;
   }
 
+  /**
+   * @returns An `Array` with the included frames.
+   */
   public getIncludedFrames(): Array<number> {
     const frames = [ ...this.includedFrames.keys() ];
     const includedFrames = frames.filter(
@@ -233,6 +384,10 @@ export class Sprite {
     return includedFrames;
   }
 
+  /**
+   * @returns How many frames are there in this `Sprite`, counting the ones
+   * marked as excluded.
+   */
   public getFrameAmount(): number {
     return this.getColumns() * this.getRows();
   }
@@ -252,18 +407,35 @@ export class Sprite {
     }
   }
 
+  /**
+   * Selects a `frame` to be used by this `Sprite` when the {@linkcode draw}
+   * method is used.
+   * @param frame The frame to select.
+   */
   public selectFrame(frame: number): void {
     this.treatFrame(frame);
 
     this.frame = frame;
   }
 
+  /**
+   * Selects a `frame` to be used by this `Sprite` when the {@linkcode draw}
+   * method is used through a {@linkcode Vector2} representing its coordinates
+   * in the sheet, starting from `[0, 0]` all the way to
+   * `[<columns> - 1, <rows> - 1]`.
+   * @param coordinate The `Vector2` with the coordinates of the
+   * `frame` to select.
+   */
   public selectFrameCoordinates(coordinate: Vector2): void {
     const frame = coordinate.getX() + coordinate.getY() * this.getColumns();
 
     this.selectFrame(frame);
   }
 
+  /**
+   * @returns A {@linkcode Vector2} representing what are the coordinates of
+   * the `frame` selected in the moment.
+   */
   public getFrameCoordinates(): Vector2 {
     const frameX = this.frame % this.getColumns();
     const frameY = Math.floor(this.frame / this.getColumns());
@@ -271,6 +443,10 @@ export class Sprite {
     return new Vector2(frameX, frameY);
   }
 
+  /**
+   * Selects the next `frame` in this `Sprite`.
+   * If the last `frame` is selected, the selection goes to the first one.
+   */
   public nextFrame(): void {
     let nextFrame = this.frame + 1;
 
@@ -279,6 +455,10 @@ export class Sprite {
     this.selectFrame(nextFrame);
   }
 
+  /**
+   * Selects the previous `frame` in this `Sprite`.
+   * If the first `frame` is selected, the selection goes to the last one.
+   */
   public previousFrame(): void {
     let previousFrame = this.frame - 1;
 
@@ -287,6 +467,10 @@ export class Sprite {
     this.selectFrame(previousFrame);
   }
 
+  /**
+   * Selects the next `frame` in the current row of this `Sprite`.
+   * If the last `frame` is selected, the selection goes to the first one.
+   */
   public nextFrameInRow(): void {
     const frameCoords = this.getFrameCoordinates();
     
@@ -299,6 +483,10 @@ export class Sprite {
     }
   }
 
+  /**
+   * Selects the previous `frame` in the current row of this `Sprite`.
+   * If the first `frame` is selected, the selection goes to the last one.
+   */
   public previousFrameInRow(): void {
     const frameCoords = this.getFrameCoordinates();
     
@@ -311,6 +499,10 @@ export class Sprite {
     }
   }
 
+  /**
+   * Selects the next `frame` in the current column of this `Sprite`.
+   * If the last `frame` is selected, the selection goes to the first one.
+   */
   public nextFrameInColumn(): void {
     const frameCoords = this.getFrameCoordinates();
     
@@ -325,6 +517,10 @@ export class Sprite {
     }
   }
 
+  /**
+   * Selects the previous `frame` in the current column of this `Sprite`.
+   * If the first `frame` is selected, the selection goes to the last one.
+   */
   public previousFrameInColumn(): void {
     const frameCoords = this.getFrameCoordinates();
     
@@ -339,10 +535,17 @@ export class Sprite {
     }
   }
 
+  /**
+   * @returns What is the current `frame` selected in this `Sprite`.
+   */
   public getFrame(): number {
     return this.frame;
   }
 
+  /**
+   * @returns The x coordinate in the image of this `Sprite` where the current
+   * frame begins.
+   */
   private getImageFrameX(): number {
     let x = 0;
 
@@ -355,6 +558,10 @@ export class Sprite {
     return x;
   }
 
+  /**
+   * @returns The y coordinate in the image of this `Sprite` where the current
+   * frame begins.
+   */
   private getImageFrameY(): number {
     let y = 0;
 
@@ -367,6 +574,9 @@ export class Sprite {
     return y;
   }
 
+  /**
+   * @returns The width of the current `frame` of this `Sprite`.
+   */
   private getImageFrameWidth(): number {
     let width = this.getWidth();
 
@@ -378,6 +588,9 @@ export class Sprite {
     return width;
   }
 
+  /**
+   * @returns The height of the current `frame` of this `Sprite`.
+   */
   private getImageFrameHeight(): number {
     let height = this.getHeight();
 
@@ -389,6 +602,13 @@ export class Sprite {
     return height;
   }
 
+  /**
+   * Draws this `Sprite` in a given `position` scaled by a given `scale` in the
+   * passed rendering context.
+   * @param ctx The {@linkcode CanvasRenderingContext2D} where to draw this `Sprite`.
+   * @param position The position where to draw this `Sprite`.
+   * @param scale The scale by which to draw this `Sprite`.
+   */
   public draw(
     ctx: CanvasRenderingContext2D,
     position: Vector2,
