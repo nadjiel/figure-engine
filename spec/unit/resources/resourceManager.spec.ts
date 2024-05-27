@@ -50,7 +50,7 @@ describe("ResourceManager class", () => {
   
       await resourceManager.loadResource(resourceName);
   
-      expect(resourceManager.getResource(resourceName).isLoaded()).toBeTrue();
+      expect(resourceManager.getResource(resourceName)?.isLoaded()).toBeTrue();
     });
 
   });
@@ -67,8 +67,8 @@ describe("ResourceManager class", () => {
   
       await resourceManager.loadAllResources();
   
-      expect(resourceManager.getResource(resourceName1).isLoaded()).toBeTrue();
-      expect(resourceManager.getResource(resourceName2).isLoaded()).toBeTrue();
+      expect(resourceManager.getResource(resourceName1)?.isLoaded()).toBeTrue();
+      expect(resourceManager.getResource(resourceName2)?.isLoaded()).toBeTrue();
     });
 
   });
