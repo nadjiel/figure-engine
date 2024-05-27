@@ -15,6 +15,11 @@ import { GameObject } from "./gameObject.js";
 export class Stage implements GameIterable {
 
   /**
+   * Indicates if this {@linkcode Stage} is loaded.
+   */
+  private loaded = false;
+
+  /**
    * This property stores an instance of a `StageElementManager`, which provides
    * utilities for organizing the game objects of this stage.
    */
@@ -240,6 +245,31 @@ export class Stage implements GameIterable {
    */
   public getObjectStopOrder(): StageElementComparer<GameObject> | undefined {
     return this.objectManager.getStopOrder();
+  }
+
+  /**
+   * Loads the {@linkcode Resource}s that this {@linkcode Stage} uses.
+   * @returns A `Promise` that resolves when this `Stage` is loaded.
+   */
+  public async load(): Promise<void> {
+    const loadPromises = new Array<Promise<Array<HTMLImageElement | HTMLAudioElement>>>();
+
+    this.getObjects().forEach(obj => {
+      loadPromises.push(obj.load());
+    });
+
+    await Promise.all(loadPromises);
+
+    this.loaded = true;
+
+    return;
+  }
+
+  /**
+   * @returns A `boolean` indicating if this {@linkcode Stage} is loaded.
+   */
+  public isLoaded(): boolean {
+    return this.loaded;
   }
 
   /**
