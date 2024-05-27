@@ -614,7 +614,7 @@ export class Sprite {
    * @returns The x coordinate in the image of this `Sprite` where the current
    * frame begins.
    */
-  private getImageFrameX(): number {
+  public getImageFrameX(): number {
     let x = 0;
 
     const frameCoords = this.getFrameCoordinates();
@@ -630,7 +630,7 @@ export class Sprite {
    * @returns The y coordinate in the image of this `Sprite` where the current
    * frame begins.
    */
-  private getImageFrameY(): number {
+  public getImageFrameY(): number {
     let y = 0;
 
     const frameCoords = this.getFrameCoordinates();
@@ -645,7 +645,7 @@ export class Sprite {
   /**
    * @returns The width of the current `frame` of this `Sprite`.
    */
-  private getImageFrameWidth(): number {
+  public getImageFrameWidth(): number {
     let width = this.getWidth();
 
     width -= this.margins.left;
@@ -659,7 +659,7 @@ export class Sprite {
   /**
    * @returns The height of the current `frame` of this `Sprite`.
    */
-  private getImageFrameHeight(): number {
+  public getImageFrameHeight(): number {
     let height = this.getHeight();
 
     height -= this.margins.top;
