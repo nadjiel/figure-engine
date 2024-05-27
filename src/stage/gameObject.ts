@@ -216,12 +216,6 @@ export abstract class GameObject implements StageElement {
     this.onStop();
   }
 
-  /**
-   * Marks the given {@linkcode Resource} as used by this {@linkcode GameObject},
-   * which means that it will be loaded whe the {@linkcode load} method is called.
-   * 
-   * @param name The name of the {@linkcode Resource} to store.
-   */
   public usesResource(name: string): void {
     const resource = ResourceManager.getResource(name);
 
@@ -232,12 +226,6 @@ export abstract class GameObject implements StageElement {
     this.resources.push(resource);
   }
 
-  /**
-   * Loads the {@linkcode Resource}s that this {@linkcode GameObject} uses
-   * according to the {@linkcode usesResource} method.
-   * 
-   * @returns A Promise that resolves when the `Resource`s are loaded. 
-   */
   public async load(): Promise<Array<HTMLImageElement | HTMLAudioElement>> {
     const loadPromises = new Array<Promise<HTMLImageElement | HTMLAudioElement>>();
 
