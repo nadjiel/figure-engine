@@ -347,6 +347,17 @@ describe("Sprite class", () => {
 
   describe("draw method", () => {
 
+    it("Shouldn't draw not loaded sprite", () => {
+      const imageResource = new ImageResource(image);
+      const sprite = new Sprite(imageResource);
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d")!;
+      const drawPosition = new Vector2(0, 0);
+
+      expect(() => sprite.draw(ctx, drawPosition))
+        .toThrowError(`Can't draw a Sprite that isn't loaded`);
+    });
+
     it("Should draw with default scale", () => {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d")!;

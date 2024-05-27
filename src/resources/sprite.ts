@@ -1,6 +1,7 @@
 import { ImageResource } from "./imageResource.js";
 import { Vector2 } from "../spatial/vector2.js";
 import { ArgumentError } from "../errors/argumentError.js";
+import ResourceError from "../errors/resourceError.js";
 
 /**
  * This interface describes the four boundings of a rectangular area.
@@ -614,6 +615,10 @@ export class Sprite {
     position: Vector2,
     scale = new Vector2(1, 1)
   ): void {
+    if(!this.image.isLoaded()) throw new ResourceError(
+      `Can't draw a Sprite that isn't loaded`
+    );
+    
     const frameX = this.getImageFrameX();
     const frameY = this.getImageFrameY();
     const frameWidth = this.getImageFrameWidth();
