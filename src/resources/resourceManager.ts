@@ -12,15 +12,23 @@ export class ResourceManager {
    * This property stores a `Map` that stores the names and values of the
    * registered `Resource`s.
    */
-  private resources = new Map<string, Resource>();
+  private static resources = new Map<string, Resource>();
 
   /**
    * Adds a `Resource` with a given `name` to this `ResourceManager`.
    * @param name The name to register to this `Resource`.
    * @param resource The `Resource` to store.
    */
-  public addResource(name: string, resource: Resource): void {
-    this.resources.set(name, resource);
+  public static addResource(name: string, resource: Resource): void {
+    ResourceManager.resources.set(name, resource);
+  }
+
+  public static removeAllResources(): void {
+    const resourceNames = ResourceManager.resources.keys();
+
+    for(const name of resourceNames) {
+      this.removeResource(name);
+    }
   }
 
   /**
@@ -29,15 +37,15 @@ export class ResourceManager {
    * @param name The name of the `Resource` to remove.
    * @returns The removed `Resource`.
    */
-  public removeResource(name: string): boolean {
-    return this.resources.delete(name);
+  public static removeResource(name: string): boolean {
+    return ResourceManager.resources.delete(name);
   }
 
   /**
    * @returns All the `Resource`s registered in this `ResourceManager`.
    */
-  public getResources(): Map<string, Resource> {
-    return this.resources;
+  public static getResources(): Map<string, Resource> {
+    return ResourceManager.resources;
   }
 
   /**
@@ -45,8 +53,8 @@ export class ResourceManager {
    * @returns The `Resource` identified by the passed `name`, if it exists, or
    * `undefined` if it does not.
    */
-  public getResource(name: string): Resource | undefined {
-    return this.resources.get(name);
+  public static getResource(name: string): Resource | undefined {
+    return ResourceManager.resources.get(name);
   }
 
   /**
@@ -55,7 +63,7 @@ export class ResourceManager {
    * @returns A `Promise` that resolves with the value of the loaded `Resource`
    * when it finishes loading.
    */
-  public async loadResource(name: string): Promise<HTMLImageElement | HTMLAudioElement | void> {
+  public static async loadResource(name: string): Promise<HTMLImageElement | HTMLAudioElement | void> {
     return this.getResource(name)?.load();
   }
 
@@ -64,10 +72,10 @@ export class ResourceManager {
    * @returns A `Promise` that resolves with the values of the loaded `Resource`s
    * when they finish loading.
    */
-  public async loadAllResources(): Promise<Iterable<HTMLImageElement | HTMLAudioElement>> {
+  public static async loadAllResources(): Promise<Iterable<HTMLImageElement | HTMLAudioElement>> {
     const loadPromises = new Array<Promise<HTMLImageElement | HTMLAudioElement>>();
 
-    this.resources.forEach(resource => {
+    ResourceManager.resources.forEach(resource => {
       loadPromises.push(resource.load());
     });
 
