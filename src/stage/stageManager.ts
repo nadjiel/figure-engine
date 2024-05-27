@@ -170,7 +170,7 @@ export class StageManager {
    * @throws {ArgumentError} If the received `index` doesn't correspond to any
    * stages stored in this manager.
    */
-  public select(index: number): Stage {
+  public async select(index: number): Promise<Stage> {
     const selectedStage = this.getSelectedStage();
     
     if(index === this.getSelectedIndex()) return selectedStage!;
@@ -181,6 +181,7 @@ export class StageManager {
 
     this.selected = index;
 
+    await newStage.load();
     newStage.start();
 
     return newStage;
@@ -201,7 +202,7 @@ export class StageManager {
    * @throws {CallError} If there aren't any stages in this manager to select
    * from or if the current stage is already the last of the list.
    */
-  public selectNext(): Stage {
+  public selectNext(): Promise<Stage> {
     if(this.getSelectedIndex() === this.getAmount() - 1) {
       throw new CallError(`can't select next stage from last one`);
     }
@@ -228,7 +229,7 @@ export class StageManager {
    * @throws {CallError} If there aren't any stages in this manager to select
    * from or if the current stage is already the first of the list.
    */
-  public selectPrevious(): Stage {
+  public selectPrevious(): Promise<Stage> {
     if(this.getSelectedIndex() === 0) {
       throw new CallError(`can't select previous stage from first one`);
     }
