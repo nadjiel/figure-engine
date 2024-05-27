@@ -419,6 +419,10 @@ export class Sprite {
     this.frame = frame;
   }
 
+  private coordToFrame(coordinate: Vector2): number {
+    return coordinate.getX() + coordinate.getY() * this.getColumns();
+  }
+
   /**
    * Selects a `frame` to be used by this `Sprite` when the {@linkcode draw}
    * method is used through a {@linkcode Vector2} representing its coordinates
@@ -428,9 +432,16 @@ export class Sprite {
    * `frame` to select.
    */
   public selectFrameCoordinates(coordinate: Vector2): void {
-    const frame = coordinate.getX() + coordinate.getY() * this.getColumns();
+    const frame = this.coordToFrame(coordinate);
 
     this.selectFrame(frame);
+  }
+
+  private frameToCoord(frame: number): Vector2 {
+    const frameX = frame % this.getColumns();
+    const frameY = Math.floor(frame / this.getColumns());
+
+    return new Vector2(frameX, frameY);
   }
 
   /**
@@ -438,20 +449,31 @@ export class Sprite {
    * the `frame` selected in the moment.
    */
   public getFrameCoordinates(): Vector2 {
-    const frameX = this.frame % this.getColumns();
-    const frameY = Math.floor(this.frame / this.getColumns());
+    return this.frameToCoord(this.frame);
+  }
 
-    return new Vector2(frameX, frameY);
+  private calculateNextFrame(frame = this.frame): number {
+    let nextFrame = frame + 1;
+    if(nextFrame === this.getFrameAmount()) nextFrame = 0;
+
+    return nextFrame;
   }
 
   /**
-   * Selects the next `frame` in this `Sprite`.
-   * If the last `frame` is selected, the selection goes to the first one.
+   * Selects the next `frame` in this `Sprite` if there is one available.
+   * If the last `frame` is selected, the selection goes to the first included
+   * one.
    */
   public nextFrame(): void {
-    let nextFrame = this.frame + 1;
+    let nextFrame = this.calculateNextFrame();
 
-    if(nextFrame === this.getFrameAmount()) nextFrame = 0;
+    if(this.getIncludedFrames().length === 0) return;
+
+    while(!this.includedFrames.get(nextFrame)) {
+      nextFrame = this.calculateNextFrame(nextFrame);
+
+      if(nextFrame === this.frame) return;
+    }
 
     this.selectFrame(nextFrame);
   }
@@ -468,20 +490,29 @@ export class Sprite {
     this.selectFrame(previousFrame);
   }
 
+  private calculateNextFrameInRow(frame = this.frame): number {
+    let frameCoord = this.frameToCoord(frame);
+    frameCoord.setX(frameCoord.getX() + 1);
+
+    if(frameCoord.getX() === this.getColumns()) frameCoord.setX(0);
+
+    return this.coordToFrame(frameCoord);
+  }
+
   /**
    * Selects the next `frame` in the current row of this `Sprite`.
    * If the last `frame` is selected, the selection goes to the first one.
    */
   public nextFrameInRow(): void {
-    const frameCoords = this.getFrameCoordinates();
-    
-    if(frameCoords.getX() === this.getColumns() - 1) {
-      this.selectFrameCoordinates(
-        new Vector2(0, frameCoords.getY())
-      );
-    } else {
-      this.nextFrame();
+    let nextFrame = this.calculateNextFrameInRow();
+
+    while(!this.includedFrames.get(nextFrame)) {
+      nextFrame = this.calculateNextFrameInRow(nextFrame);
+
+      if(nextFrame === this.frame) return;
     }
+
+    this.selectFrame(nextFrame);
   }
 
   /**
@@ -500,22 +531,29 @@ export class Sprite {
     }
   }
 
+  private calculateNextFrameInColumn(frame = this.frame): number {
+    let frameCoord = this.frameToCoord(frame);
+    frameCoord.setY(frameCoord.getY() + 1);
+
+    if(frameCoord.getY() === this.getRows()) frameCoord.setY(0);
+
+    return this.coordToFrame(frameCoord);
+  }
+
   /**
    * Selects the next `frame` in the current column of this `Sprite`.
    * If the last `frame` is selected, the selection goes to the first one.
    */
   public nextFrameInColumn(): void {
-    const frameCoords = this.getFrameCoordinates();
-    
-    if(frameCoords.getY() === this.getRows() - 1) {
-      this.selectFrameCoordinates(
-        new Vector2(frameCoords.getX(), 0)
-      );
-    } else {
-      this.selectFrameCoordinates(
-        new Vector2(frameCoords.getX(), frameCoords.getY() + 1)
-      );
+    let nextFrame = this.calculateNextFrameInColumn();
+
+    while(!this.includedFrames.get(nextFrame)) {
+      nextFrame = this.calculateNextFrameInColumn(nextFrame);
+
+      if(nextFrame === this.frame) return;
     }
+
+    this.selectFrame(nextFrame);
   }
 
   /**

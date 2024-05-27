@@ -291,6 +291,30 @@ describe("Sprite class", () => {
       expect(sprite.getFrame()).toBe(expectedFrame);
     });
 
+    it("Should skip excluded frames", () => {
+      sprite.setColumns(2); // Makes it 2 frames total
+      sprite.setRows(2); // Makes it 4 frames total
+      sprite.selectFrame(0);
+      sprite.excludeFrame(1);
+      const expectedFrame = 2;
+
+      sprite.nextFrame();
+
+      expect(sprite.getFrame()).toBe(expectedFrame);
+    });
+
+    it("Should do nothing if there are no available frames", () => {
+      sprite.setColumns(2); // Makes it 2 frames total
+      sprite.setRows(2); // Makes it 4 frames total
+      sprite.selectFrame(0);
+      sprite.excludeFrames(0, 1, 2, 3);
+      const expectedFrame = 0;
+
+      sprite.nextFrame();
+
+      expect(sprite.getFrame()).toBe(expectedFrame);
+    });
+
   });
 
   describe("nextFrameInRow method", () => {
@@ -317,6 +341,18 @@ describe("Sprite class", () => {
       expect(sprite.getFrame()).toBe(expectedFrame);
     });
 
+    it("Should skip excluded frames", () => {
+      sprite.setColumns(2); // Makes it 2 frames total
+      sprite.setRows(2); // Makes it 4 frames total
+      sprite.selectFrame(0);
+      sprite.excludeFrame(1);
+      const expectedFrame = 0;
+
+      sprite.nextFrameInRow();
+
+      expect(sprite.getFrame()).toBe(expectedFrame);
+    });
+
   });
 
   describe("nextFrameInColumn method", () => {
@@ -336,6 +372,18 @@ describe("Sprite class", () => {
       sprite.setColumns(2); // Makes it 2 frames total
       sprite.setRows(2); // Makes it 4 frames total
       sprite.selectFrame(2);
+      const expectedFrame = 0;
+
+      sprite.nextFrameInColumn();
+
+      expect(sprite.getFrame()).toBe(expectedFrame);
+    });
+
+    it("Should skip excluded frames", () => {
+      sprite.setColumns(2); // Makes it 2 frames total
+      sprite.setRows(2); // Makes it 4 frames total
+      sprite.selectFrame(0);
+      sprite.excludeFrame(2);
       const expectedFrame = 0;
 
       sprite.nextFrameInColumn();
