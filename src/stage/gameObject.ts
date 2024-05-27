@@ -2,6 +2,10 @@ import { StageElement } from "./stageElement.js";
 import { Rectangle } from "../spatial/rectangle.js";
 import { Color, ColorFactory } from "../graphical/color.js";
 import { Vector2 } from "../spatial/vector2.js";
+import { Resource } from "../resources/resource.js";
+import { Sprite } from "../resources/sprite.js";
+import { ResourceManager } from "../resources/resourceManager.js";
+import { ResourceError } from "../errors/resourceError.js";
 
 /**
  * The `GameObject` class allows the creation and customization
@@ -17,7 +21,18 @@ import { Vector2 } from "../spatial/vector2.js";
  * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
  */
 export abstract class GameObject implements StageElement {
+
+  /**
+   * The resources that this `GameObject` is able to use thanks to the
+   * {@linkcode usesResource} method. 
+   */
+  private resources = new Array<Resource>;
   
+  /**
+   * The `Sprite` of this `GameObject`.
+   */
+  private sprite?: Sprite;
+
   /**
    * This property represents the area that this game object occupies
    * in the game space.
@@ -37,9 +52,11 @@ export abstract class GameObject implements StageElement {
   /**
    * @param coordinates The coordinates of this object in the game space.
    * @param dimensions The dimensions of this object in the game space.
+   * @param sprite The sprite of this object that will be drawn on the game.
    */
-  constructor(coordinates: Vector2, dimensions: Vector2) {
+  constructor(coordinates: Vector2, dimensions: Vector2, sprite?: Sprite) {
     this.boundingBox = new Rectangle(coordinates, dimensions);
+    this.sprite = sprite;
   }
 
   /**
@@ -127,6 +144,14 @@ export abstract class GameObject implements StageElement {
     return this.color;
   }
 
+  public setSprite(sprite: Sprite): void {
+    this.sprite = sprite;
+  }
+
+  public getSprite(): Sprite | undefined {
+    return this.sprite;
+  }
+
   /**
    * This method is executed on the start of the stage this object is in.
    * 
@@ -152,6 +177,9 @@ export abstract class GameObject implements StageElement {
    * The `draw` method is executed every frame after the {@linkcode update}
    * method.
    * 
+   * It draws the bounding box of this `GameObject` using the defined
+   * {@linkcode Color} and its {@linkcode Sprite} on top of it.
+   * 
    * It triggers the {@linkcode onDraw} method, which you can use to define
    * what this game object draws.
    */
@@ -161,6 +189,19 @@ export abstract class GameObject implements StageElement {
       this.getX(), this.getY(),
       this.getWidth(), this.getHeight()
     );
+
+    if(this.sprite !== undefined) {
+      const scale = new Vector2(
+        this.getWidth() / this.sprite.getImageFrameWidth(),
+        this.getHeight() / this.sprite.getImageFrameHeight()
+      );
+
+      this.sprite.draw(
+        ctx,
+        this.getCoordinates(),
+        scale
+      );
+    }
 
     this.onDraw(ctx);
   }
@@ -173,6 +214,38 @@ export abstract class GameObject implements StageElement {
    */
   public stop(): void {
     this.onStop();
+  }
+
+  /**
+   * Marks the given {@linkcode Resource} as used by this {@linkcode GameObject},
+   * which means that it will be loaded whe the {@linkcode load} method is called.
+   * 
+   * @param name The name of the {@linkcode Resource} to store.
+   */
+  public usesResource(name: string): void {
+    const resource = ResourceManager.getResource(name);
+
+    if(resource === undefined) throw new ResourceError(
+      `The resource ${name} isn't registered in the ResourceManager`
+    );
+
+    this.resources.push(resource);
+  }
+
+  /**
+   * Loads the {@linkcode Resource}s that this {@linkcode GameObject} uses
+   * according to the {@linkcode usesResource} method.
+   * 
+   * @returns A Promise that resolves when the `Resource`s are loaded. 
+   */
+  public async load(): Promise<Array<HTMLImageElement | HTMLAudioElement>> {
+    const loadPromises = new Array<Promise<HTMLImageElement | HTMLAudioElement>>();
+
+    this.resources.forEach(resource => {
+      loadPromises.push(resource.load());
+    });
+
+    return Promise.all(loadPromises);
   }
 
   /**
