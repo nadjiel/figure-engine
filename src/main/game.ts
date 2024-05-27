@@ -7,6 +7,8 @@ import { MouseInput } from "../input/mouseInput.js";
 import { StageManager } from "../stage/stageManager.js";
 import { Stage } from "../stage/stage.js";
 import { ArgumentError } from "../errors/argumentError.js";
+import { ResourceManager } from "../resources/resourceManager.js";
+import { Resource } from "../resources/resource.js";
 
 /**
  * This interface describes the possible properties the game configuration can
@@ -94,6 +96,8 @@ export class Game implements GameIterable {
    * used to monitor the game input.
    */
   private gameInput: GameInput;
+
+  private resourceManager = new ResourceManager();
 
   /**
    * This property stores an instance to a {@linkcode StageManager} that
@@ -503,6 +507,59 @@ export class Game implements GameIterable {
    */
   public getMouseInput(): MouseInput {
     return this.gameInput.getMouse();
+  }
+
+  /**
+   * Adds a `Resource` with a given `name` to this `Game`.
+   * @param name The name to register to this `Resource`.
+   * @param resource The `Resource` to store.
+   */
+  public addResource(name: string, resource: Resource): void {
+    this.resourceManager.addResource(name, resource);
+  }
+
+  /**
+   * Removes a `Resource` specified by the given `name` from this `Game`.
+   * @param name The name of the `Resource` to remove.
+   * @returns The removed `Resource`.
+   */
+  public removeResource(name: string): boolean {
+    return this.resourceManager.removeResource(name);
+  }
+
+  /**
+   * @returns All the `Resource`s registered in this `Game`.
+   */
+  public getResources(): Map<string, Resource> {
+    return this.resourceManager.getResources();
+  }
+
+  /**
+   * @param name The name of the `Resource` to find.
+   * @returns The `Resource` identified by the passed `name`, if it exists, or
+   * `undefined` if it does not.
+   */
+  public getResource(name: string): Resource | undefined {
+    return this.resourceManager.getResource(name);
+  }
+
+  /**
+   * Loads a `Resource` specified by the given `name`.
+   * @param name The name of the `Resource` to load.
+   * @returns A `Promise` that resolves with the value of the loaded `Resource`
+   * when it finishes loading.
+   */
+  public async loadResource(name: string): Promise<HTMLImageElement | HTMLAudioElement | void> {
+    return this.resourceManager.loadResource(name);
+  }
+
+  /**
+   * Loads all `Resource`s registered in this `Game`.
+   * @returns A `Promise` that resolves with the values of the loaded `Resource`s
+   * when they finish loading.
+   */
+  public async loadAllResources(): Promise<Iterable<HTMLImageElement | HTMLAudioElement>> {
+    return this.resourceManager.loadAllResources();
   }
 
   /**
