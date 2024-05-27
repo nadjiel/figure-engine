@@ -12,3 +12,9 @@ export { Rectangle } from "./spatial/rectangle.js";
 
 export { Color } from "./graphical/color.js";
 export { ColorFactory } from "./graphical/color.js";
+
+export { Resource } from "./resources/resource.js";
+export { ImageResource } from "./resources/imageResource.js";
+export { SoundResource } from "./resources/soundResource.js";
+export { ResourceManager } from "./resources/resourceManager.js";
+export { Sprite } from "./resources/sprite.js";
