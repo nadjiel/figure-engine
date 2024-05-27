@@ -478,14 +478,27 @@ export class Sprite {
     this.selectFrame(nextFrame);
   }
 
+  private calculatePreviousFrame(frame = this.frame): number {
+    let previousFrame = frame - 1;
+    if(previousFrame === -1) previousFrame = this.getFrameAmount() - 1;
+
+    return previousFrame;
+  }
+
   /**
    * Selects the previous `frame` in this `Sprite`.
    * If the first `frame` is selected, the selection goes to the last one.
    */
   public previousFrame(): void {
-    let previousFrame = this.frame - 1;
+    let previousFrame = this.calculatePreviousFrame();
 
-    if(previousFrame === -1) previousFrame = this.getFrameAmount() - 1;
+    if(this.getIncludedFrames().length === 0) return;
+
+    while(!this.includedFrames.get(previousFrame)) {
+      previousFrame = this.calculatePreviousFrame(previousFrame);
+
+      if(previousFrame === this.frame) return;
+    }
 
     this.selectFrame(previousFrame);
   }
@@ -515,20 +528,29 @@ export class Sprite {
     this.selectFrame(nextFrame);
   }
 
+  private calculatePreviousFrameInRow(frame = this.frame): number {
+    let frameCoord = this.frameToCoord(frame);
+    frameCoord.setX(frameCoord.getX() - 1);
+
+    if(frameCoord.getX() === -1) frameCoord.setX(this.getColumns() - 1);
+
+    return this.coordToFrame(frameCoord);
+  }
+
   /**
    * Selects the previous `frame` in the current row of this `Sprite`.
    * If the first `frame` is selected, the selection goes to the last one.
    */
   public previousFrameInRow(): void {
-    const frameCoords = this.getFrameCoordinates();
-    
-    if(frameCoords.getX() === 0) {
-      this.selectFrameCoordinates(
-        new Vector2(this.getColumns() - 1, frameCoords.getY())
-      );
-    } else {
-      this.previousFrame();
+    let previousFrame = this.calculatePreviousFrameInRow();
+
+    while(!this.includedFrames.get(previousFrame)) {
+      previousFrame = this.calculatePreviousFrameInRow(previousFrame);
+
+      if(previousFrame === this.frame) return;
     }
+
+    this.selectFrame(previousFrame);
   }
 
   private calculateNextFrameInColumn(frame = this.frame): number {
@@ -556,22 +578,29 @@ export class Sprite {
     this.selectFrame(nextFrame);
   }
 
+  private calculatePreviousFrameInColumn(frame = this.frame): number {
+    let frameCoord = this.frameToCoord(frame);
+    frameCoord.setY(frameCoord.getY() - 1);
+
+    if(frameCoord.getY() === -1) frameCoord.setY(this.getRows() - 1);
+
+    return this.coordToFrame(frameCoord);
+  }
+
   /**
    * Selects the previous `frame` in the current column of this `Sprite`.
    * If the first `frame` is selected, the selection goes to the last one.
    */
   public previousFrameInColumn(): void {
-    const frameCoords = this.getFrameCoordinates();
-    
-    if(frameCoords.getY() === 0) {
-      this.selectFrameCoordinates(
-        new Vector2(frameCoords.getX(), this.getRows() - 1)
-      );
-    } else {
-      this.selectFrameCoordinates(
-        new Vector2(frameCoords.getX(), frameCoords.getY() - 1)
-      );
+    let previousFrame = this.calculatePreviousFrameInColumn();
+
+    while(!this.includedFrames.get(previousFrame)) {
+      previousFrame = this.calculatePreviousFrameInColumn(previousFrame);
+
+      if(previousFrame === this.frame) return;
     }
+
+    this.selectFrame(previousFrame);
   }
 
   /**
