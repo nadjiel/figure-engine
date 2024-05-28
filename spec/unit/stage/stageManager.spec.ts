@@ -12,43 +12,43 @@ describe("StageManager class", () => {
 
   describe("select method", () => {
 
-    it("Should not allow selecting without stages added", () => {
+    it("Should not allow selecting without stages added", async () => {
       const manager = new StageManager();
 
-      expect(() => manager.select(0))
-        .toThrowError(`can't access element from empty sequence`);
+      await expectAsync(manager.select(0))
+        .toBeRejectedWithError(`can't access element from empty sequence`);
     });
 
-    it("Should not allow selecting negative index", () => {
+    it("Should not allow selecting negative index", async () => {
       const manager = new StageManager();
       manager.addFirst(new Stage());
       const index = -1;
 
-      expect(() => manager.select(index))
-        .toThrowError(`index must be inside [0, ${manager.getAmount()}[ (received ${index})`);
+      await expectAsync(manager.select(index))
+        .toBeRejectedWithError(`index must be inside [0, ${manager.getAmount()}[ (received ${index})`);
     });
 
-    it("Should not allow selecting indexes too big", () => {
+    it("Should not allow selecting indexes too big", async () => {
       const manager = new StageManager();
       manager.addFirst(new Stage());
       const index = 1;
 
-      expect(() => manager.select(index))
-        .toThrowError(`index must be inside [0, ${manager.getAmount()}[ (received ${index})`);
+      await expectAsync(manager.select(index))
+        .toBeRejectedWithError(`index must be inside [0, ${manager.getAmount()}[ (received ${index})`);
     });
 
-    it("Should allow selecting valid stages", () => {
+    it("Should allow selecting valid stages", async () => {
       const manager = new StageManager();
       const stage = new Stage();
       manager.addLast(stage);
       const index = 0;
 
-      expect(manager.select(index)).toBe(stage);
+      await expectAsync(manager.select(index)).toBeResolvedTo(stage);
       expect(manager.getSelectedIndex()).toBe(index);
       expect(manager.getSelectedStage()).toBe(stage);
     });
 
-    it("Should start new stage", () => {
+    it("Should start new stage", async () => {
       const manager = new StageManager();
       const stage = new Stage();
       
@@ -56,12 +56,12 @@ describe("StageManager class", () => {
 
       manager.addFirst(stage);
 
-      manager.select(0);
+      await manager.select(0);
 
       expect(stage.start).toHaveBeenCalled();
     });
 
-    it("Should stop previous stage and start next", () => {
+    it("Should stop previous stage and start next", async () => {
       let order = "";
       const manager = new StageManager();
       const stage1 = new Stage();
@@ -72,8 +72,8 @@ describe("StageManager class", () => {
       manager.addLast(stage1);
       manager.addLast(stage2);
 
-      manager.select(0);
-      manager.select(1);
+      await manager.select(0);
+      await manager.select(1);
 
       expect(order).toBe("12");
     });
@@ -82,11 +82,11 @@ describe("StageManager class", () => {
 
   describe("selectNext method", () => {
 
-    it("Should not allow selecting without stages added", () => {
+    it("Should not allow selecting without stages added", async () => {
       const manager = new StageManager();
 
-      expect(() => manager.selectNext())
-        .toThrowError(`can't access element from empty sequence`);
+      await expectAsync(manager.selectNext())
+        .toBeRejectedWithError(`can't access element from empty sequence`);
     });
 
     it("Should not allow selecting if there is no next", () => {
@@ -99,18 +99,18 @@ describe("StageManager class", () => {
         .toThrowError(`can't select next stage from last one`);
     });
 
-    it("Should select first if no one is selected", () => {
+    it("Should select first if no one is selected", async () => {
       const manager = new StageManager();
       const stage = new Stage();
       manager.addFirst(stage);
       const index = 0;
 
-      expect(manager.selectNext()).toBe(stage);
+      await expectAsync(manager.selectNext()).toBeResolvedTo(stage);
       expect(manager.getSelectedIndex()).toBe(index);
       expect(manager.getSelectedStage()).toBe(stage);
     });
 
-    it("Should allow selecting if there is next", () => {
+    it("Should allow selecting if there is next", async () => {
       const manager = new StageManager();
       const stage1 = new Stage();
       const stage2 = new Stage();
@@ -118,14 +118,14 @@ describe("StageManager class", () => {
       manager.addLast(stage2);
       const index = 1;
 
-      manager.selectNext();
+      await manager.selectNext();
 
-      expect(manager.selectNext()).toBe(stage2);
+      await expectAsync(manager.selectNext()).toBeResolvedTo(stage2);
       expect(manager.getSelectedIndex()).toBe(index);
       expect(manager.getSelectedStage()).toBe(stage2);
     });
 
-    it("Should start new stage", () => {
+    it("Should start new stage", async () => {
       const manager = new StageManager();
       const stage = new Stage();
       
@@ -133,12 +133,12 @@ describe("StageManager class", () => {
 
       manager.addFirst(stage);
 
-      manager.selectNext();
+      await manager.selectNext();
 
       expect(stage.start).toHaveBeenCalled();
     });
 
-    it("Should stop previous stage and start next", () => {
+    it("Should stop previous stage and start next", async () => {
       let order = "";
       const manager = new StageManager();
       const stage1 = new Stage();
@@ -149,8 +149,8 @@ describe("StageManager class", () => {
       manager.addLast(stage1);
       manager.addLast(stage2);
 
-      manager.selectNext();
-      manager.selectNext();
+      await manager.selectNext();
+      await manager.selectNext();
 
       expect(order).toBe("12");
     });
@@ -159,11 +159,11 @@ describe("StageManager class", () => {
 
   describe("selectPrevious method", () => {
 
-    it("Should not allow selecting without stages added", () => {
+    it("Should not allow selecting without stages added", async () => {
       const manager = new StageManager();
 
-      expect(() => manager.selectPrevious())
-        .toThrowError(`can't access element from empty sequence`);
+      await expectAsync(manager.selectPrevious())
+        .toBeRejectedWithError(`can't access element from empty sequence`);
     });
 
     it("Should not allow selecting if there is no previous", () => {
@@ -176,18 +176,18 @@ describe("StageManager class", () => {
         .toThrowError(`can't select previous stage from first one`);
     });
 
-    it("Should select last if no one is selected", () => {
+    it("Should select last if no one is selected", async () => {
       const manager = new StageManager();
       const stage = new Stage();
       manager.addFirst(stage);
       const index = 0;
 
-      expect(manager.selectPrevious()).toBe(stage);
+      await expectAsync(manager.selectPrevious()).toBeResolvedTo(stage);
       expect(manager.getSelectedIndex()).toBe(index);
       expect(manager.getSelectedStage()).toBe(stage);
     });
 
-    it("Should allow selecting if there is previous", () => {
+    it("Should allow selecting if there is previous", async () => {
       const manager = new StageManager();
       const stage1 = new Stage();
       const stage2 = new Stage();
@@ -195,14 +195,14 @@ describe("StageManager class", () => {
       manager.addLast(stage2);
       const index = 0;
 
-      manager.selectPrevious();
+      await manager.selectPrevious();
 
-      expect(manager.selectPrevious()).toBe(stage1);
+      await expectAsync(manager.selectPrevious()).toBeResolvedTo(stage1);
       expect(manager.getSelectedIndex()).toBe(index);
       expect(manager.getSelectedStage()).toBe(stage1);
     });
 
-    it("Should start new stage", () => {
+    it("Should start new stage", async () => {
       const manager = new StageManager();
       const stage = new Stage();
       
@@ -210,12 +210,12 @@ describe("StageManager class", () => {
 
       manager.addFirst(stage);
 
-      manager.selectPrevious();
+      await manager.selectPrevious();
 
       expect(stage.start).toHaveBeenCalled();
     });
 
-    it("Should stop previous stage and start next", () => {
+    it("Should stop previous stage and start next", async () => {
       let order = "";
       const manager = new StageManager();
       const stage1 = new Stage();
@@ -226,8 +226,8 @@ describe("StageManager class", () => {
       manager.addLast(stage1);
       manager.addLast(stage2);
 
-      manager.selectPrevious();
-      manager.selectPrevious();
+      await manager.selectPrevious();
+      await manager.selectPrevious();
 
       expect(order).toBe("21");
     });
