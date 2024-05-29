@@ -18,3 +18,4 @@ export { ImageResource } from "./resources/imageResource.js";
 export { SoundResource } from "./resources/soundResource.js";
 export { ResourceManager } from "./resources/resourceManager.js";
 export { Sprite } from "./resources/sprite.js";
+export { Sound } from "./resources/sound.js";
