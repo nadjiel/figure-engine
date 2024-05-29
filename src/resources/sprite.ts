@@ -1,7 +1,7 @@
 import { ImageResource } from "./imageResource.js";
 import { Vector2 } from "../spatial/vector2.js";
 import { ArgumentError } from "../errors/argumentError.js";
-import ResourceError from "../errors/resourceError.js";
+import { ResourceError } from "../errors/resourceError.js";
 
 /**
  * This interface describes the four boundings of a rectangular area.
