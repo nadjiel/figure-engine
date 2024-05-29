@@ -63,7 +63,7 @@ export class ResourceManager {
    * @returns A `Promise` that resolves with the value of the loaded `Resource`
    * when it finishes loading.
    */
-  public static async loadResource(name: string): Promise<HTMLImageElement | HTMLAudioElement | void> {
+  public static async loadResource(name: string): Promise<Resource | void> {
     return this.getResource(name)?.load();
   }
 
@@ -72,8 +72,8 @@ export class ResourceManager {
    * @returns A `Promise` that resolves with the values of the loaded `Resource`s
    * when they finish loading.
    */
-  public static async loadAllResources(): Promise<Iterable<HTMLImageElement | HTMLAudioElement>> {
-    const loadPromises = new Array<Promise<HTMLImageElement | HTMLAudioElement>>();
+  public static async loadAllResources(): Promise<Iterable<Resource>> {
+    const loadPromises = new Array<Promise<Resource>>();
 
     ResourceManager.resources.forEach(resource => {
       loadPromises.push(resource.load());

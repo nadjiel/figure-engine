@@ -54,11 +54,11 @@ export class SoundResource implements Resource<HTMLAudioElement> {
    * if it fails, it rejects with a {@linkcode ResourceError}.
    * @returns A promise that tries to load the sound.
    */
-  public async load(): Promise<HTMLAudioElement> {
+  public async load(): Promise<Resource> {
     return new Promise((resolve, reject) => {
       this.sound.oncanplaythrough = () => {
         this.loaded = true;
-        resolve(this.sound);
+        resolve(this);
       }
       this.sound.onerror = () => reject(
         new ResourceError(`Couldn't load the resource with path "${this.path}".`)

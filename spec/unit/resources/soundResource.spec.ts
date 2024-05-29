@@ -29,7 +29,7 @@ describe("SoundResource class", () => {
 
     it("Should resolve if path is valid", async () => {
       await expectAsync(sndResource.load())
-        .toBeResolvedTo(sndResource.get());
+        .toBeResolvedTo(sndResource);
       expect(sndResource.isLoaded()).toBeTrue();
     });
 

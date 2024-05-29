@@ -29,7 +29,7 @@ describe("ImageResource class", () => {
 
     it("Should resolve if path is valid", async () => {
       await expectAsync(imgResource.load())
-        .toBeResolvedTo(imgResource.get());
+        .toBeResolvedTo(imgResource);
       expect(imgResource.isLoaded()).toBeTrue();
     });
 

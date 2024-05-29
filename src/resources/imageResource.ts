@@ -68,11 +68,11 @@ export class ImageResource implements Resource<HTMLImageElement> {
    * if it fails, it rejects with a {@linkcode ResourceError}.
    * @returns A promise that tries to load the image.
    */
-  public async load(): Promise<HTMLImageElement> {
+  public async load(): Promise<Resource> {
     return new Promise((resolve, reject) => {
       this.image.onload = () => {
         this.loaded = true;
-        resolve(this.image);
+        resolve(this);
       }
       this.image.onerror = () => reject(
         new ResourceError(`Couldn't load the resource with path "${this.path}".`)

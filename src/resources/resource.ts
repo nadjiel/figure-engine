@@ -21,7 +21,7 @@ export interface Resource<T = HTMLImageElement | HTMLAudioElement> {
   /**
    * This method is intended to load the external `Resource`.
    */
-  load(): Promise<T>;
+  load(): Promise<Resource>;
 
   /**
    * This method is intended to tell if the `Resource` is finished loading.
