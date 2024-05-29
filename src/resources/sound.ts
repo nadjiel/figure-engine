@@ -1,5 +1,5 @@
 import { SoundResource } from "./soundResource.js";
-import { ResourceError } from "../errors/resourceError";
+import { ResourceError } from "../errors/resourceError.js";
 
 export class Sound {
 
@@ -7,6 +7,10 @@ export class Sound {
 
   constructor(sound: SoundResource) {
     this.sound = sound;
+  }
+
+  public get(): HTMLAudioElement {
+    return this.sound.get();
   }
 
   public isPlaying(): boolean {
@@ -17,16 +21,26 @@ export class Sound {
     this.sound.get().loop = loop;
   }
 
+  public isLooping(): boolean {
+    return this.sound.get().loop;
+  }
+
+  public pause(): void {
+    this.sound.get().pause();
+  }
+
+  public stop(): void {
+    this.pause();
+    this.sound.get().currentTime = 0;
+  }
+
   public play(): void {
     if(!this.sound.isLoaded()) throw new ResourceError(
       `Can't play a sound that isn't loaded!`
     );
 
-    const sound = this.sound.get();
-
-    sound.pause();
-    sound.currentTime = 0;
-    sound.play();
+    this.stop();
+    this.sound.get().play();
   }
 
   public playOnce(): void {
