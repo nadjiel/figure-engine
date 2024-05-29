@@ -31,18 +31,19 @@ describe("Sound class", () => {
 
   describe("play method", () => {
 
-    it("Should not play unloaded sound", () => {
+    it("Should not play unloaded sound", async () => {
       const soundResource = new SoundResource(path);
       const sound = new Sound(soundResource);
 
-      expect(() => sound.play()).toThrowError(
-        `Can't play a sound that isn't loaded!`
-      );
+      await expectAsync(sound.play())
+      .toBeRejectedWithError(
+          `Can't play a sound that isn't loaded!`
+        );
     });
 
     // Only works if browser allows
-    it("Should play loaded sound", () => {
-      sound.play();
+    it("Should play loaded sound", async () => {
+      await sound.play();
 
       expect(sound.isPlaying()).toBeTrue();
     });
@@ -51,17 +52,18 @@ describe("Sound class", () => {
 
   describe("playOnce method", () => {
 
-    it("Should not play unloaded sound", () => {
+    it("Should not play unloaded sound", async () => {
       const soundResource = new SoundResource(path);
       const sound = new Sound(soundResource);
       
-      expect(() => sound.playOnce()).toThrowError(
-        `Can't play a sound that isn't loaded!`
-      );
+      await expectAsync(sound.playOnce())
+      .toBeRejectedWithError(
+          `Can't play a sound that isn't loaded!`
+        );
     });
 
-    it("Should play loaded sound only once", () => {
-      sound.playOnce();
+    it("Should play loaded sound only once", async () => {
+      await sound.playOnce();
 
       expect(sound.isPlaying()).toBeTrue();
       expect(sound.isLooping()).toBeFalse();
@@ -71,17 +73,18 @@ describe("Sound class", () => {
 
   describe("playLooped method", () => {
 
-    it("Should not play unloaded sound", () => {
+    it("Should not play unloaded sound", async () => {
       const soundResource = new SoundResource(path);
       const sound = new Sound(soundResource);
       
-      expect(() => sound.playLooped()).toThrowError(
-        `Can't play a sound that isn't loaded!`
-      );
+      await expectAsync(sound.playLooped())
+        .toBeRejectedWithError(
+          `Can't play a sound that isn't loaded!`
+        );
     });
 
-    it("Should play loaded sound only once", () => {
-      sound.playLooped();
+    it("Should play loaded sound only once", async () => {
+      await sound.playLooped();
 
       expect(sound.isPlaying()).toBeTrue();
       expect(sound.isLooping()).toBeTrue();
@@ -91,8 +94,8 @@ describe("Sound class", () => {
 
   describe("pause method", () => {
 
-    it("Should pause playing sound", () => {
-      sound.play();
+    it("Should pause playing sound", async () => {
+      await sound.play();
 
       sound.pause();
 
@@ -103,8 +106,8 @@ describe("Sound class", () => {
 
   describe("stop method", () => {
 
-    it("Should pause and go to start of sound", () => {
-      sound.play();
+    it("Should pause and go to start of sound", async () => {
+      await sound.play();
 
       sound.stop();
 

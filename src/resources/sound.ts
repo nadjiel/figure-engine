@@ -34,23 +34,23 @@ export class Sound {
     this.sound.get().currentTime = 0;
   }
 
-  public play(): void {
+  public async play(): Promise<void> {
     if(!this.sound.isLoaded()) throw new ResourceError(
       `Can't play a sound that isn't loaded!`
     );
 
     this.stop();
-    this.sound.get().play();
+    return this.sound.get().play();
   }
 
-  public playOnce(): void {
+  public playOnce(): Promise<void> {
     this.setLoop(false);
-    this.play();
+    return this.play();
   }
 
-  public playLooped(): void {
+  public playLooped(): Promise<void> {
     this.setLoop(true);
-    this.play();
+    return this.play();
   }
 
 }
