@@ -54,7 +54,7 @@ describe("ResourceManager class", () => {
 
   });
 
-  describe("loadResource method", () => {
+  describe("loadResources method", () => {
 
     it("Should load successfully", async () => {
       const resourceName1 = "heart1";
