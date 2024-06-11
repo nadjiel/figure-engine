@@ -250,6 +250,15 @@ export abstract class GameObject implements StageElement {
   }
 
   /**
+   * @returns An `Array` with the {@linkcode Resource}s this
+   * {@linkcode GameObject} uses according to what was set with the
+   * {@linkcode usesResource} method.
+   */
+  public getResources(): Array<Resource> {
+    return this.resources;
+  }
+
+  /**
    * This method allows you to define what happens to this object when its
    * stage starts.
    */
