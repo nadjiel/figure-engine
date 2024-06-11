@@ -1,4 +1,5 @@
 import { GameIterable } from "../main/gameIterable.js";
+import { Resource } from "../resources/resource.js";
 
 /**
  * The `StageElement` interface represents a game iterable element that
@@ -23,7 +24,7 @@ export interface StageElement extends GameIterable {
    * 
    * @returns A Promise that resolves when the `Resource`s are loaded. 
    */
-  load(): Promise<Array<HTMLImageElement | HTMLAudioElement>>;
+  load(): Promise<Array<Resource>>;
 
 }
 

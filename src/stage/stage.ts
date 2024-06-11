@@ -4,6 +4,7 @@ import {
   StageElementComparer
 } from "./stageElementManager.js";
 import { GameObject } from "./gameObject.js";
+import { Resource } from "../resources/resource.js";
 
 /**
  * The `Stage` class provides the structure for organizing and arranging all
@@ -251,18 +252,16 @@ export class Stage implements GameIterable {
    * Loads the {@linkcode Resource}s that this {@linkcode Stage} uses.
    * @returns A `Promise` that resolves when this `Stage` is loaded.
    */
-  public async load(): Promise<void> {
-    const loadPromises = new Array<Promise<Array<HTMLImageElement | HTMLAudioElement>>>();
+  public async load(): Promise<Array<Resource>> {
+    const resources = new Array<Resource>();
 
-    this.getObjects().forEach(obj => {
-      loadPromises.push(obj.load());
+    this.getObjects().forEach(async obj => {
+      resources.push(...(await obj.load()));
     });
-
-    await Promise.all(loadPromises);
 
     this.loaded = true;
 
-    return;
+    return resources;
   }
 
   /**

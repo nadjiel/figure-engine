@@ -226,8 +226,8 @@ export abstract class GameObject implements StageElement {
     this.resources.push(resource);
   }
 
-  public async load(): Promise<Array<HTMLImageElement | HTMLAudioElement>> {
-    const loadPromises = new Array<Promise<HTMLImageElement | HTMLAudioElement>>();
+  public async load(): Promise<Array<Resource>> {
+    const loadPromises = new Array<Promise<Resource>>();
 
     this.resources.forEach(resource => {
       loadPromises.push(resource.load());
