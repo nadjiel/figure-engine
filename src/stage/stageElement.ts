@@ -26,6 +26,13 @@ export interface StageElement extends GameIterable {
    */
   load(): Promise<Array<Resource>>;
 
+  /**
+   * @returns An `Array` with the {@linkcode Resource}s this
+   * {@linkcode StageElement} uses according to what was set with the
+   * {@linkcode usesResource} method.
+   */
+  getResources(): Array<Resource>;
+
 }
 
 export default StageElement;
