@@ -26,7 +26,7 @@ export abstract class GameObject implements StageElement {
    * The resources that this `GameObject` is able to use thanks to the
    * {@linkcode usesResource} method. 
    */
-  private resources = new Array<Resource>;
+  private resources = new Array<Resource>();
   
   /**
    * The `Sprite` of this `GameObject`.
