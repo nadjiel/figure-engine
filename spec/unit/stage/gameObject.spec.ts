@@ -31,6 +31,10 @@ describe("GameObject class", () => {
     );
   });
 
+  afterAll(() => {
+    ResourceManager.removeAllResources();
+  })
+
   it("Should instantiate properly", () => {
     const coordinates = Vector2.createZero();
     const dimensions = new Vector2(10, 15);
