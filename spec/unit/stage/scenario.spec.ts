@@ -104,36 +104,30 @@ describe("Scenario class", () => {
       expect(scenario.onDraw).toHaveBeenCalledWith(ctx);
     });
 
-    it("Should draw color on canvas", () => {
-      scenario.setColor(new Color(255, 0, 0, 0.5));
+    it("Should draw color on canvas with DrawStrategy", () => {
+      const color = new Color(255, 0, 0, 0.5);
+      const drawStrategy = scenario.getDrawStrategy();
 
-      spyOn(ctx, "fillRect");
+      scenario.setColor(color);
+
+      spyOn(drawStrategy, "drawColor");
 
       scenario.draw(ctx);
 
-      expect(ctx.fillStyle).toBe(scenario.getColor().toString());
-      expect(ctx.fillRect).toHaveBeenCalledWith(
-        scenario.getX(),
-        scenario.getY(),
-        scenario.getWidth(),
-        scenario.getHeight()
+      expect(drawStrategy.drawColor).toHaveBeenCalledWith(
+        ctx, color, scenario.getBoundingBox()
       );
     });
 
     it("Should draw sprite on canvas", () => {
-      const scale = new Vector2(
-        scenario.getWidth() / sprite.getImageFrameWidth(),
-        scenario.getHeight() / sprite.getImageFrameHeight(),
-      );
+      const drawStrategy = scenario.getDrawStrategy();
 
-      spyOn(sprite, "draw");
+      spyOn(drawStrategy, "drawSprite");
 
       scenario.draw(ctx);
 
-      expect(sprite.draw).toHaveBeenCalledWith(
-        ctx,
-        scenario.getCoordinates(),
-        scale
+      expect(drawStrategy.drawSprite).toHaveBeenCalledWith(
+        ctx, sprite, scenario.getBoundingBox()
       );
     });
 
