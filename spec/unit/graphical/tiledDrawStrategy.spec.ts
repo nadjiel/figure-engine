@@ -135,19 +135,97 @@ describe("TiledDrawStrategy class", () => {
   describe("drawSprite method", () => {
 
     it("Should tile when tiling is on", () => {
+      // Canvas size is 450 x 450
+      // 450 divided by 5 is 90
+      // On the x axis there'll be 5 iterations
+      // On the y axis there'll be 6 iterations
+      // 5 times 6 equals 30 draws
+      const x = -90;
+      const y = -91;
+      const width = 90;
+      const height = 90;
+      const area = new Rectangle(
+        new Vector2(x, y),
+        new Vector2(width, height)
+      );
+      const expectedDraws = 30;
 
+      spyOn(sprite, "draw");
+
+      drawStrategy.drawSprite(ctx, sprite, area);
+
+      expect(sprite.draw).toHaveBeenCalledTimes(expectedDraws);
     });
 
     it("Should tile in x axis when tileX is on", () => {
-      
+      // Canvas size is 450 x 450
+      // 450 divided by 5 is 90
+      // On the x axis there'll be 5 iterations
+      // On the y axis there'll be 1 iteration
+      // 5 times 1 equals 5 draws
+      const x = 90;
+      const y = 45;
+      const width = 90;
+      const height = 90;
+      const area = new Rectangle(
+        new Vector2(x, y),
+        new Vector2(width, height)
+      );
+      const expectedDraws = 5;
+
+      drawStrategy.dontTileY();
+
+      spyOn(sprite, "draw");
+
+      drawStrategy.drawSprite(ctx, sprite, area);
+
+      expect(sprite.draw).toHaveBeenCalledTimes(expectedDraws);
     });
 
     it("Should tile in y axis when tileY is on", () => {
-      
+      // Canvas size is 450 x 450
+      // 450 divided by 5 is 90
+      // On the x axis there'll be 1 iteration
+      // On the y axis there'll be 6 iterations
+      // 1 times 6 equals 6 draws
+      const x = 90;
+      const y = -45;
+      const width = 90;
+      const height = 90;
+      const area = new Rectangle(
+        new Vector2(x, y),
+        new Vector2(width, height)
+      );
+      const expectedDraws = 6;
+
+      drawStrategy.dontTileX();
+
+      spyOn(sprite, "draw");
+
+      drawStrategy.drawSprite(ctx, sprite, area);
+
+      expect(sprite.draw).toHaveBeenCalledTimes(expectedDraws);
     });
 
     it("Should draw in designated area when tiling is off", () => {
-      
+      const x = 90;
+      const y = -45;
+      const width = 90;
+      const height = 90;
+      const area = new Rectangle(
+        new Vector2(x, y),
+        new Vector2(width, height)
+      );
+      const expectedDraws = 1;
+
+      drawStrategy.dontTileX();
+      drawStrategy.dontTileY();
+
+      spyOn(sprite, "draw");
+
+      drawStrategy.drawSprite(ctx, sprite, area);
+
+      expect(sprite.draw).toHaveBeenCalledTimes(expectedDraws);
     });
 
   });
