@@ -82,28 +82,35 @@ export class TiledDrawStrategy implements DrawStrategy {
       if(drawingY > 0) drawingY -= drawingHeight;
     }
 
-    // drawingX += this.tiledArea.getX();
-    // drawingY += this.tiledArea.getY();
+    let y = drawingY;
 
-    for(let y = drawingY; y < this.tiledArea.getHeight(); y += drawingHeight) {
-      for(let x = drawingX; x < this.tiledArea.getWidth(); x += drawingWidth) {
+    while(y < this.tiledArea.getHeight()) {
+      let x = drawingX;
+
+      while(x < this.tiledArea.getWidth()) {
         const coordinates = new Vector2(
-          drawingX + this.tiledArea.getX(),
-          drawingY + this.tiledArea.getY()
+          x + this.tiledArea.getX(),
+          y + this.tiledArea.getY()
         );
         const scale = new Vector2(
           drawingWidth / sprite.getImageFrameWidth(),
           drawingHeight / sprite.getImageFrameHeight()
         );
 
-        console.log(drawingX, drawingY)
-
         sprite.draw(
           ctx,
           coordinates,
           scale
         );
+
+        if(!this.tileX) break;
+
+        x += drawingWidth;
       }
+      
+      if(!this.tileY) break;
+
+      y += drawingHeight;
     }
   }
 
