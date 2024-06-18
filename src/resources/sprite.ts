@@ -75,6 +75,13 @@ export class Sprite {
   }
 
   /**
+   * @returns The {@linkcode ImageResource} that this sprite stores.
+   */
+  public getImageResource(): ImageResource {
+    return this.image;
+  }
+
+  /**
    * @returns The {@linkcode HTMLImageElement} that this sprite stores.
    * If this `Sprite`'s {@linkcode ImageResource} wasn't loaded yet, this
    * returns an `HTMLImageElement` without a `src`.
