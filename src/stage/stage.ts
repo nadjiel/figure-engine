@@ -713,8 +713,14 @@ export class Stage implements GameIterable {
   public async load(): Promise<Array<Resource>> {
     const resources = new Array<Resource>();
 
+    this.getBackgrounds().forEach(async background => {
+      resources.push(...(await background.load()));
+    });
     this.getObjects().forEach(async obj => {
       resources.push(...(await obj.load()));
+    });
+    this.getForegrounds().forEach(async foreground => {
+      resources.push(...(await foreground.load()));
     });
 
     this.loaded = true;
@@ -734,7 +740,9 @@ export class Stage implements GameIterable {
    * {@linkcode onStart} method.
    */
   start(): void {
+    this.backgroundManager.start();
     this.objectManager.start();
+    this.foregroundManager.start();
 
     this.onStart();
   }
@@ -744,7 +752,9 @@ export class Stage implements GameIterable {
    * triggers the {@linkcode onUpdate} method.
    */
   update(): void {
+    this.backgroundManager.update();
     this.objectManager.update();
+    this.foregroundManager.update();
 
     this.onUpdate();
   }
@@ -755,7 +765,9 @@ export class Stage implements GameIterable {
    * @param ctx A Canvas rendering context with which to draw.
    */
   draw(ctx: CanvasRenderingContext2D): void {
+    this.backgroundManager.draw(ctx);
     this.objectManager.draw(ctx);
+    this.foregroundManager.draw(ctx);
 
     this.onDraw(ctx);
   }
@@ -765,7 +777,9 @@ export class Stage implements GameIterable {
    * {@linkcode onStop} method.
    */
   stop(): void {
+    this.backgroundManager.stop();
     this.objectManager.stop();
+    this.foregroundManager.stop();
 
     this.onStop();
   }
