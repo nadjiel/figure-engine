@@ -28,7 +28,7 @@ export class Scenario implements StageElement {
     dimensions?: Vector2,
     coordinates = Vector2.createZero()
   ) {
-    this.sprite = sprite;
+    this.setSprite(sprite);
 
     if(dimensions === undefined) {
       if(sprite !== undefined) {
@@ -130,6 +130,10 @@ export class Scenario implements StageElement {
   }
 
   public setSprite(sprite?: Sprite): void {
+    if(sprite !== undefined) {
+      this.resources.push(sprite.getImageResource());
+    }
+
     this.sprite = sprite;
   }
 
