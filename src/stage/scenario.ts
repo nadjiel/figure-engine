@@ -164,6 +164,10 @@ export class Scenario implements StageElement {
       `The resource ${name} isn't registered in the ResourceManager`
     );
 
+    if(this.resources.find(res => res === resource)) {
+      return;
+    }
+
     this.resources.push(resource);
   }
 
