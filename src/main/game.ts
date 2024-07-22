@@ -660,7 +660,7 @@ export class Game implements GameIterable {
    * @throws {ArgumentError} If the received `index` doesn't correspond to any
    * stages added to this game.
    */
-  public selectStage(index: number): Stage {
+  public selectStage(index: number): Promise<Stage> {
     return this.stageManager.select(index);
   }
 
@@ -679,7 +679,7 @@ export class Game implements GameIterable {
    * @throws {CallError} If there aren't any stages added to this game to select
    * from or if the current stage is already the last of the list.
    */
-  public selectNextStage(): Stage {
+  public selectNextStage(): Promise<Stage> {
     return this.stageManager.selectNext();
   }
 
@@ -698,7 +698,7 @@ export class Game implements GameIterable {
    * @throws {CallError} If there aren't any stages added to this game to select
    * from or if the current stage is already the first of the list.
    */
-  public selectPreviousStage(): Stage {
+  public selectPreviousStage(): Promise<Stage> {
     return this.stageManager.selectPrevious();
   }
 
@@ -749,6 +749,8 @@ export class Game implements GameIterable {
     const selectedStage = this.getSelectedStage();
 
     if(selectedStage !== undefined) {
+      if(!selectedStage.isLoaded()) return;
+
       selectedStage.update();
     }
   }
@@ -771,6 +773,8 @@ export class Game implements GameIterable {
     const selectedStage = this.getSelectedStage();
 
     if(selectedStage !== undefined) {
+      if(!selectedStage.isLoaded()) return;
+
       selectedStage.draw(ctx);
     }
   }
