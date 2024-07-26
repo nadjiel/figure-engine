@@ -1,19 +1,62 @@
+import { Game } from "../main/game.js";
 import { Resource } from "../resources/resource.js";
 import { Rectangle } from "../spatial/rectangle.js";
 import { Vector2 } from "../spatial/vector2.js";
 import { StageElement } from "./stageElement.js";
 
-export class Camera implements StageElement {
+interface CameraParams {
+
+  game: Game,
+
+  x?: number,
+  y?: number,
+  width?: number,
+  height?: number,
+
+  coordinates?: Vector2,
+  dimensions?: Vector2,
+
+  boundingBox?: Rectangle
+
+}
+
+export abstract class Camera implements StageElement {
   
   private boundingBox: Rectangle;
 
-  constructor(x: number, y: number, width?: number, height?: number) {
-    // Game width and height should be got from game
-    const gameWidth = 0;
-    const gameHeight = 0;
-    const coords = new Vector2(x, y);
-    const size = new Vector2(width || gameWidth, height || gameHeight);
-    this.boundingBox = new Rectangle(coords, size);
+  constructor(params: CameraParams) {
+    let {
+      game,
+      x, y,
+      width, height,
+      coordinates,
+      dimensions,
+      boundingBox
+    } = params;
+
+    if(x === undefined) {
+      x = 0;
+    }
+    if(y === undefined) {
+      y = 0;
+    }
+    if(width === undefined) {
+      width = game.getWidth();
+    }
+    if(height === undefined) {
+      height = game.getHeight();
+    }
+    if(coordinates === undefined) {
+      coordinates = new Vector2(x, y);
+    }
+    if(dimensions === undefined) {
+      dimensions = new Vector2(width, height);
+    }
+    if(boundingBox === undefined) {
+      boundingBox = new Rectangle(coordinates, dimensions);
+    }
+
+    this.boundingBox = boundingBox;
   }
 
   usesResource(name: string): void {
