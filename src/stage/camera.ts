@@ -4,7 +4,7 @@ import { Rectangle } from "../spatial/rectangle.js";
 import { Vector2 } from "../spatial/vector2.js";
 import { StageElement } from "./stageElement.js";
 
-interface CameraParams {
+export interface CameraParams {
 
   game: Game,
 
@@ -59,49 +59,85 @@ export abstract class Camera implements StageElement {
     this.boundingBox = boundingBox;
   }
 
-  usesResource(name: string): void {
+  public getBoundingBox(): Rectangle {
+    return this.boundingBox;
+  }
+
+  public setX(x: number): void {
+    this.boundingBox.setX(x);
+  }
+
+  public getX(): number {
+    return this.boundingBox.getX();
+  }
+
+  public setY(y: number): void {
+    this.boundingBox.setY(y);
+  }
+
+  public getY(): number {
+    return this.boundingBox.getY();
+  }
+
+  public setCoordinates(coordinates: Vector2): void {
+    this.boundingBox.setCoordinates(coordinates);
+  }
+
+  public getCoordinates(): Vector2 {
+    return this.boundingBox.getCoordinates();
+  }
+
+  public setWidth(width: number): void {
+    this.boundingBox.setWidth(width);
+  }
+
+  public getWidth(): number {
+    return this.boundingBox.getWidth();
+  }
+
+  public setHeight(height: number): void {
+    this.boundingBox.setHeight(height);
+  }
+
+  public getHeight(): number {
+    return this.boundingBox.getHeight();
+  }
+
+  public setDimensions(dimensions: Vector2): void {
+    this.boundingBox.setDimensions(dimensions);
+  }
+
+  public getDimensions(): Vector2 {
+    return this.boundingBox.getDimensions();
+  }
+
+  public usesResource(name: string): void {
     throw new Error("Method not implemented.");
   }
 
-  load(): Promise<Array<Resource>> {
+  public load(): Promise<Array<Resource>> {
     throw new Error("Method not implemented.");
   }
 
-  getResources(): Array<Resource> {
+  public getResources(): Array<Resource> {
     throw new Error("Method not implemented.");
   }
 
-  start(): void {
-    throw new Error("Method not implemented.");
-  }
+  public abstract start(): void;
 
-  update(): void {
-    throw new Error("Method not implemented.");
-  }
+  public abstract update(): void;
 
-  draw(ctx: CanvasRenderingContext2D): void {
-    throw new Error("Method not implemented.");
-  }
+  public abstract draw(ctx: CanvasRenderingContext2D): void;
 
-  stop(): void {
-    throw new Error("Method not implemented.");
-  }
+  public abstract stop(): void;
 
-  onStart(): void {
-    throw new Error("Method not implemented.");
-  }
+  public abstract onStart(): void;
 
-  onUpdate(): void {
-    throw new Error("Method not implemented.");
-  }
+  public abstract onUpdate(): void;
 
-  onDraw(ctx: CanvasRenderingContext2D): void {
-    throw new Error("Method not implemented.");
-  }
+  public abstract onDraw(ctx: CanvasRenderingContext2D): void;
 
-  onStop(): void {
-    throw new Error("Method not implemented.");
-  }
+  public abstract onStop(): void;
 
 }
 
