@@ -39,5 +39,11 @@ describe("Game class", () => {
     expect(game.getFps()).toBe(fps);
     expect(game.isRunning()).toBeFalse();
   });
+
+  it("Should store its static instance when created", () => {
+    const game = new Game();
+
+    expect(Game.getInstance()).toBe(game);
+  });
   
 });
