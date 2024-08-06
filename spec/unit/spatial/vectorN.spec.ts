@@ -99,6 +99,27 @@ describe("VectorN class", () => {
 
   });
 
+  describe("minus method", () => {
+
+    it("Should not accept vector with different dimension", () => {
+      const v1 = new VectorN(-1, 5);
+      const v2 = new VectorN(3);
+
+      expect(() => v1.minus(v2)).toThrowError(
+        `vectors must have same dimension (tried subtracting vector${v1.getDimension()} with vector${v2.getDimension()})`
+      );
+    });
+
+    it("Should subtract vectors", () => {
+      const v1 = new VectorN(-1, 5);
+      const v2 = new VectorN(3, -7);
+      const expectedResult = new VectorN(-4, 12);
+
+      expect(v1.minus(v2)).toEqual(expectedResult);
+    });
+
+  });
+
   describe("incrementBy method", () => {
 
     it("Should increment vector by a value", () => {
@@ -111,6 +132,18 @@ describe("VectorN class", () => {
 
   });
 
+  describe("decrementBy method", () => {
+
+    it("Should decrement vector by a value", () => {
+      const v1 = new VectorN(0, -9);
+      const value = 3.25;
+      const expectedResult = new VectorN(-3.25, -12.25);
+
+      expect(v1.decrementBy(value)).toEqual(expectedResult);
+    });
+
+  });
+
   describe("increment method", () => {
 
     it("Should increment vector by 1", () => {
@@ -118,6 +151,17 @@ describe("VectorN class", () => {
       const expectedResult = new VectorN(1, -8);
 
       expect(v.increment()).toEqual(expectedResult);
+    });
+
+  });
+
+  describe("decrement method", () => {
+
+    it("Should decrement vector by 1", () => {
+      const v = new VectorN(0, -9);
+      const expectedResult = new VectorN(-1, -10);
+
+      expect(v.decrement()).toEqual(expectedResult);
     });
 
   });
