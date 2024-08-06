@@ -4,9 +4,7 @@ import { ArgumentError } from "../errors/argumentError.js";
  * The `VectorN` class represents a generic sized vector that can't change it's
  * dimension once created.
  * Under the hood, it uses a common array, but prevents it's size changes with
- * the
- * {@linkcode [Object.seal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/seal)}
- * method under the hood.
+ * the {@linkcode [Object.seal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/seal)} method.
  * 
  * @version 0.3.0
  * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
