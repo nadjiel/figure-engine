@@ -104,6 +104,27 @@ export class VectorN {
   }
 
   /**
+   * Subtracts this vector with another vector and returns the result.
+   * 
+   * If the `vector` passed in the parameter has a different dimension than this
+   * one, an error is thrown. 
+   * @param vector A vector with which to subtract.
+   * @returns The result of the subtraction.
+   * @throws {ArgumentError} If the received `vector` has a different dimension.
+   */
+  public minus(vector: VectorN): VectorN {
+    if(vector.getDimension() !== this.getDimension()) {
+      throw new ArgumentError(`vectors must have same dimension (tried subtracting vector${this.getDimension()} with vector${vector.getDimension()})`);
+    }
+
+    const subtracter = (component: number, index: number) => {
+      return component - vector.getComponent(index);
+    };
+
+    return new VectorN(...this.getComponents().map(subtracter));
+  }
+
+  /**
    * Returns the result of the increment of the components of this vector by a
    * given `value`.
    * @param value A number by which to increment this vector components.
@@ -118,11 +139,33 @@ export class VectorN {
   }
 
   /**
+   * Returns the result of the decrement of the components of this vector by a
+   * given `value`.
+   * @param value A number by which to decrement this vector components.
+   * @returns The result of the decrement operation.
+   */
+  public decrementBy(value: number): VectorN {
+    const decrementer = (component: number) => {
+      return component - value;
+    };
+
+    return new VectorN(...this.getComponents().map(decrementer));
+  }
+
+  /**
    * @returns A vector corresponding to this vector with every component
    * incremented by `1`.
    */
   public increment(): VectorN {
     return this.incrementBy(1);
+  }
+
+  /**
+   * @returns A vector corresponding to this vector with every component
+   * decremented by `1`.
+   */
+  public decrement(): VectorN {
+    return this.decrementBy(1);
   }
 
   /**
