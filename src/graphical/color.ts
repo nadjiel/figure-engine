@@ -1,5 +1,5 @@
 import { ArgumentError } from "../errors/argumentError.js";
-import { VectorN } from "../spatial/vectorN.js";
+import { Vector4 } from "../spatial/vector4.js";
 
 /**
  * The `Color` class is an utility to create rgba color representations. 
@@ -7,34 +7,34 @@ import { VectorN } from "../spatial/vectorN.js";
  * @version 0.3.0
  * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
  */
-export class Color extends VectorN {
+export class Color extends Vector4 {
 
   /**
    * This constructor creates a new color specified by its parameters.
    * 
-   * The `red`, `green` and `blue` parameters accept only values greater or
-   * equal to `0` and less or equal to `255`; the `alpha` parameter accepts
+   * The `r`, `g` and `b` parameters accept only values greater or
+   * equal to `0` and less or equal to `255`; the `a` parameter accepts
    * values between `0` and `1`.
    * 
-   * You don't need to pass the `alpha` parameter, in which case it will be `1`,
+   * You don't need to pass the `a` parameter, in which case it will be `1`,
    * representing a fully visible color.
    * 
    * If any or the parameters are outside their specified intervals, an error is
    * thrown.
-   * @param red The red component of the color `[0, 255]`.
-   * @param green The green component of the color `[0, 255]`.
-   * @param blue The blue component of the color `[0, 255]`.
-   * @param alpha The alpha component of the color `[0, 1]`.
+   * @param r The red component of the color `[0, 255]`.
+   * @param g The green component of the color `[0, 255]`.
+   * @param b The blue component of the color `[0, 255]`.
+   * @param a The alpha component of the color `[0, 1]`.
    * @throws {ArgumentError} If any of the parameters are outside the required
    * interval.
    */
-  constructor(red: number, green: number, blue: number, alpha?: number) {
-    super(red, green, blue, alpha ?? 1);
+  constructor(r: number, g: number, b: number, a?: number) {
+    super(r, g, b, a ?? 1);
 
-    this.checkColorComponent(red);
-    this.checkColorComponent(green);
-    this.checkColorComponent(blue);
-    this.checkAlphaComponent(alpha ?? 1);
+    this.checkColorComponent(r);
+    this.checkColorComponent(g);
+    this.checkColorComponent(b);
+    this.checkAlphaComponent(a ?? 1);
   }
 
   /**
@@ -67,17 +67,10 @@ export class Color extends VectorN {
    * @param value The new value to set to the red component.
    * @throws {ArgumentError} If the value is invalid.
    */
-  public setRed(value: number): void {
+  public setR(value: number): void {
+    super.setR(value);
+
     this.checkColorComponent(value);
-
-    this.setComponent(0, value);
-  }
-
-  /**
-   * @returns The red component of this color.
-   */
-  public getRed(): number {
-    return this.getComponent(0);
   }
 
   /**
@@ -86,17 +79,10 @@ export class Color extends VectorN {
    * @param value The new value to set to the green component.
    * @throws {ArgumentError} If the value is invalid.
    */
-  public setGreen(value: number): void {
+  public setG(value: number): void {
+    super.setG(value);
+    
     this.checkColorComponent(value);
-
-    this.setComponent(1, value);
-  }
-
-  /**
-   * @returns The green component of this color.
-   */
-  public getGreen(): number {
-    return this.getComponent(1);
   }
 
   /**
@@ -105,17 +91,10 @@ export class Color extends VectorN {
    * @param value The new value to set to the blue component.
    * @throws {ArgumentError} If the value is invalid.
    */
-  public setBlue(value: number): void {
+  public setB(value: number): void {
+    super.setB(value);
+    
     this.checkColorComponent(value);
-
-    this.setComponent(2, value);
-  }
-
-  /**
-   * @returns The blue component of this color.
-   */
-  public getBlue(): number {
-    return this.getComponent(2);
   }
 
   /**
@@ -124,17 +103,10 @@ export class Color extends VectorN {
    * @param value The new value to set to the alpha component.
    * @throws {ArgumentError} If the value is invalid.
    */
-  public setAlpha(value: number): void {
+  public setA(value: number): void {
+    super.setA(value);
+    
     this.checkAlphaComponent(value);
-
-    this.setComponent(3, value);
-  }
-
-  /**
-   * @returns The alpha component of this color.
-   */
-  public getAlpha(): number {
-    return this.getComponent(3);
   }
 
   /**
@@ -142,7 +114,7 @@ export class Color extends VectorN {
    * `rgba(red, green, blue, alpha)` format.
    */
   public toString(): string {
-    return `rgba(${this.getRed()}, ${this.getGreen()}, ${this.getBlue()}, ${this.getAlpha()})`;
+    return `rgba(${this.getR()}, ${this.getG()}, ${this.getB()}, ${this.getA()})`;
   }
 
 }
