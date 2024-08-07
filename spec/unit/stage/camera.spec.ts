@@ -5,50 +5,48 @@ import { Rectangle } from "../../../dist/spatial/rectangle.js";
 
 describe("Camera class", () => {
 
-  const game = new Game();
-
   class ConcreteCamera extends Camera {
 
-    public constructor(params: CameraParams) {
+    public constructor(params?: CameraParams) {
       super(params);
     }
 
-    public start(): void {
-      throw new Error("Method not implemented.");
-    }
-
-    public update(): void {
-      throw new Error("Method not implemented.");
-    }
-
-    public draw(ctx: CanvasRenderingContext2D): void {
-      throw new Error("Method not implemented.");
-    }
-
-    public stop(): void {
-      throw new Error("Method not implemented.");
-    }
-
-    public onStart(): void {
-      throw new Error("Method not implemented.");
-    }
-
-    public onUpdate(): void {
-      throw new Error("Method not implemented.");
-    }
-
-    public onDraw(ctx: CanvasRenderingContext2D): void {
-      throw new Error("Method not implemented.");
-    }
-
-    public onStop(): void {
-      throw new Error("Method not implemented.");
-    }
+    public start(): void {}
+    public update(): void {}
+    public draw(ctx: CanvasRenderingContext2D): void {}
+    public stop(): void {}
+    public onStart(): void {}
+    public onUpdate(): void {}
+    public onDraw(ctx: CanvasRenderingContext2D): void {}
+    public onStop(): void {}
     
   }
 
+  let game: Game;
+  let camera: Camera;
+
+  beforeAll(() => {
+    game = new Game();
+  });
+
+  beforeEach(() => {
+    camera = new ConcreteCamera();
+  });
+
   afterAll(() => {
-    game.getRoot().removeChild(game.getHTMLCanvas());
+    game.unmount();
+  });
+
+  it("Should instantiate properly without params", () => {
+    const expectedX = 0;
+    const expectedY = 0;
+    const expectedWidth = game.getWidth();
+    const expectedHeight = game.getHeight();
+
+    expect(camera.getX()).toBe(expectedX);
+    expect(camera.getY()).toBe(expectedY);
+    expect(camera.getWidth()).toBe(expectedWidth);
+    expect(camera.getHeight()).toBe(expectedHeight);
   });
 
   it("Should instantiate properly with x, y, width and height", () => {
@@ -57,8 +55,7 @@ describe("Camera class", () => {
     const width = 720;
     const height = 480;
 
-    const camera = new ConcreteCamera({
-      game,
+    camera = new ConcreteCamera({
       x, y,
       width, height
     });
@@ -73,8 +70,7 @@ describe("Camera class", () => {
     const coordinates = new Vector2(0, 0);
     const dimensions = new Vector2(720, 480);
 
-    const camera = new ConcreteCamera({
-      game,
+    camera = new ConcreteCamera({
       coordinates,
       dimensions
     });
@@ -89,8 +85,7 @@ describe("Camera class", () => {
       new Vector2(720, 480)
     );
 
-    const camera = new ConcreteCamera({
-      game,
+    camera = new ConcreteCamera({
       boundingBox
     });
 

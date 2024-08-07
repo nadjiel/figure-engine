@@ -6,8 +6,6 @@ import { StageElement } from "./stageElement.js";
 
 export interface CameraParams {
 
-  game: Game,
-
   x?: number,
   y?: number,
   width?: number,
@@ -24,15 +22,16 @@ export abstract class Camera implements StageElement {
   
   private boundingBox: Rectangle;
 
-  constructor(params: CameraParams) {
+  constructor(params?: CameraParams) {
     let {
-      game,
       x, y,
       width, height,
       coordinates,
       dimensions,
       boundingBox
-    } = params;
+    } = params || {};
+
+    const game = Game.getInstance();
 
     if(x === undefined) {
       x = 0;
@@ -41,10 +40,10 @@ export abstract class Camera implements StageElement {
       y = 0;
     }
     if(width === undefined) {
-      width = game.getWidth();
+      width = game?.getWidth() || 0;
     }
     if(height === undefined) {
-      height = game.getHeight();
+      height = game?.getHeight() || 0;
     }
     if(coordinates === undefined) {
       coordinates = new Vector2(x, y);
@@ -112,15 +111,15 @@ export abstract class Camera implements StageElement {
   }
 
   public usesResource(name: string): void {
-    throw new Error("Method not implemented.");
+    
   }
 
-  public load(): Promise<Array<Resource>> {
-    throw new Error("Method not implemented.");
+  public async load(): Promise<Array<Resource>> {
+    return []
   }
 
   public getResources(): Array<Resource> {
-    throw new Error("Method not implemented.");
+    return []
   }
 
   public abstract start(): void;
