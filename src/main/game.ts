@@ -334,8 +334,15 @@ export class Game implements GameIterable {
    * @returns The HTML element that is the parent of the `canvas` element that
    * displays the game.
    */
-  public getRoot(): HTMLElement {
+  public getRoot(): HTMLElement | null {
     return this.gameCanvas.getRoot();
+  }
+
+  /**
+   * Removes the game from the DOM.
+   */
+  public unmount(): void {
+    return this.gameCanvas.unmount();
   }
 
   /**

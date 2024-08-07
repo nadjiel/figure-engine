@@ -373,22 +373,30 @@ export class GameCanvas {
    * @returns The HTML element that is the parent of the `canvas` element that
    * displays the game.
    */
-  public getRoot(): HTMLElement {
-    return this.getHTMLCanvas().parentElement!;
+  public getRoot(): HTMLElement | null {
+    return this.getHTMLCanvas().parentElement;
   }
 
   /**
    * @returns The width of the HTML element parent of the game canvas.
    */
   public getRootWidth(): number {
-    return parseInt(window.getComputedStyle(this.getRoot()).width);
+    const root = this.getRoot();
+
+    if(root === null) return 0;
+
+    return parseInt(window.getComputedStyle(root).width);
   }
 
   /**
    * @returns The height of the HTML element parent of the game canvas.
    */
   public getRootHeight(): number {
-    return parseInt(window.getComputedStyle(this.getRoot()).height);
+    const root = this.getRoot();
+
+    if(root === null) return 0;
+
+    return parseInt(window.getComputedStyle(root).height);
   }
 
   /**
@@ -399,6 +407,13 @@ export class GameCanvas {
    */
   private appendTo(root: HTMLElement): void {
     root.appendChild(this.getHTMLCanvas());
+  }
+
+  /**
+   * Removes the {@linkcode GameCanvas} from the DOM.
+   */
+  public unmount(): void {
+    this.canvas.parentElement?.removeChild(this.canvas);
   }
 
   /**
@@ -458,7 +473,11 @@ export class GameCanvas {
         await document.exitFullscreen();
         this.scaleToOriginalSize();
       } else {
-        await this.getRoot().requestFullscreen();
+        const root = this.getRoot();
+
+        if(root === null) return;
+
+        await root.requestFullscreen();
         this.fitRoot();
       }
     } catch(err) {
