@@ -9,7 +9,7 @@ import { ArgumentError } from "../errors/argumentError.js";
  * @version 0.3.0
  * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
  */
-export class VectorN {
+export class VectorN<V extends VectorN<V>> {
 
   /**
    * This property stores the components that compose this vector. For
@@ -91,7 +91,7 @@ export class VectorN {
    * @returns The result of the sum.
    * @throws {ArgumentError} If the received `vector` has a different dimension.
    */
-  public plus(vector: VectorN): VectorN {
+  public plus(vector: V): V {
     if(vector.getDimension() !== this.getDimension()) {
       throw new ArgumentError(`vectors must have same dimension (tried adding vector${this.getDimension()} with vector${vector.getDimension()})`);
     }
@@ -100,7 +100,11 @@ export class VectorN {
       return component + vector.getComponent(index);
     };
 
-    return new VectorN(...this.getComponents().map(adder));
+    return new (this.constructor as { new(...args: number[]): V })(
+      ...this.components.map(adder)
+    );
+
+    // return new VectorN(...this.getComponents().map(adder));
   }
 
   /**
@@ -112,7 +116,7 @@ export class VectorN {
    * @returns The result of the subtraction.
    * @throws {ArgumentError} If the received `vector` has a different dimension.
    */
-  public minus(vector: VectorN): VectorN {
+  public minus(vector: V): V {
     if(vector.getDimension() !== this.getDimension()) {
       throw new ArgumentError(`vectors must have same dimension (tried subtracting vector${this.getDimension()} with vector${vector.getDimension()})`);
     }
@@ -121,7 +125,11 @@ export class VectorN {
       return component - vector.getComponent(index);
     };
 
-    return new VectorN(...this.getComponents().map(subtracter));
+    return new (this.constructor as { new(...args: number[]): V })(
+      ...this.components.map(subtracter)
+    );
+
+    // return new V(...this.getComponents().map(subtracter));
   }
 
   /**
@@ -130,12 +138,16 @@ export class VectorN {
    * @param value A number by which to increment this vector components.
    * @returns The result of the increment operation.
    */
-  public incrementBy(value: number): VectorN {
+  public incrementBy(value: number): V {
     const incrementer = (component: number) => {
       return component + value;
     };
 
-    return new VectorN(...this.getComponents().map(incrementer));
+    return new (this.constructor as { new(...args: number[]): V })(
+      ...this.components.map(incrementer)
+    );
+
+    // return new VectorN(...this.getComponents().map(incrementer));
   }
 
   /**
@@ -144,19 +156,23 @@ export class VectorN {
    * @param value A number by which to decrement this vector components.
    * @returns The result of the decrement operation.
    */
-  public decrementBy(value: number): VectorN {
+  public decrementBy(value: number): V {
     const decrementer = (component: number) => {
       return component - value;
     };
 
-    return new VectorN(...this.getComponents().map(decrementer));
+    return new (this.constructor as { new(...args: number[]): V })(
+      ...this.components.map(decrementer)
+    );
+
+    // return new VectorN(...this.getComponents().map(decrementer));
   }
 
   /**
    * @returns A vector corresponding to this vector with every component
    * incremented by `1`.
    */
-  public increment(): VectorN {
+  public increment(): V {
     return this.incrementBy(1);
   }
 
@@ -164,7 +180,7 @@ export class VectorN {
    * @returns A vector corresponding to this vector with every component
    * decremented by `1`.
    */
-  public decrement(): VectorN {
+  public decrement(): V {
     return this.decrementBy(1);
   }
 
@@ -175,12 +191,16 @@ export class VectorN {
    * @returns A vector resulting of the scale of this vector by the received
    * `value`.
    */
-  public scaleBy(scalar: number): VectorN {
+  public scaleBy(scalar: number): V {
     const scaler = (component: number) => {
       return component * scalar;
     };
 
-    return new VectorN(...this.getComponents().map(scaler));
+    return new (this.constructor as { new(...args: number[]): V })(
+      ...this.components.map(scaler)
+    );
+
+    // return new VectorN(...this.getComponents().map(scaler));
   }
 
   /**

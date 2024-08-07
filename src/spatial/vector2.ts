@@ -6,7 +6,7 @@ import { VectorN } from "./vectorN.js";
  * @version 0.3.0
  * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
  */
-export class Vector2 extends VectorN {
+export class Vector2 extends VectorN<Vector2> {
 
   /**
    * This method returns a zero vector (a vector that has its components
@@ -68,34 +68,6 @@ export class Vector2 extends VectorN {
 
   public getY(): number {
     return this.getComponent(1);
-  }
-
-  public plus(vector: Vector2): Vector2 {
-    return super.plus(vector) as Vector2;
-  }
-
-  public minus(vector: Vector2): Vector2 {
-    return super.minus(vector) as Vector2;
-  }
-
-  public incrementBy(value: number): Vector2 {
-    return super.incrementBy(value) as Vector2;
-  }
-
-  public decrementBy(value: number): Vector2 {
-    return super.decrementBy(value) as Vector2;
-  }
-
-  public increment(): Vector2 {
-    return super.increment() as Vector2;
-  }
-
-  public decrement(): Vector2 {
-    return super.decrement() as Vector2;
-  }
-
-  public scaleBy(scalar: number): Vector2 {
-    return super.scaleBy(scalar) as Vector2;
   }
 
 }
