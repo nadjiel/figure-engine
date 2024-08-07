@@ -127,4 +127,23 @@ describe("Vector2 class", () => {
 
   });
 
+  describe("Plus method", () => {
+
+    it("Should add vectors", () => {
+      const v1 = new Vector2(-1, 5);
+      const v2 = new Vector2(3, -7);
+      const expectedResult = new Vector2(2, -2);
+
+      expect(v1.plus(v2)).toEqual(expectedResult);
+    });
+
+    it("Should return Vector2 instance", () => {
+      const vec1 = new Vector2(0, 0);
+      const vec2 = new Vector2(-5.4, 3);
+      
+      expect(vec1.plus(vec2)).toBeInstanceOf(Vector2);
+    });
+
+  });
+
 });
