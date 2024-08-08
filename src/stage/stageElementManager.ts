@@ -2,6 +2,7 @@ import { StageElement } from "./stageElement.js";
 import { Sequence } from "../util/sequence.js";
 import { ArgumentError } from "../errors/argumentError.js";
 import { CallError } from "../errors/callError.js";
+import { Camera } from "./camera.js";
 
 /**
  * This type defines a function that takes two stage elements and compares both,
@@ -340,14 +341,14 @@ export class StageElementManager<E extends StageElement> {
    * Draws all the elements in this manager following the predefined order.
    * @param ctx The canvas rendering context used for drawing the elements.
    */
-  public draw(ctx: CanvasRenderingContext2D): void {
+  public draw(ctx: CanvasRenderingContext2D, camera: Camera): void {
     let elements = this.elements.getElements();
 
     if(this.elementDrawComparer !== undefined) {
       elements = elements.sort(this.elementDrawComparer);
     }
 
-    elements.forEach(element => element.draw(ctx));
+    elements.forEach(element => element.draw(ctx, camera));
   }
 
   /**

@@ -784,9 +784,9 @@ export class Stage implements GameIterable {
    * @param ctx A Canvas rendering context with which to draw.
    */
   draw(ctx: CanvasRenderingContext2D): void {
-    this.backgroundManager.draw(ctx);
-    this.objectManager.draw(ctx);
-    this.foregroundManager.draw(ctx);
+    this.backgroundManager.draw(ctx, this.camera);
+    this.objectManager.draw(ctx, this.camera);
+    this.foregroundManager.draw(ctx, this.camera);
 
     this.onDraw(ctx);
   }

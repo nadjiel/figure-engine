@@ -110,6 +110,10 @@ export abstract class Camera implements StageElement {
     return this.boundingBox.getDimensions();
   }
 
+  public getApparentCoordinates(coordinates: Vector2): Vector2 {
+    return coordinates.minus(this.getCoordinates());
+  }
+
   public usesResource(name: string): void {
     
   }

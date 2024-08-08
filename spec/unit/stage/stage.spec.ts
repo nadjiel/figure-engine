@@ -201,9 +201,9 @@ describe("Stage class", () => {
 
       stage.draw(ctx);
 
-      expect(gameObject1.draw).toHaveBeenCalledWith(ctx);
-      expect(gameObject2.draw).toHaveBeenCalledWith(ctx);
-      expect(gameObject3.draw).toHaveBeenCalledWith(ctx);
+      expect(gameObject1.draw).toHaveBeenCalledWith(ctx, stage.getCamera());
+      expect(gameObject2.draw).toHaveBeenCalledWith(ctx, stage.getCamera());
+      expect(gameObject3.draw).toHaveBeenCalledWith(ctx, stage.getCamera());
     });
 
     it("Should draw the game objects in determined order", () => {

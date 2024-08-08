@@ -7,6 +7,7 @@ import { Sprite } from "../resources/sprite.js";
 import { ResourceManager } from "../resources/resourceManager.js";
 import { ResourceError } from "../errors/resourceError.js";
 import { Game } from "../main/game.js";
+import Camera from "./camera.js";
 
 /**
  * The `GameObject` class allows the creation and customization
@@ -137,20 +138,6 @@ export abstract class GameObject implements StageElement {
     return this.boundingBox.getDimensions();
   }
 
-  public getApparentCoordinates(): Vector2 {
-    const coords = this.getCoordinates();
-
-    const game = Game.getInstance();
-    if(game === undefined) return coords;
-
-    const stage = game.getSelectedStage();
-    if(stage === undefined) return coords;
-
-    const cameraCoords = stage.getCamera().getCoordinates();
-
-    return coords.minus(cameraCoords);
-  }
-
   public setColor(color: Color): void {
     this.color = color;
   }
@@ -198,8 +185,8 @@ export abstract class GameObject implements StageElement {
    * It triggers the {@linkcode onDraw} method, which you can use to define
    * what this game object draws.
    */
-  public draw(ctx: CanvasRenderingContext2D): void {
-    const apparentCoords = this.getApparentCoordinates();
+  public draw(ctx: CanvasRenderingContext2D, camera: Camera): void {
+    const apparentCoords = camera.getApparentCoordinates(this.getCoordinates());
 
     ctx.fillStyle = this.color.toString();
     ctx.fillRect(
@@ -220,7 +207,7 @@ export abstract class GameObject implements StageElement {
       );
     }
 
-    this.onDraw(ctx);
+    this.onDraw(ctx, camera);
   }
 
   /**
@@ -291,7 +278,7 @@ export abstract class GameObject implements StageElement {
    * This method allows you to define what this object draws every frame after
    * being updated.
    */
-  public abstract onDraw(ctx: CanvasRenderingContext2D): void;
+  public abstract onDraw(ctx: CanvasRenderingContext2D, camera: Camera): void;
 
   /**
    * This method allows you to define what happens to this object when its
