@@ -7,6 +7,7 @@ import { GameObject } from "./gameObject.js";
 import { Resource } from "../resources/resource.js";
 import { Scenario } from "./scenario.js";
 import { ArgumentError, CallError } from "../errors/index.js";
+import { StageElement } from "./stageElement.js";
 
 /**
  * The `Stage` class provides the structure for organizing and arranging all
@@ -713,15 +714,21 @@ export class Stage implements GameIterable {
   public async load(): Promise<Array<Resource>> {
     const resources = new Array<Resource>();
 
-    this.getBackgrounds().forEach(async background => {
-      resources.push(...(await background.load()));
-    });
-    this.getObjects().forEach(async obj => {
-      resources.push(...(await obj.load()));
-    });
-    this.getForegrounds().forEach(async foreground => {
-      resources.push(...(await foreground.load()));
-    });
+    const stageElementLoader = async (element: StageElement) => {
+      const loadedResources = await element.load();
+
+      resources.push(...loadedResources);
+    }
+
+    const backgroundLoading = this.getBackgrounds().map(stageElementLoader);
+    const objectLoading = this.getObjects().map(stageElementLoader);
+    const foregroundLoading = this.getForegrounds().map(stageElementLoader);
+
+    await Promise.all([
+      ...backgroundLoading,
+      ...objectLoading,
+      ...foregroundLoading
+    ]);
 
     this.loaded = true;
 
