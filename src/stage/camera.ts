@@ -22,6 +22,8 @@ export abstract class Camera implements StageElement {
   
   private boundingBox: Rectangle;
 
+  private speed: Vector2 = Vector2.createZero();
+
   constructor(params?: CameraParams) {
     let {
       x, y,
@@ -121,6 +123,14 @@ export abstract class Camera implements StageElement {
     );
 
     return coordinates.minus(parallaxedCoords);
+  }
+
+  public setSpeed(speed: Vector2): void {
+    this.speed = speed;
+  }
+
+  public getSpeed(): Vector2 {
+    return this.speed;
   }
 
   public usesResource(name: string): void {
