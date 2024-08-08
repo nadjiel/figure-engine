@@ -110,8 +110,17 @@ export abstract class Camera implements StageElement {
     return this.boundingBox.getDimensions();
   }
 
-  public getApparentCoordinates(coordinates: Vector2): Vector2 {
-    return coordinates.minus(this.getCoordinates());
+  public getApparentCoordinates(coordinates: Vector2, parallax?: Vector2): Vector2 {
+    if(parallax === undefined) {
+      parallax = new Vector2(1, 1);
+    }
+
+    const parallaxedCoords = new Vector2(
+      this.getX() * parallax.getX(),
+      this.getY() * parallax.getY()
+    );
+
+    return coordinates.minus(parallaxedCoords);
   }
 
   public usesResource(name: string): void {
