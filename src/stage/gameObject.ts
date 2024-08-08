@@ -6,6 +6,7 @@ import { Resource } from "../resources/resource.js";
 import { Sprite } from "../resources/sprite.js";
 import { ResourceManager } from "../resources/resourceManager.js";
 import { ResourceError } from "../errors/resourceError.js";
+import { Game } from "../main/game.js";
 
 /**
  * The `GameObject` class allows the creation and customization
@@ -136,6 +137,20 @@ export abstract class GameObject implements StageElement {
     return this.boundingBox.getDimensions();
   }
 
+  public getApparentCoordinates(): Vector2 {
+    const coords = this.getCoordinates();
+
+    const game = Game.getInstance();
+    if(game === undefined) return coords;
+
+    const stage = game.getSelectedStage();
+    if(stage === undefined) return coords;
+
+    const cameraCoords = stage.getCamera().getCoordinates();
+
+    return coords.minus(cameraCoords);
+  }
+
   public setColor(color: Color): void {
     this.color = color;
   }
@@ -184,9 +199,11 @@ export abstract class GameObject implements StageElement {
    * what this game object draws.
    */
   public draw(ctx: CanvasRenderingContext2D): void {
+    const apparentCoords = this.getApparentCoordinates();
+
     ctx.fillStyle = this.color.toString();
     ctx.fillRect(
-      this.getX(), this.getY(),
+      apparentCoords.getX(), apparentCoords.getY(),
       this.getWidth(), this.getHeight()
     );
 
@@ -198,7 +215,7 @@ export abstract class GameObject implements StageElement {
 
       this.sprite.draw(
         ctx,
-        this.getCoordinates(),
+        apparentCoords,
         scale
       );
     }
