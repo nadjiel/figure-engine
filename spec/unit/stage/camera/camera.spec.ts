@@ -1,7 +1,7 @@
-import { Vector2 } from "../../../dist/spatial/vector2.js";
-import { Camera, CameraParams } from "../../../dist/stage/camera/camera.js";
-import { Game } from "../../../dist/main/game.js";
-import { Rectangle } from "../../../dist/spatial/rectangle.js";
+import { Vector2 } from "../../../../dist/spatial/vector2.js";
+import { Camera, CameraParams } from "../../../../dist/stage/camera/camera.js";
+import { Game } from "../../../../dist/main/game.js";
+import { Rectangle } from "../../../../dist/spatial/rectangle.js";
 
 describe("Camera class", () => {
 
