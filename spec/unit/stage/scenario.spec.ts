@@ -4,7 +4,7 @@ import { ResourceManager } from "../../../dist/resources/resourceManager.js";
 import { Sprite } from "../../../dist/resources/sprite.js";
 import { Vector2 } from "../../../dist/spatial/vector2.js";
 import { Scenario } from "../../../dist/stage/scenario.js";
-import { StaticCamera } from "../../../dist/stage/staticCamera.js";
+import { StaticCamera } from "../../../dist/stage/camera/staticCamera.js";
 
 describe("Scenario class", () => {
 

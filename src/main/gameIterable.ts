@@ -1,4 +1,4 @@
-import { Camera } from "../stage/camera";
+import { Camera } from "../stage/camera/camera";
 
 /**
  * This interface describes a class that is iterated by the game.

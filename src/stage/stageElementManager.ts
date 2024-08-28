@@ -2,7 +2,7 @@ import { StageElement } from "./stageElement.js";
 import { Sequence } from "../util/sequence.js";
 import { ArgumentError } from "../errors/argumentError.js";
 import { CallError } from "../errors/callError.js";
-import { Camera } from "./camera.js";
+import { Camera } from "./camera/camera.js";
 
 /**
  * This type defines a function that takes two stage elements and compares both,

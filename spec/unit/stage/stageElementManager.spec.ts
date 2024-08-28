@@ -1,7 +1,7 @@
 import { StageElementManager } from "../../../dist/stage/stageElementManager.js";
 import { GameObject } from "../../../dist/stage/gameObject.js";
 import { Vector2 } from "../../../dist/spatial/vector2.js";
-import { StaticCamera } from "../../../dist/stage/staticCamera.js";
+import { StaticCamera } from "../../../dist/stage/camera/staticCamera.js";
 
 describe("StageElementManager class", () => {
 

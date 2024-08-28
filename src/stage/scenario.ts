@@ -8,7 +8,7 @@ import { Color, ColorFactory } from "../graphical/color.js";
 import { Rectangle } from "../spatial/rectangle.js";
 import { DrawStrategy } from "../graphical/drawStrategy.js";
 import { OneDrawStrategy } from "../graphical/oneDrawStrategy.js";
-import { Camera } from "./camera.js";
+import { Camera } from "./camera/camera.js";
 
 export class Scenario implements StageElement {
 

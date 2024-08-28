@@ -8,8 +8,8 @@ import { Resource } from "../resources/resource.js";
 import { Scenario } from "./scenario.js";
 import { ArgumentError, CallError } from "../errors/index.js";
 import { StageElement } from "./stageElement.js";
-import { Camera } from "./camera.js";
-import { StaticCamera } from "./staticCamera.js";
+import { Camera } from "./camera/camera.js";
+import { StaticCamera } from "./camera/staticCamera.js";
 
 /**
  * The `Stage` class provides the structure for organizing and arranging all

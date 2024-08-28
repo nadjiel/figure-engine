@@ -7,7 +7,7 @@ import { Sprite } from "../resources/sprite.js";
 import { ResourceManager } from "../resources/resourceManager.js";
 import { ResourceError } from "../errors/resourceError.js";
 import { Game } from "../main/game.js";
-import Camera from "./camera.js";
+import Camera from "./camera/camera.js";
 
 /**
  * The `GameObject` class allows the creation and customization

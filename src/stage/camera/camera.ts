@@ -1,8 +1,8 @@
-import { Game } from "../main/game.js";
-import { Resource } from "../resources/resource.js";
-import { Rectangle } from "../spatial/rectangle.js";
-import { Vector2 } from "../spatial/vector2.js";
-import { StageElement } from "./stageElement.js";
+import { Game } from "../../main/game.js";
+import { Resource } from "../../resources/resource.js";
+import { Rectangle } from "../../spatial/rectangle.js";
+import { Vector2 } from "../../spatial/vector2.js";
+import { StageElement } from "../stageElement.js";
 
 export interface CameraParams {
 
