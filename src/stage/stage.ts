@@ -762,6 +762,7 @@ export class Stage implements GameIterable {
     this.backgroundManager.start();
     this.objectManager.start();
     this.foregroundManager.start();
+    this.camera.start();
 
     this.onStart();
   }
@@ -774,6 +775,7 @@ export class Stage implements GameIterable {
     this.backgroundManager.update();
     this.objectManager.update();
     this.foregroundManager.update();
+    this.camera.update();
 
     this.onUpdate();
   }
@@ -787,6 +789,7 @@ export class Stage implements GameIterable {
     this.backgroundManager.draw(ctx, this.camera);
     this.objectManager.draw(ctx, this.camera);
     this.foregroundManager.draw(ctx, this.camera);
+    this.camera.draw(ctx);
 
     this.onDraw(ctx);
   }
@@ -799,6 +802,7 @@ export class Stage implements GameIterable {
     this.backgroundManager.stop();
     this.objectManager.stop();
     this.foregroundManager.stop();
+    this.camera.stop();
 
     this.onStop();
   }
