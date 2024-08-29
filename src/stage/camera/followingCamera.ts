@@ -1,21 +1,50 @@
-import { Camera } from "./camera.js";
+import { Camera, CameraParams } from "./camera.js";
+import { GameObject } from "../gameObject.js";
+import { Vector2 } from "../../spatial/vector2.js";
+
+interface FollowingCameraParams extends CameraParams {
+
+  maxSpeed?: Vector2,
+  target: GameObject,
+
+}
 
 export class FollowingCamera extends Camera {
 
-  public start(): void {
-    
+  private maxSpeed?: Vector2;
+
+  private target: GameObject;
+
+  constructor(params: FollowingCameraParams) {
+    super(params);
+
+    this.target = params.target;
+  }
+
+  public setTarget(target: GameObject): void {
+    this.target = target;
+  }
+
+  public getTarget(): GameObject {
+    return this.target;
   }
 
   public update(): void {
-    
-  }
+    super.update();
 
-  public draw(ctx: CanvasRenderingContext2D): void {
-    
-  }
+    const cameraCoordinates = this.getCenterCoordinates();
+    const targetCoordinates = this.target.getCenterCoordinates();
 
-  public stop(): void {
-    
+    console.log(cameraCoordinates)
+    console.log(targetCoordinates)
+
+    const difference = targetCoordinates.minus(cameraCoordinates);
+
+    this.setSpeed(difference);
+
+    this.move();
+
+    console.log(difference.getX() + " " + difference.getY())
   }
 
   public onStart(): void {
