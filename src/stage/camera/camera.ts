@@ -88,6 +88,13 @@ export abstract class Camera implements StageElement {
     return this.boundingBox.getCoordinates();
   }
 
+  public getCenterCoordinates(): Vector2 {
+    return new Vector2(
+      this.getX() + this.getWidth() / 2,
+      this.getY() + this.getHeight() / 2
+    );
+  }
+
   public setWidth(width: number): void {
     this.boundingBox.setWidth(width);
   }
@@ -133,6 +140,10 @@ export abstract class Camera implements StageElement {
     return this.speed;
   }
 
+  public move(): void {
+    this.setCoordinates(this.getCoordinates().plus(this.getSpeed()));
+  }
+
   public usesResource(name: string): void {
     
   }
@@ -145,13 +156,13 @@ export abstract class Camera implements StageElement {
     return []
   }
 
-  public abstract start(): void;
+  public start(): void {}
 
-  public abstract update(): void;
+  public update(): void {}
 
-  public abstract draw(ctx: CanvasRenderingContext2D): void;
+  public draw(ctx: CanvasRenderingContext2D): void {}
 
-  public abstract stop(): void;
+  public stop(): void {}
 
   public abstract onStart(): void;
 
