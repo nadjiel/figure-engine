@@ -93,6 +93,13 @@ export abstract class GameObject implements StageElement {
     return this.boundingBox.getCoordinates();
   }
 
+  public getCenterCoordinates(): Vector2 {
+    return new Vector2(
+      this.getX() + this.getWidth() / 2,
+      this.getY() + this.getHeight() / 2
+    );
+  }
+
   /**
    * Sets the width of this game object.
    * 
