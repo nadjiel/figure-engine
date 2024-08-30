@@ -6,6 +6,8 @@ import { Resource } from "../resources/resource.js";
 import { Sprite } from "../resources/sprite.js";
 import { ResourceManager } from "../resources/resourceManager.js";
 import { ResourceError } from "../errors/resourceError.js";
+import { Game } from "../main/game.js";
+import Camera from "./camera/camera.js";
 
 /**
  * The `GameObject` class allows the creation and customization
@@ -89,6 +91,13 @@ export abstract class GameObject implements StageElement {
 
   public getCoordinates(): Vector2 {
     return this.boundingBox.getCoordinates();
+  }
+
+  public getCenterCoordinates(): Vector2 {
+    return new Vector2(
+      this.getX() + this.getWidth() / 2,
+      this.getY() + this.getHeight() / 2
+    );
   }
 
   /**
@@ -183,10 +192,12 @@ export abstract class GameObject implements StageElement {
    * It triggers the {@linkcode onDraw} method, which you can use to define
    * what this game object draws.
    */
-  public draw(ctx: CanvasRenderingContext2D): void {
+  public draw(ctx: CanvasRenderingContext2D, camera: Camera): void {
+    const apparentCoords = camera.getApparentCoordinates(this.getCoordinates());
+
     ctx.fillStyle = this.color.toString();
     ctx.fillRect(
-      this.getX(), this.getY(),
+      apparentCoords.getX(), apparentCoords.getY(),
       this.getWidth(), this.getHeight()
     );
 
@@ -198,12 +209,12 @@ export abstract class GameObject implements StageElement {
 
       this.sprite.draw(
         ctx,
-        this.getCoordinates(),
+        apparentCoords,
         scale
       );
     }
 
-    this.onDraw(ctx);
+    this.onDraw(ctx, camera);
   }
 
   /**
@@ -274,7 +285,7 @@ export abstract class GameObject implements StageElement {
    * This method allows you to define what this object draws every frame after
    * being updated.
    */
-  public abstract onDraw(ctx: CanvasRenderingContext2D): void;
+  public abstract onDraw(ctx: CanvasRenderingContext2D, camera: Camera): void;
 
   /**
    * This method allows you to define what happens to this object when its

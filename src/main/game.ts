@@ -77,6 +77,8 @@ interface GameConfig {
  */
 export class Game implements GameIterable {
 
+  private static instance: Game | undefined;
+
   /**
    * The `gameCanvas` property stores an instance to a {@linkcode GameCanvas}
    * used to control the game display.
@@ -106,6 +108,8 @@ export class Game implements GameIterable {
    * `undefined`, which makes the game use the default configurations.
    */
   constructor(config?: GameConfig) {
+    Game.instance = this;
+
     if(config === undefined) config = {};
     let { canvas, root, width, height, fps } = config;
     
@@ -330,8 +334,15 @@ export class Game implements GameIterable {
    * @returns The HTML element that is the parent of the `canvas` element that
    * displays the game.
    */
-  public getRoot(): HTMLElement {
+  public getRoot(): HTMLElement | null {
     return this.gameCanvas.getRoot();
+  }
+
+  /**
+   * Removes the game from the DOM.
+   */
+  public unmount(): void {
+    return this.gameCanvas.unmount();
   }
 
   /**
@@ -715,6 +726,14 @@ export class Game implements GameIterable {
    */
   public getSelectedStage(): Stage | undefined {
     return this.stageManager.getSelectedStage();
+  }
+
+  public static instantiate(config?: GameConfig): Game {
+    return new Game(config);
+  }
+
+  public static getInstance(): Game | undefined {
+    return this.instance;
   }
 
   /**

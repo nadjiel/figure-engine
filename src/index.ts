@@ -6,6 +6,9 @@ export { MouseInput } from "./input/mouseInput.js";
 export { Stage } from "./stage/stage.js";
 export { GameObject } from "./stage/gameObject.js";
 export { Scenario } from "./stage/scenario.js";
+export { Camera } from "./stage/camera/camera.js";
+export { StaticCamera } from "./stage/camera/staticCamera.js";
+export { FollowingCamera } from "./stage/camera/followingCamera.js";
 
 export { VectorN } from "./spatial/vectorN.js";
 export { Vector2 } from "./spatial/vector2.js";

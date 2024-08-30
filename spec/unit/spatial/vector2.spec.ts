@@ -9,7 +9,7 @@ describe("Vector2 class", () => {
 
     expect(v2.getX()).toBe(x);
     expect(v2.getY()).toBe(y);
-  })
+  });
 
   describe("createZero method", () => {
 
@@ -25,6 +25,50 @@ describe("Vector2 class", () => {
       const v2 = Vector2.createZero();
 
       expect(v1).not.toBe(v2);
+    });
+
+  });
+
+  describe("createUp method", () => {
+
+    it("Should instantiate a vector pointing up", () => {
+      const v2 = Vector2.createUp();
+      const expectedComponents = [ 0, -1 ];
+
+      expect(v2.getComponents()).toEqual(expectedComponents);
+    });
+
+  });
+
+  describe("createRight method", () => {
+
+    it("Should instantiate a vector pointing right", () => {
+      const v2 = Vector2.createRight();
+      const expectedComponents = [ 1, 0 ];
+
+      expect(v2.getComponents()).toEqual(expectedComponents);
+    });
+
+  });
+
+  describe("createDown method", () => {
+
+    it("Should instantiate a vector pointing down", () => {
+      const v2 = Vector2.createDown();
+      const expectedComponents = [ 0, 1 ];
+
+      expect(v2.getComponents()).toEqual(expectedComponents);
+    });
+
+  });
+
+  describe("createLeft method", () => {
+
+    it("Should instantiate a vector pointing left", () => {
+      const v2 = Vector2.createLeft();
+      const expectedComponents = [ -1, 0 ];
+
+      expect(v2.getComponents()).toEqual(expectedComponents);
     });
 
   });
@@ -79,6 +123,25 @@ describe("Vector2 class", () => {
       const expectedComponents = [ 1, newY ];
 
       expect(v2.getComponents()).toEqual(expectedComponents);
+    });
+
+  });
+
+  describe("Plus method", () => {
+
+    it("Should add vectors", () => {
+      const v1 = new Vector2(-1, 5);
+      const v2 = new Vector2(3, -7);
+      const expectedResult = new Vector2(2, -2);
+
+      expect(v1.plus(v2)).toEqual(expectedResult);
+    });
+
+    it("Should return Vector2 instance", () => {
+      const vec1 = new Vector2(0, 0);
+      const vec2 = new Vector2(-5.4, 3);
+      
+      expect(vec1.plus(vec2)).toBeInstanceOf(Vector2);
     });
 
   });

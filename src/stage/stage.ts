@@ -7,6 +7,9 @@ import { GameObject } from "./gameObject.js";
 import { Resource } from "../resources/resource.js";
 import { Scenario } from "./scenario.js";
 import { ArgumentError, CallError } from "../errors/index.js";
+import { StageElement } from "./stageElement.js";
+import { Camera } from "./camera/camera.js";
+import { StaticCamera } from "./camera/staticCamera.js";
 
 /**
  * The `Stage` class provides the structure for organizing and arranging all
@@ -39,6 +42,8 @@ export class Stage implements GameIterable {
    * utilities for organizing the foreground of this stage.
    */
   private foregroundManager = new StageElementManager<Scenario>();
+
+  private camera: Camera = new StaticCamera();
 
   /**
    * This method adds a game object to this stage in a given index, if it is
@@ -706,6 +711,14 @@ export class Stage implements GameIterable {
     return this.foregroundManager.getStopOrder();
   }
 
+  public setCamera(camera: Camera) {
+    this.camera = camera;
+  }
+
+  public getCamera(): Camera {
+    return this.camera;
+  }
+
   /**
    * Loads the {@linkcode Resource}s that this {@linkcode Stage} uses.
    * @returns A `Promise` that resolves when this `Stage` is loaded.
@@ -713,15 +726,21 @@ export class Stage implements GameIterable {
   public async load(): Promise<Array<Resource>> {
     const resources = new Array<Resource>();
 
-    this.getBackgrounds().forEach(async background => {
-      resources.push(...(await background.load()));
-    });
-    this.getObjects().forEach(async obj => {
-      resources.push(...(await obj.load()));
-    });
-    this.getForegrounds().forEach(async foreground => {
-      resources.push(...(await foreground.load()));
-    });
+    const stageElementLoader = async (element: StageElement) => {
+      const loadedResources = await element.load();
+
+      resources.push(...loadedResources);
+    }
+
+    const backgroundLoading = this.getBackgrounds().map(stageElementLoader);
+    const objectLoading = this.getObjects().map(stageElementLoader);
+    const foregroundLoading = this.getForegrounds().map(stageElementLoader);
+
+    await Promise.all([
+      ...backgroundLoading,
+      ...objectLoading,
+      ...foregroundLoading
+    ]);
 
     this.loaded = true;
 
@@ -743,6 +762,7 @@ export class Stage implements GameIterable {
     this.backgroundManager.start();
     this.objectManager.start();
     this.foregroundManager.start();
+    this.camera.start();
 
     this.onStart();
   }
@@ -755,6 +775,7 @@ export class Stage implements GameIterable {
     this.backgroundManager.update();
     this.objectManager.update();
     this.foregroundManager.update();
+    this.camera.update();
 
     this.onUpdate();
   }
@@ -765,9 +786,10 @@ export class Stage implements GameIterable {
    * @param ctx A Canvas rendering context with which to draw.
    */
   draw(ctx: CanvasRenderingContext2D): void {
-    this.backgroundManager.draw(ctx);
-    this.objectManager.draw(ctx);
-    this.foregroundManager.draw(ctx);
+    this.backgroundManager.draw(ctx, this.camera);
+    this.objectManager.draw(ctx, this.camera);
+    this.foregroundManager.draw(ctx, this.camera);
+    this.camera.draw(ctx);
 
     this.onDraw(ctx);
   }
@@ -780,6 +802,7 @@ export class Stage implements GameIterable {
     this.backgroundManager.stop();
     this.objectManager.stop();
     this.foregroundManager.stop();
+    this.camera.stop();
 
     this.onStop();
   }

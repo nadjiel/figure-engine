@@ -1,6 +1,7 @@
 import { StageElementManager } from "../../../dist/stage/stageElementManager.js";
 import { GameObject } from "../../../dist/stage/gameObject.js";
 import { Vector2 } from "../../../dist/spatial/vector2.js";
+import { StaticCamera } from "../../../dist/stage/camera/staticCamera.js";
 
 describe("StageElementManager class", () => {
 
@@ -445,7 +446,7 @@ describe("StageElementManager class", () => {
       manager.addFirst(gameObj2);
       manager.addFirst(gameObj3);
 
-      manager.draw(ctx);
+      manager.draw(ctx, new StaticCamera());
 
       expect(order).toBe("321");
     });
@@ -471,7 +472,7 @@ describe("StageElementManager class", () => {
 
       manager.setDrawOrder((el1, el2) => el1.getY() - el2.getY());
 
-      manager.draw(ctx);
+      manager.draw(ctx, new StaticCamera());
 
       expect(order).toBe("123");
     });

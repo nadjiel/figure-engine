@@ -1,4 +1,6 @@
 import { Resource } from "./resource.js";
+import { ImageResource } from "./imageResource.js";
+import { SoundResource } from "./soundResource.js";
 
 /**
  * The `ResourceManager` class allows managing and loading `Resource`s.
@@ -23,14 +25,6 @@ export class ResourceManager {
     ResourceManager.resources.set(name, resource);
   }
 
-  public static removeAllResources(): void {
-    const resourceNames = ResourceManager.resources.keys();
-
-    for(const name of resourceNames) {
-      this.removeResource(name);
-    }
-  }
-
   /**
    * Removes a `Resource` specified by the given `name` from this
    * `ResourceManager`.
@@ -39,6 +33,14 @@ export class ResourceManager {
    */
   public static removeResource(name: string): boolean {
     return ResourceManager.resources.delete(name);
+  }
+
+  public static removeAllResources(): void {
+    const resourceNames = ResourceManager.resources.keys();
+
+    for(const name of resourceNames) {
+      this.removeResource(name);
+    }
   }
 
   /**
@@ -55,6 +57,24 @@ export class ResourceManager {
    */
   public static getResource(name: string): Resource | undefined {
     return ResourceManager.resources.get(name);
+  }
+
+  /**
+   * @param name The name of the `ImageResource` to find.
+   * @returns The `ImageResource` identified by the passed `name`, if it exists, or
+   * `undefined` if it does not.
+   */
+  public static getImageResource(name: string): ImageResource | undefined {
+    return ResourceManager.getResource(name) as ImageResource;
+  }
+
+  /**
+   * @param name The name of the `SoundResource` to find.
+   * @returns The `SoundResource` identified by the passed `name`, if it exists, or
+   * `undefined` if it does not.
+   */
+  public static getSoundResource(name: string): SoundResource | undefined {
+    return ResourceManager.getResource(name) as SoundResource;
   }
 
   /**

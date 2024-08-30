@@ -95,13 +95,13 @@ describe("Color class", () => {
     expect(color.toString()).toBe(`rgba(${red}, ${green}, ${blue}, ${alpha})`);
   });
 
-  describe("setRed method", () => {
+  describe("setR method", () => {
 
     it("Should not allow negative red component", () => {
       const color = new Color(255, 255, 255);
       const newRed = -255;
   
-      expect(() => color.setRed(newRed))
+      expect(() => color.setR(newRed))
         .toThrowError(`color components must be in [0, 255] interval (received ${newRed})`);
     });
   
@@ -109,7 +109,7 @@ describe("Color class", () => {
       const color = new Color(255, 255, 255);
       const newRed = 256;
   
-      expect(() => color.setRed(newRed))
+      expect(() => color.setR(newRed))
         .toThrowError(`color components must be in [0, 255] interval (received ${newRed})`);
     });
 
@@ -117,20 +117,20 @@ describe("Color class", () => {
       const color = new Color(255, 255, 255);
       const newRed = 200;
   
-      color.setRed(newRed);
+      color.setR(newRed);
   
-      expect(color.getRed()).toBe(newRed);
+      expect(color.getR()).toBe(newRed);
     });
 
   });
 
-  describe("setGreen method", () => {
+  describe("setG method", () => {
 
     it("Should not allow negative green component", () => {
       const color = new Color(255, 255, 255);
       const newGreen = -255;
   
-      expect(() => color.setGreen(newGreen))
+      expect(() => color.setG(newGreen))
         .toThrowError(`color components must be in [0, 255] interval (received ${newGreen})`);
     });
   
@@ -138,7 +138,7 @@ describe("Color class", () => {
       const color = new Color(255, 255, 255);
       const newGreen = 256;
   
-      expect(() => color.setGreen(newGreen))
+      expect(() => color.setG(newGreen))
         .toThrowError(`color components must be in [0, 255] interval (received ${newGreen})`);
     });
 
@@ -146,20 +146,20 @@ describe("Color class", () => {
       const color = new Color(255, 255, 255);
       const newGreen = 200;
   
-      color.setGreen(newGreen);
+      color.setG(newGreen);
   
-      expect(color.getGreen()).toBe(newGreen);
+      expect(color.getG()).toBe(newGreen);
     });
 
   });
 
-  describe("setBlue method", () => {
+  describe("setB method", () => {
 
     it("Should not allow negative blue component", () => {
       const color = new Color(255, 255, 255);
       const newBlue = -255;
   
-      expect(() => color.setBlue(newBlue))
+      expect(() => color.setB(newBlue))
         .toThrowError(`color components must be in [0, 255] interval (received ${newBlue})`);
     });
   
@@ -167,7 +167,7 @@ describe("Color class", () => {
       const color = new Color(255, 255, 255);
       const newBlue = 256;
   
-      expect(() => color.setBlue(newBlue))
+      expect(() => color.setB(newBlue))
         .toThrowError(`color components must be in [0, 255] interval (received ${newBlue})`);
     });
 
@@ -175,20 +175,20 @@ describe("Color class", () => {
       const color = new Color(255, 255, 255);
       const newBlue = 200;
   
-      color.setBlue(newBlue);
+      color.setB(newBlue);
   
-      expect(color.getBlue()).toBe(newBlue);
+      expect(color.getB()).toBe(newBlue);
     });
 
   });
 
-  describe("setAlpha method", () => {
+  describe("setA method", () => {
 
     it("Should not allow negative alpha component", () => {
       const color = new Color(255, 255, 255);
       const newAlpha = -1;
   
-      expect(() => color.setAlpha(newAlpha))
+      expect(() => color.setA(newAlpha))
         .toThrowError(`color alpha component must be in [0, 1] interval (received ${newAlpha})`);
     });
   
@@ -196,7 +196,7 @@ describe("Color class", () => {
       const color = new Color(255, 255, 255);
       const newAlpha = 2;
   
-      expect(() => color.setAlpha(newAlpha))
+      expect(() => color.setA(newAlpha))
         .toThrowError(`color alpha component must be in [0, 1] interval (received ${newAlpha})`);
     });
 
@@ -204,9 +204,9 @@ describe("Color class", () => {
       const color = new Color(255, 255, 255);
       const newAlpha = 0.5;
   
-      color.setAlpha(newAlpha);
+      color.setA(newAlpha);
   
-      expect(color.getAlpha()).toBe(newAlpha);
+      expect(color.getA()).toBe(newAlpha);
     });
 
   });

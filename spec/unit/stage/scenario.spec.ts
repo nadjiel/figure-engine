@@ -4,6 +4,7 @@ import { ResourceManager } from "../../../dist/resources/resourceManager.js";
 import { Sprite } from "../../../dist/resources/sprite.js";
 import { Vector2 } from "../../../dist/spatial/vector2.js";
 import { Scenario } from "../../../dist/stage/scenario.js";
+import { StaticCamera } from "../../../dist/stage/camera/staticCamera.js";
 
 describe("Scenario class", () => {
 
@@ -97,11 +98,12 @@ describe("Scenario class", () => {
   describe("draw method", () => {
 
     it("Should trigger onDraw method", () => {
+      const camera = new StaticCamera();
       spyOn(scenario, "onDraw");
 
-      scenario.draw(ctx);
+      scenario.draw(ctx, camera);
 
-      expect(scenario.onDraw).toHaveBeenCalledWith(ctx);
+      expect(scenario.onDraw).toHaveBeenCalledWith(ctx, camera);
     });
 
     it("Should draw color on canvas with DrawStrategy", () => {
@@ -112,7 +114,7 @@ describe("Scenario class", () => {
 
       spyOn(drawStrategy, "drawColor");
 
-      scenario.draw(ctx);
+      scenario.draw(ctx, new StaticCamera());
 
       expect(drawStrategy.drawColor).toHaveBeenCalledWith(
         ctx, color, scenario.getBoundingBox()
@@ -124,7 +126,7 @@ describe("Scenario class", () => {
 
       spyOn(drawStrategy, "drawSprite");
 
-      scenario.draw(ctx);
+      scenario.draw(ctx, new StaticCamera());
 
       expect(drawStrategy.drawSprite).toHaveBeenCalledWith(
         ctx, sprite, scenario.getBoundingBox()

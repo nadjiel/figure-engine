@@ -8,6 +8,7 @@ import { Color, ColorFactory } from "../graphical/color.js";
 import { Rectangle } from "../spatial/rectangle.js";
 import { DrawStrategy } from "../graphical/drawStrategy.js";
 import { OneDrawStrategy } from "../graphical/oneDrawStrategy.js";
+import { Camera } from "./camera/camera.js";
 
 export class Scenario implements StageElement {
 
@@ -193,13 +194,23 @@ export class Scenario implements StageElement {
     this.onUpdate();
   }
 
-  public draw(ctx: CanvasRenderingContext2D): void {
-    this.drawStrategy.drawColor(ctx, this.color, this.boundingBox);
+  public draw(ctx: CanvasRenderingContext2D, camera: Camera): void {
+    const apparentCoords = camera.getApparentCoordinates(
+      this.getCoordinates(),
+      this.getParallaxSpeed()
+    );
+
+    const drawingBB = new Rectangle(
+      apparentCoords,
+      this.getDimensions()
+    );
+
+    this.drawStrategy.drawColor(ctx, this.color, drawingBB);
     if(this.sprite !== undefined) {
-      this.drawStrategy.drawSprite(ctx, this.sprite, this.boundingBox);
+      this.drawStrategy.drawSprite(ctx, this.sprite, drawingBB);
     }
 
-    this.onDraw(ctx);
+    this.onDraw(ctx, camera);
   }
 
   public stop(): void {
@@ -214,7 +225,7 @@ export class Scenario implements StageElement {
     
   }
 
-  public onDraw(ctx: CanvasRenderingContext2D): void {
+  public onDraw(ctx: CanvasRenderingContext2D, camera: Camera): void {
     
   }
 

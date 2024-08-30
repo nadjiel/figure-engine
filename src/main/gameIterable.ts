@@ -1,3 +1,5 @@
+import { Camera } from "../stage/camera/camera";
+
 /**
  * This interface describes a class that is iterated by the game.
  * It has methods for describing the class behavior on the iteration start,
@@ -23,7 +25,7 @@ export interface GameIterable {
    * Defines what is drawn every iteration after updating.
    * @param ctx The canvas on which to draw.
    */
-  draw(ctx: CanvasRenderingContext2D): void;
+  draw(ctx: CanvasRenderingContext2D, camera?: Camera): void;
   
   /**
    * Defines what happens once the iteration stops.
@@ -47,7 +49,7 @@ export interface GameIterable {
    * behavior after the update event.
    * @param ctx The canvas on which to draw.
    */
-  onDraw(ctx: CanvasRenderingContext2D): void;
+  onDraw(ctx: CanvasRenderingContext2D, camera?: Camera): void;
   
   /**
    * Should be overriden by the user, if they wish to define a custom behavior

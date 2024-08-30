@@ -4,14 +4,12 @@ import { ArgumentError } from "../errors/argumentError.js";
  * The `VectorN` class represents a generic sized vector that can't change it's
  * dimension once created.
  * Under the hood, it uses a common array, but prevents it's size changes with
- * the
- * {@linkcode [Object.seal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/seal)}
- * method under the hood.
+ * the {@linkcode [Object.seal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/seal)} method.
  * 
  * @version 0.3.0
  * @author Daniel de Oliveira <oliveira.daaaaniel@gmail.com>
  */
-export class VectorN {
+export class VectorN<V extends VectorN<V>> {
 
   /**
    * This property stores the components that compose this vector. For
@@ -93,7 +91,7 @@ export class VectorN {
    * @returns The result of the sum.
    * @throws {ArgumentError} If the received `vector` has a different dimension.
    */
-  public plus(vector: VectorN): VectorN {
+  public plus(vector: V): V {
     if(vector.getDimension() !== this.getDimension()) {
       throw new ArgumentError(`vectors must have same dimension (tried adding vector${this.getDimension()} with vector${vector.getDimension()})`);
     }
@@ -102,7 +100,36 @@ export class VectorN {
       return component + vector.getComponent(index);
     };
 
-    return new VectorN(...this.getComponents().map(adder));
+    return new (this.constructor as { new(...args: number[]): V })(
+      ...this.components.map(adder)
+    );
+
+    // return new VectorN(...this.getComponents().map(adder));
+  }
+
+  /**
+   * Subtracts this vector with another vector and returns the result.
+   * 
+   * If the `vector` passed in the parameter has a different dimension than this
+   * one, an error is thrown. 
+   * @param vector A vector with which to subtract.
+   * @returns The result of the subtraction.
+   * @throws {ArgumentError} If the received `vector` has a different dimension.
+   */
+  public minus(vector: V): V {
+    if(vector.getDimension() !== this.getDimension()) {
+      throw new ArgumentError(`vectors must have same dimension (tried subtracting vector${this.getDimension()} with vector${vector.getDimension()})`);
+    }
+
+    const subtracter = (component: number, index: number) => {
+      return component - vector.getComponent(index);
+    };
+
+    return new (this.constructor as { new(...args: number[]): V })(
+      ...this.components.map(subtracter)
+    );
+
+    // return new V(...this.getComponents().map(subtracter));
   }
 
   /**
@@ -111,20 +138,50 @@ export class VectorN {
    * @param value A number by which to increment this vector components.
    * @returns The result of the increment operation.
    */
-  public incrementBy(value: number): VectorN {
+  public incrementBy(value: number): V {
     const incrementer = (component: number) => {
       return component + value;
     };
 
-    return new VectorN(...this.getComponents().map(incrementer));
+    return new (this.constructor as { new(...args: number[]): V })(
+      ...this.components.map(incrementer)
+    );
+
+    // return new VectorN(...this.getComponents().map(incrementer));
+  }
+
+  /**
+   * Returns the result of the decrement of the components of this vector by a
+   * given `value`.
+   * @param value A number by which to decrement this vector components.
+   * @returns The result of the decrement operation.
+   */
+  public decrementBy(value: number): V {
+    const decrementer = (component: number) => {
+      return component - value;
+    };
+
+    return new (this.constructor as { new(...args: number[]): V })(
+      ...this.components.map(decrementer)
+    );
+
+    // return new VectorN(...this.getComponents().map(decrementer));
   }
 
   /**
    * @returns A vector corresponding to this vector with every component
    * incremented by `1`.
    */
-  public increment(): VectorN {
+  public increment(): V {
     return this.incrementBy(1);
+  }
+
+  /**
+   * @returns A vector corresponding to this vector with every component
+   * decremented by `1`.
+   */
+  public decrement(): V {
+    return this.decrementBy(1);
   }
 
   /**
@@ -134,12 +191,16 @@ export class VectorN {
    * @returns A vector resulting of the scale of this vector by the received
    * `value`.
    */
-  public scaleBy(scalar: number): VectorN {
+  public scaleBy(scalar: number): V {
     const scaler = (component: number) => {
       return component * scalar;
     };
 
-    return new VectorN(...this.getComponents().map(scaler));
+    return new (this.constructor as { new(...args: number[]): V })(
+      ...this.components.map(scaler)
+    );
+
+    // return new VectorN(...this.getComponents().map(scaler));
   }
 
   /**
